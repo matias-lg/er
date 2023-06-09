@@ -62,7 +62,7 @@ entity =
             name: identifier,
             attributes,
             hasParent: parentIdentifier !== null,
-            parent: parentIdentifier,
+            parentName: parentIdentifier,
             hasDependencies,
             dependsOn: hasDependencies? dependsOn : null 
         }
@@ -77,7 +77,7 @@ entityAttribute =
         attribute.isKey = isKey === true
         const isMultivalued = childAttributes !== null
         attribute.isMultivalued = isMultivalued
-        attribute.childAttributesNames = isMultivalued? childAttributes : []
+        attribute.childAttributesNames = isMultivalued? childAttributes : null
         return attribute
     }
     
@@ -106,8 +106,8 @@ parentIdentifier "parent identifier" = validWord
 dependsOn = "depends on"i
 through = "through"i
 relationDependencyIdentifier "relation identifier" = validWord
-declareWeak = dependsOn [ \t]+ entity:entityIdentifier [ \t]+ through [ \t]+ relation:relationDependencyIdentifier
-{ return {entity, relation}}
+declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+ relationName:relationDependencyIdentifier
+{ return {entityName, relationName}}
 
 // END ENTITY
 
