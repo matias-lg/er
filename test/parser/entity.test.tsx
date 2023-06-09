@@ -1,5 +1,6 @@
 import { ER } from "../../src/types/er";
-import parser from "../../src/parser";
+import { parse } from "../../src/er-parser";
+//import parser from "../../src/parser";
 
 const simpleEntity = `
 entity Dog {
@@ -19,8 +20,7 @@ const entityWithParent = `
 
 const entityWithMultivaluedAttribute = `
    entity Person {
-        RUT key
-        full_name: [name, last_name]
+        full_name: [name, last_name] key
         age
         address: [street, city, country]
    } 
@@ -35,9 +35,22 @@ const entityWithDependencies = `
    }
 `;
 
+const badEntities =[`
+    entity {
+       position
+    }`,
+     `
+        entity Food {
+    `
+]
+
+const emptyEntity = `
+    entity Void {}`
+
+
 describe("Parses Entities", () => {
   it("parses a simple entity", () => {
-    const er: ER = parser.parse(simpleEntity);
+    const er: ER = parse(simpleEntity);
     expect(er).toStrictEqual({
       entities: [
         {
@@ -74,7 +87,7 @@ describe("Parses Entities", () => {
   });
 
   it("Parses an entity that extends another", () => {
-    const er: ER = parser.parse(entityWithParent);
+    const er: ER = parse(entityWithParent);
     expect(er).toStrictEqual({
       entities: [
         {
@@ -117,7 +130,7 @@ describe("Parses Entities", () => {
   });
 
   it("Parses an entity with multivalued attributes", () => {
-    const er: ER = parser.parse(entityWithMultivaluedAttribute);
+    const er: ER = parse(entityWithMultivaluedAttribute);
     expect(er).toStrictEqual({
       entities: [
         {
@@ -129,14 +142,8 @@ describe("Parses Entities", () => {
           dependsOn: null,
           attributes: [
             {
-              name: "RUT",
-              isKey: true,
-              isMultivalued: false,
-              childAttributesNames: null,
-            },
-            {
               name: "full_name",
-              isKey: false,
+              isKey: true,
               isMultivalued: true,
               childAttributesNames: ["name", "last_name"],
             },
@@ -160,7 +167,7 @@ describe("Parses Entities", () => {
   });
 
   it("Parses an entity that depends on another", () => {
-    const er: ER = parser.parse(entityWithDependencies);
+    const er: ER = parse(entityWithDependencies);
     expect(er).toStrictEqual({
       entities: [
         {
@@ -204,4 +211,14 @@ describe("Parses Entities", () => {
       relations: [],
     });
   });
+
+  it("Throws an error when parsing a bad constructed entity", () => {
+    badEntities.forEach(entity => {
+        expect(() => parse(entity)).toThrowError();
+    })
+  })
+
+  it("Throws an error when parsing an entity without attributes", () => {
+       expect(() => parse(emptyEntity)).toThrowError();
+   });
 });

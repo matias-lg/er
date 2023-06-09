@@ -51,9 +51,7 @@ entityIdentifier "entity identifier" = validWord
 entity = 
 	declareEntity _ identifier:entityIdentifier dependsOn:(_ deps:declareWeak{return deps})? parentIdentifier:(_ parent:entityExtends{return parent})? _0
     Lcurly _0
-        attributes:
-            (atrib:entityAttribute '\n' _0{return atrib})*
-		    (lastAtrib:entityAttribute {return lastAtrib})*
+        attributes:(atrib:entityAttribute '\n' _0{return atrib})+
 	    _0
 	Rcurly {
         const hasDependencies = dependsOn !== null
