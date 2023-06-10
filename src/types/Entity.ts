@@ -12,5 +12,5 @@ export type Entity = {
     hasParent: boolean;
     parentName: string | null;
     hasDependencies: boolean;
-    dependsOn: { "entityName": string, "attributeName": string } | null;
+    dependsOn: { "entityName": string, "relationshipName": string } | null;
 }

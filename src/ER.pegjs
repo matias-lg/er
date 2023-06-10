@@ -8,6 +8,7 @@ Entidades:
  [X] Entidades débiles
 
 Relaciones:
+ [ ] Relación Base
  [ ] Arcos etiquetados
  [ ] Relaciones N-arias
  [ ] Restricciones cardinalidad de cada entidad
@@ -18,12 +19,12 @@ Agregación:
 */
 
 start
-  = all:((entity/relation)/_{return null})* {
+  = all:((entity/relationship)/_{return null})* {
     const elements = all.filter(ele => ele != null)
-    const er = {entities: [], relations: []};
+    const er = {entities: [], relationships: []};
     for (const e of elements) {
     	if (e.type == "entity") er.entities.push(e)
-        if (e.type == "relation") er.relations.push(e)
+        if (e.type == "relationship") er.relationships.push(e)
     }
   	return er;
   }
@@ -42,7 +43,7 @@ _ "1 or more whitespaces" = [ \t\n]+
 _0 "0 or more whitespaces" = [ \t\n]*
 declareIsKey "key" = "key"i
 
-declareRelation = "relation"i
+declareRelationship = "relationship"i
 // END TOKENS
 
 //BEGIN ENTITY
@@ -103,23 +104,26 @@ parentIdentifier "parent identifier" = validWord
 // Entidad débil
 dependsOn = "depends on"i
 through = "through"i
-relationDependencyIdentifier "relation identifier" = validWord
-declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+ relationName:relationDependencyIdentifier
-{ return {entityName, relationName}}
+relationDependencyIdentifier "relationship identifier" = validWord
+declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+ relationshipName:relationDependencyIdentifier
+{ return {entityName, relationshipName}}
 
 // END ENTITY
 
 
-// RELATION 
-relation
-	= declareRelation _ identifier:validWord _0 Lcurly
- 	/* relation body */
+// RELATIONSHIP 
+relationship
+	= declareRelationship _ identifier:relationIdentifier _0 Lcurly
+ 	/* relationship body */
     _0
     Rcurly 
     
-    {return {
-    		 type: "relation",
+    {
+        return {
+    		 type: "relationship",
     		 name: identifier,
     		 atributtes: [1]
              }
     }
+
+relationIdentifier "relationship identifier" = validWord

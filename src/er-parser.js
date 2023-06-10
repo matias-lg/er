@@ -183,7 +183,7 @@ function peg$parse(input, options) {
   var peg$c4 = "entity";
   var peg$c5 = "extends";
   var peg$c6 = "key";
-  var peg$c7 = "relation";
+  var peg$c7 = "relationship";
   var peg$c8 = "\n";
   var peg$c9 = ":";
   var peg$c10 = ",";
@@ -206,7 +206,7 @@ function peg$parse(input, options) {
   var peg$e9 = peg$otherExpectation("0 or more whitespaces");
   var peg$e10 = peg$otherExpectation("key");
   var peg$e11 = peg$literalExpectation("key", true);
-  var peg$e12 = peg$literalExpectation("relation", true);
+  var peg$e12 = peg$literalExpectation("relationship", true);
   var peg$e13 = peg$otherExpectation("entity identifier");
   var peg$e14 = peg$literalExpectation("\n", false);
   var peg$e15 = peg$classExpectation([" ", "\t"], false, false);
@@ -216,15 +216,15 @@ function peg$parse(input, options) {
   var peg$e19 = peg$otherExpectation("parent identifier");
   var peg$e20 = peg$literalExpectation("depends on", true);
   var peg$e21 = peg$literalExpectation("through", true);
-  var peg$e22 = peg$otherExpectation("relation identifier");
+  var peg$e22 = peg$otherExpectation("relationship identifier");
 
   var peg$f0 = function() {return null};
   var peg$f1 = function(all) {
     const elements = all.filter(ele => ele != null)
-    const er = {entities: [], relations: []};
+    const er = {entities: [], relationships: []};
     for (const e of elements) {
     	if (e.type == "entity") er.entities.push(e)
-        if (e.type == "relation") er.relations.push(e)
+        if (e.type == "relationship") er.relationships.push(e)
     }
   	return er;
   };
@@ -259,9 +259,10 @@ function peg$parse(input, options) {
   var peg$f12 = function(firstAttrs, finalAttr) {return firstAttrs.concat(finalAttr)};
   var peg$f13 = function(attributes) {return attributes};
   var peg$f14 = function(parent) {return parent};
-  var peg$f15 = function(entityName, relationName) { return {entityName, relationName}};
-  var peg$f16 = function(identifier) {return {
-    		 type: "relation",
+  var peg$f15 = function(entityName, relationshipName) { return {entityName, relationshipName}};
+  var peg$f16 = function(identifier) {
+        return {
+    		 type: "relationship",
     		 name: identifier,
     		 atributtes: [1]
              }
@@ -433,7 +434,7 @@ function peg$parse(input, options) {
     s1 = [];
     s2 = peg$parseentity();
     if (s2 === peg$FAILED) {
-      s2 = peg$parserelation();
+      s2 = peg$parserelationship();
     }
     if (s2 === peg$FAILED) {
       s2 = peg$currPos;
@@ -448,7 +449,7 @@ function peg$parse(input, options) {
       s1.push(s2);
       s2 = peg$parseentity();
       if (s2 === peg$FAILED) {
-        s2 = peg$parserelation();
+        s2 = peg$parserelationship();
       }
       if (s2 === peg$FAILED) {
         s2 = peg$currPos;
@@ -670,12 +671,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parsedeclareRelation() {
+  function peg$parsedeclareRelationship() {
     var s0;
 
-    if (input.substr(peg$currPos, 8).toLowerCase() === peg$c7) {
-      s0 = input.substr(peg$currPos, 8);
-      peg$currPos += 8;
+    if (input.substr(peg$currPos, 12).toLowerCase() === peg$c7) {
+      s0 = input.substr(peg$currPos, 12);
+      peg$currPos += 12;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e12); }
@@ -1409,15 +1410,15 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parserelation() {
+  function peg$parserelationship() {
     var s0, s1, s2, s3, s4, s5, s6, s7;
 
     s0 = peg$currPos;
-    s1 = peg$parsedeclareRelation();
+    s1 = peg$parsedeclareRelationship();
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
       if (s2 !== peg$FAILED) {
-        s3 = peg$parsevalidWord();
+        s3 = peg$parserelationIdentifier();
         if (s3 !== peg$FAILED) {
           s4 = peg$parse_0();
           s5 = peg$parseLcurly();
@@ -1446,6 +1447,20 @@ function peg$parse(input, options) {
     } else {
       peg$currPos = s0;
       s0 = peg$FAILED;
+    }
+
+    return s0;
+  }
+
+  function peg$parserelationIdentifier() {
+    var s0, s1;
+
+    peg$silentFails++;
+    s0 = peg$parsevalidWord();
+    peg$silentFails--;
+    if (s0 === peg$FAILED) {
+      s1 = peg$FAILED;
+      if (peg$silentFails === 0) { peg$fail(peg$e22); }
     }
 
     return s0;
