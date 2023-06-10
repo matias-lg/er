@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "build-parser": "peggy -o ./src/er-parser.js ./src/ER.pegjs",
+    "test": "npm run build-parser && jest"
   },
   "keywords": [],
   "author": "",
