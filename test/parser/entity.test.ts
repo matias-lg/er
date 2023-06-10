@@ -1,6 +1,5 @@
-import { ER } from "../../src/types/er";
+import { ER } from "../../src/types/ER";
 import { parse } from "../../src/er-parser";
-//import parser from "../../src/parser";
 
 const simpleEntity = `
 entity Dog {
@@ -82,8 +81,8 @@ describe("Parses Entities", () => {
           ],
         },
       ],
-      relations: [],
-    });
+      relationships: [],
+    } as ER);
   });
 
   it("Parses an entity that extends another", () => {
@@ -125,8 +124,8 @@ describe("Parses Entities", () => {
           ],
         },
       ],
-      relations: [],
-    });
+      relationships: [],
+    } as ER);
   });
 
   it("Parses an entity with multivalued attributes", () => {
@@ -162,8 +161,8 @@ describe("Parses Entities", () => {
           ],
         },
       ],
-      relations: [],
-    });
+      relationships: [],
+    } as ER);
   });
 
   it("Parses an entity that depends on another", () => {
@@ -178,7 +177,7 @@ describe("Parses Entities", () => {
           hasDependencies: true,
           dependsOn: {
             entityName: "OS",
-            relationName: "Compiles",
+            relationshipName: "Compiles",
           },
           attributes: [
             {
@@ -208,8 +207,8 @@ describe("Parses Entities", () => {
           ],
         },
       ],
-      relations: [],
-    });
+      relationships: [],
+    } as ER);
   });
 
   it("Throws an error when parsing a bad constructed entity", () => {
