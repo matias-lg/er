@@ -1,7 +1,10 @@
-import { Entity } from "./Entity"
-import { Relationship } from "./Relationship"
+import { Entity, EntitySchema } from "./Entity"
+import { Relationship, RelationshipSchema } from "./Relationship"
+import { z } from "zod"
 
-export type ER = {
-    entities: Entity[];
-    relationships: Relationship[];
-}
+export const ERSchema = z.object({
+    entities: z.array(EntitySchema),
+    relationships: z.array(RelationshipSchema),
+})
+
+export type ER = z.infer<typeof ERSchema>

@@ -183,7 +183,7 @@ function peg$parse(input, options) {
   var peg$c4 = "entity";
   var peg$c5 = "extends";
   var peg$c6 = "key";
-  var peg$c7 = "relationship";
+  var peg$c7 = "relation";
   var peg$c8 = "\n";
   var peg$c9 = ":";
   var peg$c10 = ",";
@@ -206,7 +206,7 @@ function peg$parse(input, options) {
   var peg$e9 = peg$otherExpectation("0 or more whitespaces");
   var peg$e10 = peg$otherExpectation("key");
   var peg$e11 = peg$literalExpectation("key", true);
-  var peg$e12 = peg$literalExpectation("relationship", true);
+  var peg$e12 = peg$literalExpectation("relation", true);
   var peg$e13 = peg$otherExpectation("entity identifier");
   var peg$e14 = peg$literalExpectation("\n", false);
   var peg$e15 = peg$classExpectation([" ", "\t"], false, false);
@@ -674,9 +674,9 @@ function peg$parse(input, options) {
   function peg$parsedeclareRelationship() {
     var s0;
 
-    if (input.substr(peg$currPos, 12).toLowerCase() === peg$c7) {
-      s0 = input.substr(peg$currPos, 12);
-      peg$currPos += 12;
+    if (input.substr(peg$currPos, 8).toLowerCase() === peg$c7) {
+      s0 = input.substr(peg$currPos, 8);
+      peg$currPos += 8;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e12); }
@@ -1281,7 +1281,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parserelationDependencyIdentifier() {
+  function peg$parserelationshipDependencyIdentifier() {
     var s0, s1;
 
     peg$silentFails++;
@@ -1374,7 +1374,7 @@ function peg$parse(input, options) {
                 s6 = peg$FAILED;
               }
               if (s6 !== peg$FAILED) {
-                s7 = peg$parserelationDependencyIdentifier();
+                s7 = peg$parserelationshipDependencyIdentifier();
                 if (s7 !== peg$FAILED) {
                   peg$savedPos = s0;
                   s0 = peg$f15(s3, s7);
@@ -1418,7 +1418,7 @@ function peg$parse(input, options) {
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
       if (s2 !== peg$FAILED) {
-        s3 = peg$parserelationIdentifier();
+        s3 = peg$parserelationshipIdentifier();
         if (s3 !== peg$FAILED) {
           s4 = peg$parse_0();
           s5 = peg$parseLcurly();
@@ -1452,7 +1452,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parserelationIdentifier() {
+  function peg$parserelationshipIdentifier() {
     var s0, s1;
 
     peg$silentFails++;

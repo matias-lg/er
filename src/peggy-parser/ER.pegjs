@@ -43,7 +43,7 @@ _ "1 or more whitespaces" = [ \t\n]+
 _0 "0 or more whitespaces" = [ \t\n]*
 declareIsKey "key" = "key"i
 
-declareRelationship = "relationship"i
+declareRelationship = "relation"i
 // END TOKENS
 
 //BEGIN ENTITY
@@ -104,8 +104,8 @@ parentIdentifier "parent identifier" = validWord
 // Entidad débil
 dependsOn = "depends on"i
 through = "through"i
-relationDependencyIdentifier "relationship identifier" = validWord
-declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+ relationshipName:relationDependencyIdentifier
+relationshipDependencyIdentifier "relationship identifier" = validWord
+declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+ relationshipName:relationshipDependencyIdentifier
 { return {entityName, relationshipName}}
 
 // END ENTITY
@@ -113,7 +113,7 @@ declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+
 
 // RELATIONSHIP 
 relationship
-	= declareRelationship _ identifier:relationIdentifier _0 Lcurly
+	= declareRelationship _ identifier:relationshipIdentifier _0 Lcurly
  	/* relationship body */
     _0
     Rcurly 
@@ -126,4 +126,4 @@ relationship
              }
     }
 
-relationIdentifier "relationship identifier" = validWord
+relationshipIdentifier "relationship identifier" = validWord
