@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-parser": "peggy -o ./src/er-parser.js ./src/ER.pegjs",
+    "build-parser": "peggy -o ./src/peggy-parser/er-parser.js ./src/peggy-parser/ER.pegjs",
     "test": "npm run build-parser && jest"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "peggy": "^3.0.2"
+    "peggy": "^3.0.2",
+    "zod": "^3.21.4"
   }
 }
