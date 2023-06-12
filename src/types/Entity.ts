@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const EntityAttributeSchema = z.object({
+const EntityAttributeSchema = z.object({
     name: z.string(),
     isKey: z.boolean(),
     isMultivalued: z.boolean(),
@@ -20,5 +20,4 @@ export const EntitySchema = z.object({
     }).nullable(),
 });
 
-export type EntityAttribute = z.infer<typeof EntityAttributeSchema>;
 export type Entity = z.infer<typeof EntitySchema>;
