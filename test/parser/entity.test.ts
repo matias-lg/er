@@ -8,6 +8,18 @@ entity Dog {
     breed
 }
 `;
+
+const inlineSimpleEntity = `
+entity tv extends electronic {brand key}
+`;
+
+const mixedIndentationEntity = `
+entity test extends word {member
+member2 key
+  member3
+}
+`;
+
 const entityWithParent = `
   ENTITY Coffee EXTENDS drink {
     name key
@@ -34,18 +46,18 @@ const entityWithDependencies = `
    }
 `;
 
-const badEntities =[`
+const badEntities = [
+  `
     entity {
        position
     }`,
-     `
+  `
         entity Food {
-    `
-]
+    `,
+];
 
 const emptyEntity = `
-    entity Void {}`
-
+    entity Void {}`;
 
 describe("Parses Entities", () => {
   it("parses a simple entity", () => {
@@ -211,13 +223,75 @@ describe("Parses Entities", () => {
     } as ER);
   });
 
+  it("Parses an entity written inline", () => {
+    const er: ER = parse(inlineSimpleEntity);
+    expect(er).toStrictEqual({
+      entities: [
+        {
+          type: "entity",
+          name: "tv",
+          hasParent: true,
+          parentName: "electronic",
+          hasDependencies: false,
+          dependsOn: null,
+          attributes: [
+            {
+              name: "brand",
+              isKey: true,
+              isMultivalued: false,
+              childAttributesNames: null,
+            },
+          ],
+        },
+      ],
+      relationships: [],
+    } as ER);
+  });
+
+  it("Parses an entity with mixed indentation", () => {
+    const er: ER = parse(mixedIndentationEntity);
+    expect(er).toStrictEqual({
+      entities: [
+        {
+          type: "entity",
+          name: "test",
+          hasParent: true,
+          parentName: "word",
+          hasDependencies: false,
+          dependsOn: null,
+          attributes: [
+            {
+              name: "member",
+              isKey: false,
+              isMultivalued: false,
+              childAttributesNames: null,
+            },
+            {
+              name: "member2",
+              isKey: true,
+              isMultivalued: false,
+              childAttributesNames: null,
+            },
+            {
+              name: "member3",
+              isKey: false,
+              isMultivalued: false,
+              childAttributesNames: null,
+            },
+          ],
+        },
+      ],
+      relationships: [],
+    } as ER);
+  });
+
   it("Throws an error when parsing a bad constructed entity", () => {
-    badEntities.forEach(entity => {
-        expect(() => parse(entity)).toThrowError();
-    })
-  })
+    badEntities.forEach((entity) => {
+      expect(() => parse(entity)).toThrowError();
+    });
+  });
 
   it("Throws an error when parsing an entity without attributes", () => {
-       expect(() => parse(emptyEntity)).toThrowError();
-   });
+    expect(() => parse(emptyEntity)).toThrowError();
+  });
 });
