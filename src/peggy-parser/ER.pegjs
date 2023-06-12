@@ -8,11 +8,11 @@ Entidades:
  [X] Entidades débiles
 
 Relaciones:
- [ ] Relación Base
+ [X] Relación Base
+ [X] Relaciones N-arias
  [ ] Arcos etiquetados
- [ ] Relaciones N-arias
- [ ] Restricciones cardinalidad de cada entidad
- [ ] Restricciones de participación de cada entidad
+ [X] Restricciones cardinalidad de cada entidad
+ [X] Restricciones de participación de cada entidad
 
 Agregación:
 [ ] Agregación Base
@@ -36,6 +36,8 @@ Lcurly = "{"
 Rcurly = "}"
 Lbracket = "["
 Rbracket = "]"
+Lparen = "("
+Rparen = ")"
 
 declareEntity = "entity"i
 declareExtends = "extends"i
@@ -117,8 +119,12 @@ declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+
 
 // RELATIONSHIP 
 relationship
-	= declareRelationship _ identifier:relationshipIdentifier _0 Lcurly
- 	/* relationship body */
+	= declareRelationship _ identifier:relationshipIdentifier _0 participants:listOfParticipants Lcurly _0
+        attributes:(
+             head:(_0 e:relationShipAttribute{return e})
+		     tail:( '\n' _0 e:relationShipAttribute{return e})*
+             {return [head, ...tail]}
+       	)
     _0
     Rcurly 
     
@@ -126,8 +132,54 @@ relationship
         return {
     		 type: "relationship",
     		 name: identifier,
-    		 atributtes: [1]
+             participantEntities: participants,
+    		 attributes
              }
     }
 
 relationshipIdentifier "relationship identifier" = validWord
+relationShipAttribute "relationship attribute " = iden:validWord
+ { return{
+        name: iden,
+        isMultivalued: false,
+        childAttributesNames: null
+    }
+}
+
+listOfParticipants =
+    Lparen
+    participants:(
+        pHead:([ \t]* p:participantEntity [ \t]*  {return p})
+        pTail:(','[ \t]* p:participantEntity {return p})*
+    {return [pHead, ...pTail]}
+    ) Rparen
+    {return participants}
+
+participantEntity = (entityName:entityIdentifier cardinalityInfo:declareCardinality?{
+     {
+         let cardinality = "N";
+         let isTotal = false;
+         if (cardinalityInfo !== null) {
+                cardinality = cardinalityInfo.cardinality;
+                isTotal = cardinalityInfo.isTotalParticipation;
+         }
+         return {
+                entityName,
+                cardinality,
+                participation: isTotal? "total" : "partial"
+         }
+    }
+})
+
+declareCardinality =
+    [ \t]+ c:cardinality isTotal:'!'?{return { cardinality: c, isTotalParticipation: isTotal === '!' }}
+
+cardinality = cardinality:(nums:[0-9]+{return parseInt(nums.join(''))} / [A-Z])? { return cardinality === null? "N" : cardinality }
+
+ /*
+        attributes:(
+             head:(_0 e:entityAttribute {return e})
+		     tail:( '\n' _0 e:entityAttribute {return e})*
+             {return [head, ...tail]}
+       	)
+*/

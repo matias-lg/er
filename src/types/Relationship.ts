@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const RelationshipAttributeSchema = z.object({
   name: z.string(),
-  isMultiValued: z.boolean(),
+  isMultivalued: z.boolean(),
   childAttributesNames: z.array(z.string()).nullable(),
 });
 
