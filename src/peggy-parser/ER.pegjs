@@ -95,9 +95,9 @@ beginMultivalued = ':' [ \t]*
 listOfAttributes =
     Lbracket
         attributes:(
-            firstAttrs:([ \t]* singleAttr:attributeIdentifier [ \t]* ',' [ \t]* {return singleAttr})*
-    	    finalAttr:([ \t]* singleAttr:attributeIdentifier [ \t]* {return singleAttr})
-            {return firstAttrs.concat(finalAttr)}
+            head:([ \t]* h:attributeIdentifier {return h})
+    	    tail:( ',' [ \t]* t:attributeIdentifier {return t})*
+            {return [head, ...tail]}
         ) Rbracket
     {return attributes}
 
@@ -119,21 +119,21 @@ declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+
 
 // RELATIONSHIP 
 relationship
-	= declareRelationship _ identifier:relationshipIdentifier _0 participants:listOfParticipants Lcurly _0
-        attributes:(
+	= declareRelationship _ identifier:relationshipIdentifier _0 participants:listOfParticipants attributes:(_0 Lcurly _0
+        attribList:(
              head:(_0 e:relationShipAttribute{return e})
 		     tail:( '\n' _0 e:relationShipAttribute{return e})*
              {return [head, ...tail]}
-       	)
+       	)?
     _0
-    Rcurly 
+    Rcurly {return attribList === null? [] : attribList})?
     
     {
         return {
     		 type: "relationship",
     		 name: identifier,
              participantEntities: participants,
-    		 attributes
+    		 attributes: attributes === null? [] : attributes
              }
     }
 
@@ -149,13 +149,40 @@ relationShipAttribute "relationship attribute " = iden:validWord
 listOfParticipants =
     Lparen
     participants:(
-        pHead:([ \t]* p:participantEntity [ \t]*  {return p})
-        pTail:(','[ \t]* p:participantEntity {return p})*
+        pHead:([ \t]* p:(MultivaluedParticipantEntity/participantEntity)  {return p})
+        pTail:(','[ \t]* p:(MultivaluedParticipantEntity/participantEntity) {return p})*
     {return [pHead, ...pTail]}
     ) Rparen
     {return participants}
 
-participantEntity = (entityName:entityIdentifier cardinalityInfo:declareCardinality?{
+
+// begin Multivalued participant in relationship
+MultivaluedParticipantEntity = entityName:entityIdentifier childParticipants:declareMultivaluedParticipantEntity
+{
+    return {
+        entityName,
+        isMultivalued: true,
+        childParticipants
+    }
+}
+
+declareMultivaluedParticipantEntity =
+    beginMultivalued
+    childParticipants: listOfChildParticipants
+    {return childParticipants}
+
+listOfChildParticipants =
+    Lbracket
+    participants:(
+        pHead:([ \t]* p:participantEntity {return p})
+        pTail:(','[ \t]* p:participantEntity {return p})*
+    {return [pHead, ...pTail]}
+    ) Rbracket
+    {return participants}
+// end Multivalued participant in relationship
+
+// begin participant entity in relationship
+participantEntity = entityName:entityIdentifier cardinalityInfo:declareCardinality?{
      {
          let cardinality = "N";
          let isTotal = false;
@@ -165,21 +192,16 @@ participantEntity = (entityName:entityIdentifier cardinalityInfo:declareCardinal
          }
          return {
                 entityName,
+                isMultivalued: false,
                 cardinality,
                 participation: isTotal? "total" : "partial"
          }
     }
-})
+}
 
 declareCardinality =
     [ \t]+ c:cardinality isTotal:'!'?{return { cardinality: c, isTotalParticipation: isTotal === '!' }}
 
-cardinality = cardinality:(nums:[0-9]+{return parseInt(nums.join(''))} / [A-Z])? { return cardinality === null? "N" : cardinality }
+cardinality = cardinality:(nums:[0-9]+{return nums.join('')} / [A-Z])? { return cardinality === null? "N" : cardinality }
+// end participant entity in relationship
 
- /*
-        attributes:(
-             head:(_0 e:entityAttribute {return e})
-		     tail:( '\n' _0 e:entityAttribute {return e})*
-             {return [head, ...tail]}
-       	)
-*/
