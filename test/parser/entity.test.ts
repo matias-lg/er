@@ -54,6 +54,18 @@ const badEntities = [
   `
         entity Food {
     `,
+
+    `
+    entity Food {
+        name key key
+        calories ies
+    }
+    `,
+    `
+    entity Meal extendds Food {
+        main_ingredient
+    }
+    `
 ];
 
 const emptyEntity = `
@@ -94,6 +106,7 @@ describe("Parses Entities", () => {
         },
       ],
       relationships: [],
+      aggregations: [],
     } as ER);
   });
 
@@ -137,6 +150,7 @@ describe("Parses Entities", () => {
         },
       ],
       relationships: [],
+      aggregations: [],
     } as ER);
   });
 
@@ -174,6 +188,7 @@ describe("Parses Entities", () => {
         },
       ],
       relationships: [],
+      aggregations: [],
     } as ER);
   });
 
@@ -220,6 +235,7 @@ describe("Parses Entities", () => {
         },
       ],
       relationships: [],
+      aggregations: [],
     } as ER);
   });
 
@@ -245,6 +261,7 @@ describe("Parses Entities", () => {
         },
       ],
       relationships: [],
+      aggregations: [],
     } as ER);
   });
 
@@ -282,6 +299,7 @@ describe("Parses Entities", () => {
         },
       ],
       relationships: [],
+      aggregations: [],
     } as ER);
   });
 

@@ -27,6 +27,17 @@ relation Buys(human: [seller 1!, buyer N], product M!, place: [store 1!, country
     date
 }`;
 
+const badRelationships = [
+    `relation Attends(person concert)`,
+    `relation Attends(person N!!, concert)`,
+    `relation Attends(person N!, concert M!){
+        seat_number key
+    }`,
+    `relation Attends(person N!, concert M!){`,
+    `relation Attends(person: concert){}`,
+    `relation Attends(person, concert){`,
+]
+
 describe("Parses Relationships", () => {
   it("parses a simple relationship", () => {
     const er: ER = parse(simpleRelationship);
@@ -59,6 +70,7 @@ describe("Parses Relationships", () => {
           ],
         },
       ],
+      aggregations: [],
     } as ER);
   });
 
@@ -93,6 +105,7 @@ describe("Parses Relationships", () => {
           ],
         },
       ],
+      aggregations: [],
     } as ER);
   });
 
@@ -127,6 +140,7 @@ describe("Parses Relationships", () => {
           ],
         },
       ],
+      aggregations: [],
     } as ER);
   });
 
@@ -155,6 +169,7 @@ describe("Parses Relationships", () => {
           attributes: [],
         },
       ],
+      aggregations: [],
     } as ER);
   });
 
@@ -183,6 +198,7 @@ describe("Parses Relationships", () => {
           attributes: [],
         },
       ],
+      aggregations: [],
     } as ER);
   });
 
@@ -217,6 +233,7 @@ describe("Parses Relationships", () => {
           attributes: [],
         },
       ],
+      aggregations: [],
     } as ER);
   });
 
@@ -281,6 +298,16 @@ describe("Parses Relationships", () => {
           ],
         },
       ],
-    });
+      aggregations: [],
+    } as ER);
   });
+
+  it("Throws an error when parsing bad constructed relationships", () => {
+      badRelationships.forEach((badRelationship) => {
+        expect(() => parse(badRelationship)).toThrowError();
+      });
+  });
+
+
+
 });

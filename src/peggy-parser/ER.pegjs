@@ -10,43 +10,26 @@ Entidades:
 Relaciones:
  [X] Relación Base
  [X] Relaciones N-arias
- [ ] Arcos etiquetados
+ [X] Arcos etiquetados
  [X] Restricciones cardinalidad de cada entidad
  [X] Restricciones de participación de cada entidad
 
 Agregación:
-[ ] Agregación Base
+[X] Agregación Base
 */
 
 start
-  = all:((entity/relationship)/_{return null})* {
+  = all:((entity/relationship/aggregation)/_{return null})* {
     const elements = all.filter(ele => ele != null)
-    const er = {entities: [], relationships: []};
+    const er = {entities: [], relationships: [], aggregations: []};
     for (const e of elements) {
-    	if (e.type == "entity") er.entities.push(e)
-        if (e.type == "relationship") er.relationships.push(e)
+    	if (e.type == "entity") er.entities.push(e);
+        if (e.type == "relationship") er.relationships.push(e);
+        if (e.type == "aggregation") er.aggregations.push(e);
     }
   	return er;
   }
 
-
-// BEGIN TOKENS
-validWord = characters:[a-zA-Z0-9_]+ {return characters.join('')}
-Lcurly = "{"
-Rcurly = "}"
-Lbracket = "["
-Rbracket = "]"
-Lparen = "("
-Rparen = ")"
-
-declareEntity = "entity"i
-declareExtends = "extends"i
-_ "1 or more whitespaces" = [ \t\n]+
-_0 "0 or more whitespaces" = [ \t\n]*
-declareIsKey "key" = "key"i
-
-declareRelationship = "relation"i
-// END TOKENS
 
 //BEGIN ENTITY
 entityIdentifier "entity identifier" = validWord
@@ -200,8 +183,38 @@ participantEntity = entityName:entityIdentifier cardinalityInfo:declareCardinali
 }
 
 declareCardinality =
-    [ \t]+ c:cardinality isTotal:'!'?{return { cardinality: c, isTotalParticipation: isTotal === '!' }}
+    [ \t]+ c:cardinality isTotal: declareTotalparticipation 
+    {return { cardinality: c, isTotalParticipation: isTotal }}
 
 cardinality = cardinality:(nums:[0-9]+{return nums.join('')} / [A-Z])? { return cardinality === null? "N" : cardinality }
 // end participant entity in relationship
+declareTotalparticipation = isTotal:"!"? { return isTotal !== null}
 
+// Aggregation
+aggregation = declareAggregation _ identifier:aggregationIdentifier _0 Lparen aggregatedRelationshipName:relationshipIdentifier Rparen (_0 Lcurly _0 Rcurly)?
+{ return {
+    type: "aggregation",
+    name: identifier,
+    aggregatedRelationshipName
+    }
+}
+
+
+aggregationIdentifier "aggregation identifier" = validWord
+// BEGIN TOKENS
+validWord = characters:[a-zA-Z0-9_]+ {return characters.join('')}
+Lcurly = "{"
+Rcurly = "}"
+Lbracket = "["
+Rbracket = "]"
+Lparen = "("
+Rparen = ")"
+
+declareEntity = "entity"i
+declareExtends = "extends"i
+_ "1 or more whitespaces" = [ \t\n]+
+_0 "0 or more whitespaces" = [ \t\n]*
+declareIsKey "key" = "key"i
+
+declareRelationship = "relation"i
+declareAggregation = "aggregation"i
