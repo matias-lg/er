@@ -191,7 +191,8 @@ cardinality = cardinality:(nums:[0-9]+{return nums.join('')} / [A-Z])? { return 
 declareTotalparticipation = isTotal:"!"? { return isTotal !== null}
 
 // Aggregation
-aggregation = declareAggregation _ identifier:aggregationIdentifier _0 Lparen aggregatedRelationshipName:relationshipIdentifier Rparen (_0 Lcurly _0 Rcurly)?
+aggregation = declareAggregation _ identifier:aggregationIdentifier _0 Lparen aggregatedRelationshipName:relationshipIdentifier Rparen
+ (_0 Lcurly _0 Rcurly)?
 { return {
     type: "aggregation",
     name: identifier,
@@ -202,7 +203,7 @@ aggregation = declareAggregation _ identifier:aggregationIdentifier _0 Lparen ag
 
 aggregationIdentifier "aggregation identifier" = validWord
 // BEGIN TOKENS
-validWord = characters:[a-zA-Z0-9_]+ {return characters.join('')}
+validWord = characters:[a-zA-Z0-9_áéíóúÁÉÍÓÚñÑ]+ {return characters.join('')}
 Lcurly = "{"
 Rcurly = "}"
 Lbracket = "["

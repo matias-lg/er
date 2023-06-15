@@ -197,7 +197,7 @@ function peg$parse(input, options) {
   var peg$r0 = /^[ \t]/;
   var peg$r1 = /^[0-9]/;
   var peg$r2 = /^[A-Z]/;
-  var peg$r3 = /^[a-zA-Z0-9_]/;
+  var peg$r3 = /^[a-zA-Z0-9_\xE1\xE9\xED\xF3\xFA\xC1\xC9\xCD\xD3\xDA\xF1\xD1]/;
   var peg$r4 = /^[ \t\n]/;
 
   var peg$e0 = peg$otherExpectation("entity identifier");
@@ -215,7 +215,7 @@ function peg$parse(input, options) {
   var peg$e12 = peg$classExpectation([["A", "Z"]], false, false);
   var peg$e13 = peg$literalExpectation("!", false);
   var peg$e14 = peg$otherExpectation("aggregation identifier");
-  var peg$e15 = peg$classExpectation([["a", "z"], ["A", "Z"], ["0", "9"], "_"], false, false);
+  var peg$e15 = peg$classExpectation([["a", "z"], ["A", "Z"], ["0", "9"], "_", "\xE1", "\xE9", "\xED", "\xF3", "\xFA", "\xC1", "\xC9", "\xCD", "\xD3", "\xDA", "\xF1", "\xD1"], false, false);
   var peg$e16 = peg$literalExpectation("{", false);
   var peg$e17 = peg$literalExpectation("}", false);
   var peg$e18 = peg$literalExpectation("[", false);

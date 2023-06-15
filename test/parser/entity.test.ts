@@ -46,6 +46,15 @@ const entityWithDependencies = `
    }
 `;
 
+const entityWithTildeAndÑ = `
+Entity Curso {
+  codigo key
+  sección key
+  semestre key
+  año key
+  nombre
+}`;
+
 const badEntities = [
   `
     entity {
@@ -55,17 +64,17 @@ const badEntities = [
         entity Food {
     `,
 
-    `
+  `
     entity Food {
         name key key
         calories ies
     }
     `,
-    `
+  `
     entity Meal extendds Food {
         main_ingredient
     }
-    `
+    `,
 ];
 
 const emptyEntity = `
@@ -291,6 +300,56 @@ describe("Parses Entities", () => {
             },
             {
               name: "member3",
+              isKey: false,
+              isMultivalued: false,
+              childAttributesNames: null,
+            },
+          ],
+        },
+      ],
+      relationships: [],
+      aggregations: [],
+    } as ER);
+  });
+
+  it("Parses an entity with tildes and ñ", () => {
+    const er: ER = parse(entityWithTildeAndÑ);
+    expect(er).toStrictEqual({
+      entities: [
+        {
+          type: "entity",
+          name: "Curso",
+          hasParent: false,
+          parentName: null,
+          hasDependencies: false,
+          dependsOn: null,
+          attributes: [
+            {
+              name: "codigo",
+              isKey: true,
+              isMultivalued: false,
+              childAttributesNames: null,
+            },
+            {
+              name: "sección",
+              isKey: true,
+              isMultivalued: false,
+              childAttributesNames: null,
+            },
+            {
+              name: "semestre",
+              isKey: true,
+              isMultivalued: false,
+              childAttributesNames: null,
+            },
+            {
+              name: "año",
+              isKey: true,
+              isMultivalued: false,
+              childAttributesNames: null,
+            },
+            {
+              name: "nombre",
               isKey: false,
               isMultivalued: false,
               childAttributesNames: null,
