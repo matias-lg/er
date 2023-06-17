@@ -24,7 +24,7 @@ describe("Parses ER Models with multiple elements", () => {
         Aggregation Student_attends_university(Attends)`;
 
     const er = parse(simpleERModel);
-    expect(er).toStrictEqual({
+    expect(er).toStrictEqual<ER>({
       entities: [
         {
           type: "entity",
@@ -123,6 +123,6 @@ describe("Parses ER Models with multiple elements", () => {
           aggregatedRelationshipName: "Attends",
         },
       ],
-    } as ER);
+    });
   });
 });
