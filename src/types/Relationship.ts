@@ -9,7 +9,7 @@ const RelationshipAttributeSchema = z.object({
 const simpleRelationParticipantSchema = z.object({
       entityName: z.string(),
       isMultivalued: z.literal(false),
-      cardinality: z.string().max(1), // Permitir solo numeros y caracteres como "N" o "M"? 
+      cardinality: z.string(), // Permitir solo numeros y caracteres como "N" o "M"? 
       participation: z.union([z.literal("total"), z.literal("partial")]),
     })
 
