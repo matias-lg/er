@@ -43,7 +43,7 @@ const entityWithDependencies = `
         language
         version
         file_extension
-        filename key
+        filename pkey
    }
 `;
 
@@ -76,6 +76,23 @@ const badEntities = [
         main_ingredient
     }
     `,
+
+    // regular entity using "pkey" instead of "key"
+    `
+    ENTITY Tea {
+        name pkey
+        origin
+    }
+    `,
+    // weak entity using "key" instead of "pkey"
+    `
+   entity Program depends on OS through Compiles {
+        language
+        version
+        file_extension
+        filename key
+   }
+    `
 ];
 
 const emptyEntity = `

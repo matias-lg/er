@@ -1,25 +1,5 @@
-/*
-# TODO:
-Entidades:
- [X] Entidad Base
- [X] Declarar llaves
- [X] Atributos multivaluados
- [X] Jerarquía de Clases
- [X] Entidades débiles
-
-Relaciones:
- [X] Relación Base
- [X] Relaciones N-arias
- [X] Arcos etiquetados
- [X] Restricciones cardinalidad de cada entidad
- [X] Restricciones de participación de cada entidad
-
-Agregación:
-[X] Agregación Base
-*/
-
 start
-  = all:((entity/relationship/aggregation)/_{return null})* {
+  = all:((entity/weakEntity/relationship/aggregation)/_{return null})* {
     const elements = all.filter(ele => ele != null)
     const er = {entities: [], relationships: [], aggregations: []};
     for (const e of elements) {
@@ -30,12 +10,48 @@ start
   	return er;
   }
 
+// BEGIN WEAK ENTITY
+weakEntity = 
+	declareEntity _ identifier:entityIdentifier dependsOn:(_ deps:declareWeak{return deps}) parentIdentifier:(_ parent:entityExtends{return parent})? _0
+    Lcurly _0
+        attributes:(
+             head:(_0 e:WeakEntityAttribute {return e})
+		     tail:( '\n' _0 e:WeakEntityAttribute  {return e})*
+             {return [head, ...tail]}
+       	)
+	    _0
+	Rcurly {
+        return {
+            type: "entity",
+            name: identifier,
+            attributes,
+            hasParent: parentIdentifier !== null,
+            parentName: parentIdentifier,
+            hasDependencies: true,
+            dependsOn,
+        }
+    } 
+    
+    
+// Weak entity attributes
+WeakEntityAttribute =
+	identifier:attributeIdentifier [ \t]* childAttributes:declareMultivalued? [ \t]* isKey:(declareIsPartialKey {return true})?
+    {
+    	const attribute = {name: identifier}
+        attribute.isKey = isKey === true
+        const isMultivalued = childAttributes !== null
+        attribute.isMultivalued = isMultivalued
+        attribute.childAttributesNames = isMultivalued? childAttributes : null
+        return attribute
+    }
+    
+declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+ relationshipName:relationshipDependencyIdentifier
+{ return {entityName, relationshipName}}
+// END WEAK ENTITY
 
 //BEGIN ENTITY
-entityIdentifier "entity identifier" = validWord
-
 entity = 
-	declareEntity _ identifier:entityIdentifier dependsOn:(_ deps:declareWeak{return deps})? parentIdentifier:(_ parent:entityExtends{return parent})? _0
+	declareEntity _ identifier:entityIdentifier parentIdentifier:(_ parent:entityExtends{return parent})? _0
     Lcurly _0
         attributes:(
              head:(_0 e:entityAttribute {return e})
@@ -44,18 +60,16 @@ entity =
        	)
 	    _0
 	Rcurly {
-        const hasDependencies = dependsOn !== null
         return {
             type: "entity",
             name: identifier,
             attributes,
             hasParent: parentIdentifier !== null,
             parentName: parentIdentifier,
-            hasDependencies,
-            dependsOn: hasDependencies? dependsOn : null 
+            hasDependencies: false,
+            dependsOn: null,
         }
     } 
-    
     
 // Atributos de la entidad
 entityAttribute =
@@ -84,18 +98,9 @@ listOfAttributes =
         ) Rbracket
     {return attributes}
 
-attributeIdentifier "attribute identifier" = validWord
 // Jerarquia de clase
 entityExtends
 	= (declareExtends _ parent:parentIdentifier {return parent})   
-parentIdentifier "parent identifier" = validWord
-
-// Entidad débil
-dependsOn = "depends on"i
-through = "through"i
-relationshipDependencyIdentifier "relationship identifier" = validWord
-declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+ relationshipName:relationshipDependencyIdentifier
-{ return {entityName, relationshipName}}
 
 // END ENTITY
 
@@ -120,7 +125,6 @@ relationship
              }
     }
 
-relationshipIdentifier "relationship identifier" = validWord
 relationShipAttribute "relationship attribute " = iden:validWord
  { return{
         name: iden,
@@ -200,9 +204,8 @@ aggregation = declareAggregation _ identifier:aggregationIdentifier _0 Lparen ag
     }
 }
 
-
 aggregationIdentifier "aggregation identifier" = validWord
-// BEGIN TOKENS
+// TOKENS
 validWord = characters:[a-zA-Z0-9_áéíóúÁÉÍÓÚñÑ]+ {return characters.join('')}
 Lcurly = "{"
 Rcurly = "}"
@@ -215,7 +218,16 @@ declareEntity = "entity"i
 declareExtends = "extends"i
 _ "1 or more whitespaces" = [ \t\n]+
 _0 "0 or more whitespaces" = [ \t\n]*
-declareIsKey "key" = "key"i
+declareIsKey "key" = "key"
+declareIsPartialKey "partial key" = "pkey"
+
+dependsOn = "depends on"i
+through = "through"i
+relationshipDependencyIdentifier "relationship identifier" = validWord
+entityIdentifier "entity identifier" = validWord
+attributeIdentifier "attribute identifier" = validWord
+parentIdentifier "parent identifier" = validWord
+relationshipIdentifier "relationship identifier" = validWord
 
 declareRelationship = "relation"i
 declareAggregation = "aggregation"i
