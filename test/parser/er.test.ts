@@ -37,19 +37,19 @@ describe("Parses ER Models with multiple elements", () => {
             {
               name: "RUT",
               isKey: true,
-              isMultivalued: false,
+              isComposite: false,
               childAttributesNames: null,
             },
             {
               name: "full_name",
               isKey: false,
-              isMultivalued: true,
+              isComposite: true,
               childAttributesNames: ["first_name", "last_name"],
             },
             {
               name: "age",
               isKey: false,
-              isMultivalued: false,
+              isComposite: false,
               childAttributesNames: null,
             },
           ],
@@ -65,25 +65,25 @@ describe("Parses ER Models with multiple elements", () => {
             {
               name: "name",
               isKey: false,
-              isMultivalued: false,
+              isComposite: false,
               childAttributesNames: null,
             },
             {
               name: "address",
               isKey: false,
-              isMultivalued: false,
+              isComposite: false,
               childAttributesNames: null,
             },
             {
               name: "foundation_date",
               isKey: false,
-              isMultivalued: false,
+              isComposite: false,
               childAttributesNames: null,
             },
             {
               name: "university_id",
               isKey: true,
-              isMultivalued: false,
+              isComposite: false,
               childAttributesNames: null,
             },
           ],
@@ -96,13 +96,13 @@ describe("Parses ER Models with multiple elements", () => {
           participantEntities: [
             {
               entityName: "student",
-              isMultivalued: false,
+              isComposite: false,
               cardinality: "1",
               participation: "partial",
             },
             {
               entityName: "university",
-              isMultivalued: false,
+              isComposite: false,
               cardinality: "N",
               participation: "total",
             },
@@ -110,7 +110,7 @@ describe("Parses ER Models with multiple elements", () => {
           attributes: [
             {
               name: "enrollment_date",
-              isMultivalued: false,
+              isComposite: false,
               childAttributesNames: null,
             },
           ],

@@ -49,13 +49,13 @@ describe("Parses Relationships", () => {
         participantEntities: [
           {
             entityName: "student",
-            isMultivalued: false,
+            isComposite: false,
             cardinality: "N",
             participation: "partial",
           },
           {
             entityName: "professor",
-            isMultivalued: false,
+            isComposite: false,
             cardinality: "N",
             participation: "partial",
           },
@@ -63,7 +63,7 @@ describe("Parses Relationships", () => {
         attributes: [
           {
             name: "subject",
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
         ],
@@ -80,13 +80,13 @@ describe("Parses Relationships", () => {
         participantEntities: [
           {
             entityName: "person",
-            isMultivalued: false,
+            isComposite: false,
             cardinality: "M",
             participation: "partial",
           },
           {
             entityName: "concert",
-            isMultivalued: false,
+            isComposite: false,
             cardinality: "1",
             participation: "partial",
           },
@@ -94,7 +94,7 @@ describe("Parses Relationships", () => {
         attributes: [
           {
             name: "seat_number",
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
         ],
@@ -111,13 +111,13 @@ describe("Parses Relationships", () => {
         participantEntities: [
           {
             entityName: "person",
-            isMultivalued: false,
+            isComposite: false,
             cardinality: "M",
             participation: "total",
           },
           {
             entityName: "concert",
-            isMultivalued: false,
+            isComposite: false,
             cardinality: "1",
             participation: "total",
           },
@@ -125,7 +125,7 @@ describe("Parses Relationships", () => {
         attributes: [
           {
             name: "seat_number",
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
         ],
@@ -143,12 +143,12 @@ describe("Parses Relationships", () => {
           {
             entityName: "person",
             cardinality: "M",
-            isMultivalued: false,
+            isComposite: false,
             participation: "total",
           },
           {
             entityName: "concert",
-            isMultivalued: false,
+            isComposite: false,
             cardinality: "1",
             participation: "total",
           },
@@ -167,13 +167,13 @@ describe("Parses Relationships", () => {
         participantEntities: [
           {
             entityName: "videogame",
-            isMultivalued: false,
+            isComposite: false,
             cardinality: "M",
             participation: "total",
           },
           {
             entityName: "player",
-            isMultivalued: false,
+            isComposite: false,
             cardinality: "1",
             participation: "total",
           },
@@ -192,17 +192,17 @@ describe("Parses Relationships", () => {
         participantEntities: [
           {
             entityName: "human",
-            isMultivalued: true,
+            isComposite: true,
             childParticipants: [
               {
                 entityName: "seller",
-                isMultivalued: false,
+                isComposite: false,
                 cardinality: "1",
                 participation: "total",
               },
               {
                 entityName: "buyer",
-                isMultivalued: false,
+                isComposite: false,
                 cardinality: "N",
                 participation: "partial",
               },
@@ -223,17 +223,17 @@ describe("Parses Relationships", () => {
         participantEntities: [
           {
             entityName: "human",
-            isMultivalued: true,
+            isComposite: true,
             childParticipants: [
               {
                 entityName: "seller",
-                isMultivalued: false,
+                isComposite: false,
                 cardinality: "1",
                 participation: "total",
               },
               {
                 entityName: "buyer",
-                isMultivalued: false,
+                isComposite: false,
                 cardinality: "N",
                 participation: "partial",
               },
@@ -241,23 +241,23 @@ describe("Parses Relationships", () => {
           },
           {
             entityName: "product",
-            isMultivalued: false,
+            isComposite: false,
             cardinality: "M",
             participation: "total",
           },
           {
             entityName: "place",
-            isMultivalued: true,
+            isComposite: true,
             childParticipants: [
               {
                 entityName: "store",
-                isMultivalued: false,
+                isComposite: false,
                 cardinality: "1",
                 participation: "total",
               },
               {
                 entityName: "country",
-                isMultivalued: false,
+                isComposite: false,
                 cardinality: "1",
                 participation: "total",
               },
@@ -267,7 +267,7 @@ describe("Parses Relationships", () => {
         attributes: [
           {
             name: "date",
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
         ],

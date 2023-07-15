@@ -3,7 +3,7 @@ import { z } from "zod";
 const EntityAttributeSchema = z.object({
     name: z.string(),
     isKey: z.boolean(),
-    isMultivalued: z.boolean(),
+    isComposite: z.boolean(),
     childAttributesNames: z.array(z.string()).nullable(),
 });
 
@@ -15,7 +15,6 @@ export const EntitySchema = z.object({
     parentName: z.string().nullable(),
     hasDependencies: z.boolean(),
     dependsOn: z.object({
-        entityName: z.string(),
         relationshipName: z.string(),
     }).nullable(),
 });

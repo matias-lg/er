@@ -35,18 +35,18 @@ weakEntity =
     
 // Weak entity attributes
 WeakEntityAttribute =
-	identifier:attributeIdentifier [ \t]* childAttributes:declareMultivalued? [ \t]* isKey:(declareIsPartialKey {return true})?
+	identifier:attributeIdentifier [ \t]* childAttributes:declareComposite? [ \t]* isKey:(declareIsPartialKey {return true})?
     {
     	const attribute = {name: identifier}
         attribute.isKey = isKey === true
-        const isMultivalued = childAttributes !== null
-        attribute.isMultivalued = isMultivalued
-        attribute.childAttributesNames = isMultivalued? childAttributes : null
+        const isComposite = childAttributes !== null
+        attribute.isComposite  = isComposite 
+        attribute.childAttributesNames = isComposite ? childAttributes : null
         return attribute
     }
     
-declareWeak = dependsOn [ \t]+ entityName:entityIdentifier [ \t]+ through [ \t]+ relationshipName:relationshipDependencyIdentifier
-{ return {entityName, relationshipName}}
+declareWeak = dependsOn [ \t]+ relationshipName:relationshipDependencyIdentifier
+{ return {relationshipName}}
 // END WEAK ENTITY
 
 //BEGIN ENTITY
@@ -73,22 +73,22 @@ entity =
     
 // Atributos de la entidad
 entityAttribute =
-	identifier:attributeIdentifier [ \t]* childAttributes:declareMultivalued? [ \t]* isKey:(declareIsKey {return true})?
+	identifier:attributeIdentifier [ \t]* childAttributes:declareComposite? [ \t]* isKey:(declareIsKey {return true})?
     {
     	const attribute = {name: identifier}
         attribute.isKey = isKey === true
-        const isMultivalued = childAttributes !== null
-        attribute.isMultivalued = isMultivalued
-        attribute.childAttributesNames = isMultivalued? childAttributes : null
+        const isComposite = childAttributes !== null
+        attribute.isComposite = isComposite
+        attribute.childAttributesNames = isComposite? childAttributes : null
         return attribute
     }
     
-declareMultivalued =
-    beginMultivalued
+declareComposite =
+    beginComposite
         childAttribs: listOfAttributes
     {return childAttribs}
 
-beginMultivalued = ':' [ \t]*
+beginComposite = ':' [ \t]*
 listOfAttributes =
     Lbracket
         attributes:(
@@ -128,7 +128,7 @@ relationship
 relationShipAttribute "relationship attribute " = iden:validWord
  { return{
         name: iden,
-        isMultivalued: false,
+        isComposite: false,
         childAttributesNames: null
     }
 }
@@ -136,25 +136,25 @@ relationShipAttribute "relationship attribute " = iden:validWord
 listOfParticipants =
     Lparen
     participants:(
-        pHead:([ \t]* p:(MultivaluedParticipantEntity/participantEntity)  {return p})
-        pTail:(','[ \t]* p:(MultivaluedParticipantEntity/participantEntity) {return p})*
+        pHead:([ \t]* p:(CompositeParticipantEntity/participantEntity)  {return p})
+        pTail:(','[ \t]* p:(CompositeParticipantEntity/participantEntity) {return p})*
     {return [pHead, ...pTail]}
     ) Rparen
     {return participants}
 
 
-// begin Multivalued participant in relationship
-MultivaluedParticipantEntity = entityName:entityIdentifier childParticipants:declareMultivaluedParticipantEntity
+// begin composite participant in relationship
+CompositeParticipantEntity = entityName:entityIdentifier childParticipants:declareCompositeParticipantEntity
 {
     return {
         entityName,
-        isMultivalued: true,
+        isComposite: true,
         childParticipants
     }
 }
 
-declareMultivaluedParticipantEntity =
-    beginMultivalued
+declareCompositeParticipantEntity =
+    beginComposite
     childParticipants: listOfChildParticipants
     {return childParticipants}
 
@@ -166,7 +166,7 @@ listOfChildParticipants =
     {return [pHead, ...pTail]}
     ) Rbracket
     {return participants}
-// end Multivalued participant in relationship
+// end composite participant in relationship
 
 // begin participant entity in relationship
 participantEntity = entityName:entityIdentifier cardinalityInfo:declareCardinality?{
@@ -179,7 +179,7 @@ participantEntity = entityName:entityIdentifier cardinalityInfo:declareCardinali
          }
          return {
                 entityName,
-                isMultivalued: false,
+                isComposite: false,
                 cardinality,
                 participation: isTotal? "total" : "partial"
          }

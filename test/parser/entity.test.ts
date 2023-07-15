@@ -30,7 +30,7 @@ const entityWithParent = `
   }
 `;
 
-const entityWithMultivaluedAttribute = `
+const entityWithCompositeAttribute = `
    entity Person {
         full_name: [name, last_name] key
         age
@@ -39,7 +39,7 @@ const entityWithMultivaluedAttribute = `
 `;
 
 const entityWithDependencies = `
-   entity Program depends on OS through Compiles {
+   entity Program depends on Compiles {
         language
         version
         file_extension
@@ -86,7 +86,7 @@ const badEntities = [
     `,
     // weak entity using "key" instead of "pkey"
     `
-   entity Program depends on OS through Compiles {
+   entity Program depends on Compiles {
         language
         version
         file_extension
@@ -113,19 +113,19 @@ describe("Parses Entities", () => {
           {
             name: "name",
             isKey: true,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "age",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "breed",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
         ],
@@ -147,25 +147,25 @@ describe("Parses Entities", () => {
           {
             name: "name",
             isKey: true,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "origin",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "intensity",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "roast_date",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
         ],
@@ -173,8 +173,8 @@ describe("Parses Entities", () => {
     ]);
   });
 
-  it("Parses an entity with multivalued attributes", () => {
-    const er: ER = parse(entityWithMultivaluedAttribute);
+  it("Parses an entity with composite attributes", () => {
+    const er: ER = parse(entityWithCompositeAttribute);
     expect(er.entities).toStrictEqual<Entity[]>([
       {
         type: "entity",
@@ -187,19 +187,19 @@ describe("Parses Entities", () => {
           {
             name: "full_name",
             isKey: true,
-            isMultivalued: true,
+            isComposite: true,
             childAttributesNames: ["name", "last_name"],
           },
           {
             name: "age",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "address",
             isKey: false,
-            isMultivalued: true,
+            isComposite: true,
             childAttributesNames: ["street", "city", "country"],
           },
         ],
@@ -217,32 +217,31 @@ describe("Parses Entities", () => {
         parentName: null,
         hasDependencies: true,
         dependsOn: {
-          entityName: "OS",
           relationshipName: "Compiles",
         },
         attributes: [
           {
             name: "language",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "version",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "file_extension",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "filename",
             isKey: true,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
         ],
@@ -264,7 +263,7 @@ describe("Parses Entities", () => {
           {
             name: "brand",
             isKey: true,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
         ],
@@ -286,19 +285,19 @@ describe("Parses Entities", () => {
           {
             name: "member",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "member2",
             isKey: true,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "member3",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
         ],
@@ -320,31 +319,31 @@ describe("Parses Entities", () => {
           {
             name: "codigo",
             isKey: true,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "sección",
             isKey: true,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "semestre",
             isKey: true,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "año",
             isKey: true,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
           {
             name: "nombre",
             isKey: false,
-            isMultivalued: false,
+            isComposite: false,
             childAttributesNames: null,
           },
         ],

@@ -2,20 +2,20 @@ import { z } from "zod";
 
 const RelationshipAttributeSchema = z.object({
   name: z.string(),
-  isMultivalued: z.boolean(),
+  isComposite: z.boolean(),
   childAttributesNames: z.array(z.string()).nullable(),
 });
 
 const simpleRelationParticipantSchema = z.object({
       entityName: z.string(),
-      isMultivalued: z.literal(false),
+      isComposite: z.literal(false),
       cardinality: z.string(), // Permitir solo numeros y caracteres como "N" o "M"? 
       participation: z.union([z.literal("total"), z.literal("partial")]),
     })
 
-const MultivaluedRelationParticipantSchema = z.object({
+const CompositeRelationParticipantSchema = z.object({
   entityName: z.string(),
-  isMultivalued: z.literal(true),
+  isComposite: z.literal(true),
   childParticipants: z.array(simpleRelationParticipantSchema)
 })
 
@@ -25,7 +25,7 @@ export const RelationshipSchema = z.object({
   name: z.string(),
   attributes: z.array(RelationshipAttributeSchema),
   participantEntities: z.array(
-    z.union([simpleRelationParticipantSchema, MultivaluedRelationParticipantSchema])
+    z.union([simpleRelationParticipantSchema, CompositeRelationParticipantSchema])
   ),
 });
 

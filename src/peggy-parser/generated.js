@@ -266,12 +266,12 @@ function peg$parse(input, options) {
   var peg$f9 = function(identifier, childAttributes, isKey) {
     	const attribute = {name: identifier}
         attribute.isKey = isKey === true
-        const isMultivalued = childAttributes !== null
-        attribute.isMultivalued = isMultivalued
-        attribute.childAttributesNames = isMultivalued? childAttributes : null
+        const isComposite = childAttributes !== null
+        attribute.isComposite  = isComposite 
+        attribute.childAttributesNames = isComposite ? childAttributes : null
         return attribute
     };
-  var peg$f10 = function(entityName, relationshipName) { return {entityName, relationshipName}};
+  var peg$f10 = function(relationshipName) { return {relationshipName}};
   var peg$f11 = function(identifier, parent) {return parent};
   var peg$f12 = function(identifier, parentIdentifier, e) {return e};
   var peg$f13 = function(identifier, parentIdentifier, head, e) {return e};
@@ -291,9 +291,9 @@ function peg$parse(input, options) {
   var peg$f17 = function(identifier, childAttributes, isKey) {
     	const attribute = {name: identifier}
         attribute.isKey = isKey === true
-        const isMultivalued = childAttributes !== null
-        attribute.isMultivalued = isMultivalued
-        attribute.childAttributesNames = isMultivalued? childAttributes : null
+        const isComposite = childAttributes !== null
+        attribute.isComposite = isComposite
+        attribute.childAttributesNames = isComposite? childAttributes : null
         return attribute
     };
   var peg$f18 = function(childAttribs) {return childAttribs};
@@ -316,7 +316,7 @@ function peg$parse(input, options) {
     };
   var peg$f29 = function(iden) { return{
         name: iden,
-        isMultivalued: false,
+        isComposite: false,
         childAttributesNames: null
     }
 };
@@ -327,7 +327,7 @@ function peg$parse(input, options) {
   var peg$f34 = function(entityName, childParticipants) {
     return {
         entityName,
-        isMultivalued: true,
+        isComposite: true,
         childParticipants
     }
 };
@@ -346,7 +346,7 @@ function peg$parse(input, options) {
          }
          return {
                 entityName,
-                isMultivalued: false,
+                isComposite: false,
                 cardinality,
                 participation: isTotal? "total" : "partial"
          }
@@ -752,7 +752,7 @@ function peg$parse(input, options) {
           if (peg$silentFails === 0) { peg$fail(peg$e1); }
         }
       }
-      s3 = peg$parsedeclareMultivalued();
+      s3 = peg$parsedeclareComposite();
       if (s3 === peg$FAILED) {
         s3 = null;
       }
@@ -795,7 +795,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parsedeclareWeak() {
-    var s0, s1, s2, s3, s4, s5, s6, s7;
+    var s0, s1, s2, s3;
 
     s0 = peg$currPos;
     s1 = peg$parsedependsOn();
@@ -823,76 +823,10 @@ function peg$parse(input, options) {
         s2 = peg$FAILED;
       }
       if (s2 !== peg$FAILED) {
-        s3 = peg$parseentityIdentifier();
+        s3 = peg$parserelationshipDependencyIdentifier();
         if (s3 !== peg$FAILED) {
-          s4 = [];
-          if (peg$r0.test(input.charAt(peg$currPos))) {
-            s5 = input.charAt(peg$currPos);
-            peg$currPos++;
-          } else {
-            s5 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$e1); }
-          }
-          if (s5 !== peg$FAILED) {
-            while (s5 !== peg$FAILED) {
-              s4.push(s5);
-              if (peg$r0.test(input.charAt(peg$currPos))) {
-                s5 = input.charAt(peg$currPos);
-                peg$currPos++;
-              } else {
-                s5 = peg$FAILED;
-                if (peg$silentFails === 0) { peg$fail(peg$e1); }
-              }
-            }
-          } else {
-            s4 = peg$FAILED;
-          }
-          if (s4 !== peg$FAILED) {
-            s5 = peg$parsethrough();
-            if (s5 !== peg$FAILED) {
-              s6 = [];
-              if (peg$r0.test(input.charAt(peg$currPos))) {
-                s7 = input.charAt(peg$currPos);
-                peg$currPos++;
-              } else {
-                s7 = peg$FAILED;
-                if (peg$silentFails === 0) { peg$fail(peg$e1); }
-              }
-              if (s7 !== peg$FAILED) {
-                while (s7 !== peg$FAILED) {
-                  s6.push(s7);
-                  if (peg$r0.test(input.charAt(peg$currPos))) {
-                    s7 = input.charAt(peg$currPos);
-                    peg$currPos++;
-                  } else {
-                    s7 = peg$FAILED;
-                    if (peg$silentFails === 0) { peg$fail(peg$e1); }
-                  }
-                }
-              } else {
-                s6 = peg$FAILED;
-              }
-              if (s6 !== peg$FAILED) {
-                s7 = peg$parserelationshipDependencyIdentifier();
-                if (s7 !== peg$FAILED) {
-                  peg$savedPos = s0;
-                  s0 = peg$f10(s3, s7);
-                } else {
-                  peg$currPos = s0;
-                  s0 = peg$FAILED;
-                }
-              } else {
-                peg$currPos = s0;
-                s0 = peg$FAILED;
-              }
-            } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
-            }
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
+          peg$savedPos = s0;
+          s0 = peg$f10(s3);
         } else {
           peg$currPos = s0;
           s0 = peg$FAILED;
@@ -1065,7 +999,7 @@ function peg$parse(input, options) {
           if (peg$silentFails === 0) { peg$fail(peg$e1); }
         }
       }
-      s3 = peg$parsedeclareMultivalued();
+      s3 = peg$parsedeclareComposite();
       if (s3 === peg$FAILED) {
         s3 = null;
       }
@@ -1107,11 +1041,11 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parsedeclareMultivalued() {
+  function peg$parsedeclareComposite() {
     var s0, s1, s2;
 
     s0 = peg$currPos;
-    s1 = peg$parsebeginMultivalued();
+    s1 = peg$parsebeginComposite();
     if (s1 !== peg$FAILED) {
       s2 = peg$parselistOfAttributes();
       if (s2 !== peg$FAILED) {
@@ -1129,7 +1063,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parsebeginMultivalued() {
+  function peg$parsebeginComposite() {
     var s0, s1, s2, s3;
 
     s0 = peg$currPos;
@@ -1512,7 +1446,7 @@ function peg$parse(input, options) {
           if (peg$silentFails === 0) { peg$fail(peg$e1); }
         }
       }
-      s5 = peg$parseMultivaluedParticipantEntity();
+      s5 = peg$parseCompositeParticipantEntity();
       if (s5 === peg$FAILED) {
         s5 = peg$parseparticipantEntity();
       }
@@ -1552,7 +1486,7 @@ function peg$parse(input, options) {
               if (peg$silentFails === 0) { peg$fail(peg$e1); }
             }
           }
-          s8 = peg$parseMultivaluedParticipantEntity();
+          s8 = peg$parseCompositeParticipantEntity();
           if (s8 === peg$FAILED) {
             s8 = peg$parseparticipantEntity();
           }
@@ -1596,7 +1530,7 @@ function peg$parse(input, options) {
                 if (peg$silentFails === 0) { peg$fail(peg$e1); }
               }
             }
-            s8 = peg$parseMultivaluedParticipantEntity();
+            s8 = peg$parseCompositeParticipantEntity();
             if (s8 === peg$FAILED) {
               s8 = peg$parseparticipantEntity();
             }
@@ -1639,13 +1573,13 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseMultivaluedParticipantEntity() {
+  function peg$parseCompositeParticipantEntity() {
     var s0, s1, s2;
 
     s0 = peg$currPos;
     s1 = peg$parseentityIdentifier();
     if (s1 !== peg$FAILED) {
-      s2 = peg$parsedeclareMultivaluedParticipantEntity();
+      s2 = peg$parsedeclareCompositeParticipantEntity();
       if (s2 !== peg$FAILED) {
         peg$savedPos = s0;
         s0 = peg$f34(s1, s2);
@@ -1661,11 +1595,11 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parsedeclareMultivaluedParticipantEntity() {
+  function peg$parsedeclareCompositeParticipantEntity() {
     var s0, s1, s2;
 
     s0 = peg$currPos;
-    s1 = peg$parsebeginMultivalued();
+    s1 = peg$parsebeginComposite();
     if (s1 !== peg$FAILED) {
       s2 = peg$parselistOfChildParticipants();
       if (s2 !== peg$FAILED) {
