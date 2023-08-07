@@ -77,22 +77,22 @@ const badEntities = [
     }
     `,
 
-    // regular entity using "pkey" instead of "key"
-    `
+  // regular entity using "pkey" instead of "key"
+  `
     ENTITY Tea {
         name pkey
         origin
     }
     `,
-    // weak entity using "key" instead of "pkey"
-    `
+  // weak entity using "key" instead of "pkey"
+  `
    entity Program depends on Compiles {
         language
         version
         file_extension
         filename key
    }
-    `
+    `,
 ];
 
 const emptyEntity = `
@@ -129,6 +129,21 @@ describe("Parses Entities", () => {
             childAttributesNames: null,
           },
         ],
+      },
+    ]);
+  });
+
+  it("Parses an entity with no attributes", () => {
+    const er: ER = parse(emptyEntity);
+    expect(er.entities).toStrictEqual<Entity[]>([
+      {
+        type: "entity",
+        name: "Void",
+        hasParent: false,
+        parentName: null,
+        hasDependencies: false,
+        dependsOn: null,
+        attributes: [],
       },
     ]);
   });
@@ -355,9 +370,5 @@ describe("Parses Entities", () => {
     badEntities.forEach((entity) => {
       expect(() => parse(entity)).toThrowError();
     });
-  });
-
-  it("Throws an error when parsing an entity without attributes", () => {
-    expect(() => parse(emptyEntity)).toThrowError();
   });
 });

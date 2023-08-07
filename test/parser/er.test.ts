@@ -125,4 +125,98 @@ describe("Parses ER Models with multiple elements", () => {
       ],
     });
   });
+
+  it("Parses an ER Model with only entities", () => {
+    const ER = `
+        entity keyboard extends peripheral {
+            switch_type key
+            size
+        }
+
+        ENTITY deskmat DEPENDS ON Uses {
+            model_name pkey
+            dimensions 
+        }
+
+        ENTITY mouse extends peripheral {
+            sensor key
+            isWireless key
+        }
+     `;
+
+    expect(parse(ER)).toStrictEqual<ER>({
+      entities: [
+        {
+          type: "entity",
+          name: "keyboard",
+          hasParent: true,
+          parentName: "peripheral",
+          hasDependencies: false,
+          dependsOn: null,
+          attributes: [
+            {
+              name: "switch_type",
+              isKey: true,
+              isComposite: false,
+              childAttributesNames: null,
+            },
+            {
+              name: "size",
+              isKey: false,
+              isComposite: false,
+              childAttributesNames: null,
+            },
+          ],
+        },
+        {
+          type: "entity",
+          name: "deskmat",
+          hasParent: false,
+          parentName: null,
+          hasDependencies: true,
+          dependsOn: {
+            relationshipName: "Uses",
+          },
+          attributes: [
+            {
+              name: "model_name",
+              isKey: true,
+              isComposite: false,
+              childAttributesNames: null,
+            },
+            {
+              name: "dimensions",
+              isKey: false,
+              isComposite: false,
+              childAttributesNames: null,
+            },
+          ],
+        },
+        {
+          type: "entity",
+          name: "mouse",
+          hasParent: true,
+          parentName: "peripheral",
+          hasDependencies: false,
+          dependsOn: null,
+          attributes: [
+            {
+              name: "sensor",
+              isKey: true,
+              isComposite: false,
+              childAttributesNames: null,
+            },
+            {
+              name: "isWireless",
+              isKey: true,
+              isComposite: false,
+              childAttributesNames: null,
+            },
+          ],
+        },
+      ],
+      relationships: [],
+      aggregations: [],
+    });
+  });
 });

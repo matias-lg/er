@@ -18,13 +18,13 @@ weakEntity =
              head:(_0 e:WeakEntityAttribute {return e})
 		     tail:( '\n' _0 e:WeakEntityAttribute  {return e})*
              {return [head, ...tail]}
-       	)
+       	)|0..1|
 	    _0
 	Rcurly {
         return {
             type: "entity",
             name: identifier,
-            attributes,
+            attributes: attributes.length == 0? [] : attributes[0],
             hasParent: parentIdentifier !== null,
             parentName: parentIdentifier,
             hasDependencies: true,
@@ -57,13 +57,13 @@ entity =
              head:(_0 e:entityAttribute {return e})
 		     tail:( '\n' _0 e:entityAttribute {return e})*
              {return [head, ...tail]}
-       	)
+       	)|0..1|
 	    _0
 	Rcurly {
         return {
             type: "entity",
             name: identifier,
-            attributes,
+            attributes: attributes.length == 0? [] : attributes[0],
             hasParent: parentIdentifier !== null,
             parentName: parentIdentifier,
             hasDependencies: false,
