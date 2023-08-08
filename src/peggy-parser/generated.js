@@ -4,6 +4,13 @@
 
 "use strict";
 
+
+  function getLocation(location_fun) {
+    const location = location_fun();
+    const { source, ...rest } = location;
+    return rest;
+  }
+
 function peg$subclass(child, parent) {
   function C() { this.constructor = child; }
   C.prototype = parent.prototype;
@@ -260,11 +267,12 @@ function peg$parse(input, options) {
             parentName: parentIdentifier,
             hasDependencies: true,
             dependsOn,
+            location: getLocation(location)
         }
     };
   var peg$f8 = function(identifier, childAttributes) {return true};
   var peg$f9 = function(identifier, childAttributes, isKey) {
-    	const attribute = {name: identifier}
+    	const attribute = {name: identifier, location: getLocation(location)}
         attribute.isKey = isKey === true
         const isComposite = childAttributes !== null
         attribute.isComposite  = isComposite 
@@ -285,11 +293,12 @@ function peg$parse(input, options) {
             parentName: parentIdentifier,
             hasDependencies: false,
             dependsOn: null,
+            location: getLocation(location)
         }
     };
   var peg$f16 = function(identifier, childAttributes) {return true};
   var peg$f17 = function(identifier, childAttributes, isKey) {
-    	const attribute = {name: identifier}
+    	const attribute = {name: identifier, location: getLocation(location)}
         attribute.isKey = isKey === true
         const isComposite = childAttributes !== null
         attribute.isComposite = isComposite
@@ -311,13 +320,15 @@ function peg$parse(input, options) {
     		 type: "relationship",
     		 name: identifier,
              participantEntities: participants,
-    		 attributes: attributes === null? [] : attributes
+    		 attributes: attributes === null? [] : attributes,
+             location: getLocation(location)
              }
     };
   var peg$f29 = function(iden) { return{
         name: iden,
         isComposite: false,
-        childAttributesNames: null
+        childAttributesNames: null,
+        location: getLocation(location)
     }
 };
   var peg$f30 = function(p) {return p};
@@ -328,7 +339,8 @@ function peg$parse(input, options) {
     return {
         entityName,
         isComposite: true,
-        childParticipants
+        childParticipants,
+        location: getLocation(location)
     }
 };
   var peg$f35 = function(childParticipants) {return childParticipants};
@@ -348,7 +360,8 @@ function peg$parse(input, options) {
                 entityName,
                 isComposite: false,
                 cardinality,
-                participation: isTotal? "total" : "partial"
+                participation: isTotal? "total" : "partial",
+                location: getLocation(location)
          }
     }
 };
@@ -359,7 +372,8 @@ function peg$parse(input, options) {
   var peg$f45 = function(identifier, aggregatedRelationshipName) { return {
     type: "aggregation",
     name: identifier,
-    aggregatedRelationshipName
+    aggregatedRelationshipName,
+    location: getLocation(location)
     }
 };
   var peg$f46 = function(characters) {return characters.join('')};

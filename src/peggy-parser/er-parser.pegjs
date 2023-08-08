@@ -1,3 +1,12 @@
+{{
+  function getLocation(location_fun) {
+    const location = location_fun();
+    const { source, ...rest } = location;
+    return rest;
+  }
+}}
+
+
 start
   = all:((entity/weakEntity/relationship/aggregation)/_{return null})* {
     const elements = all.filter(ele => ele != null)
@@ -29,6 +38,7 @@ weakEntity =
             parentName: parentIdentifier,
             hasDependencies: true,
             dependsOn,
+            location: getLocation(location)
         }
     } 
     
@@ -37,7 +47,7 @@ weakEntity =
 WeakEntityAttribute =
 	identifier:attributeIdentifier [ \t]* childAttributes:declareComposite? [ \t]* isKey:(declareIsPartialKey {return true})?
     {
-    	const attribute = {name: identifier}
+    	const attribute = {name: identifier, location: getLocation(location)}
         attribute.isKey = isKey === true
         const isComposite = childAttributes !== null
         attribute.isComposite  = isComposite 
@@ -68,6 +78,7 @@ entity =
             parentName: parentIdentifier,
             hasDependencies: false,
             dependsOn: null,
+            location: getLocation(location)
         }
     } 
     
@@ -75,7 +86,7 @@ entity =
 entityAttribute =
 	identifier:attributeIdentifier [ \t]* childAttributes:declareComposite? [ \t]* isKey:(declareIsKey {return true})?
     {
-    	const attribute = {name: identifier}
+    	const attribute = {name: identifier, location: getLocation(location)}
         attribute.isKey = isKey === true
         const isComposite = childAttributes !== null
         attribute.isComposite = isComposite
@@ -121,7 +132,8 @@ relationship
     		 type: "relationship",
     		 name: identifier,
              participantEntities: participants,
-    		 attributes: attributes === null? [] : attributes
+    		 attributes: attributes === null? [] : attributes,
+             location: getLocation(location)
              }
     }
 
@@ -129,7 +141,8 @@ relationShipAttribute "relationship attribute " = iden:validWord
  { return{
         name: iden,
         isComposite: false,
-        childAttributesNames: null
+        childAttributesNames: null,
+        location: getLocation(location)
     }
 }
 
@@ -149,7 +162,8 @@ CompositeParticipantEntity = entityName:entityIdentifier childParticipants:decla
     return {
         entityName,
         isComposite: true,
-        childParticipants
+        childParticipants,
+        location: getLocation(location)
     }
 }
 
@@ -181,7 +195,8 @@ participantEntity = entityName:entityIdentifier cardinalityInfo:declareCardinali
                 entityName,
                 isComposite: false,
                 cardinality,
-                participation: isTotal? "total" : "partial"
+                participation: isTotal? "total" : "partial",
+                location: getLocation(location)
          }
     }
 }
@@ -200,7 +215,8 @@ aggregation = declareAggregation _ identifier:aggregationIdentifier _0 Lparen ag
 { return {
     type: "aggregation",
     name: identifier,
-    aggregatedRelationshipName
+    aggregatedRelationshipName,
+    location: getLocation(location)
     }
 }
 

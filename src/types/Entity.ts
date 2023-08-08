@@ -1,10 +1,12 @@
 import { z } from "zod";
+import { TokenLocationSchema } from "./TokenLocation";
 
 const EntityAttributeSchema = z.object({
     name: z.string(),
     isKey: z.boolean(),
     isComposite: z.boolean(),
     childAttributesNames: z.array(z.string()).nullable(),
+    location: TokenLocationSchema
 });
 
 export const EntitySchema = z.object({
@@ -17,6 +19,7 @@ export const EntitySchema = z.object({
     dependsOn: z.object({
         relationshipName: z.string(),
     }).nullable(),
+    location: TokenLocationSchema
 });
 
 export type Entity = z.infer<typeof EntitySchema>;
