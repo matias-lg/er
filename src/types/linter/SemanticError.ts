@@ -32,6 +32,14 @@ export type EntityDuplicateError = {
     location: TokenLocation;
 }
 
+export type EntityDuplicateAttributeError = {
+    type: SemanticErrorType.ENTITY_DUPLICATE_ATTRIBUTE;
+    entityName: string;
+    attributeName: string;
+    location: TokenLocation;
+}
+
 export type SemanticError =
     EntityDuplicateError
+    | EntityDuplicateAttributeError
 
