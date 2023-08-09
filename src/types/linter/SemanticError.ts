@@ -21,25 +21,31 @@ export enum SemanticErrorType {
   RELATIONSHIP_PARTICIPANT_NON_EXISTENT_ENTITY,
   RELATIONSHIP_DUPLICATE_PARTICIPANT,
 
-    /* Aggregation */
-    AGGREGATION_DUPLICATE,
-    AGGREGATION_NON_EXISTENT_RELATIONSHIP,
+  /* Aggregation */
+  AGGREGATION_DUPLICATE,
+  AGGREGATION_NON_EXISTENT_RELATIONSHIP,
 }
 
 export type EntityDuplicateError = {
-    type: SemanticErrorType.ENTITY_DUPLICATE;
-    entityName: string;
-    location: TokenLocation;
-}
+  type: SemanticErrorType.ENTITY_DUPLICATE;
+  entityName: string;
+  location: TokenLocation;
+};
 
 export type EntityDuplicateAttributeError = {
-    type: SemanticErrorType.ENTITY_DUPLICATE_ATTRIBUTE;
-    entityName: string;
-    attributeName: string;
-    location: TokenLocation;
-}
+  type: SemanticErrorType.ENTITY_DUPLICATE_ATTRIBUTE;
+  entityName: string;
+  attributeName: string;
+  location: TokenLocation;
+};
+
+export type EntityNoPrimaryKeyError = {
+  type: SemanticErrorType.ENTITY_NO_PRIMARY_KEY;
+  entityName: string;
+  location: TokenLocation;
+};
 
 export type SemanticError =
-    EntityDuplicateError
-    | EntityDuplicateAttributeError
-
+  | EntityDuplicateError
+  | EntityDuplicateAttributeError
+  | EntityNoPrimaryKeyError;
