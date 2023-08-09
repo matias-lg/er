@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "build-parser": "peggy -o ./src/peggy-parser/generated.js ./src/peggy-parser/er-parser.pegjs",
     "test": "npm run build-parser && jest"
   },
