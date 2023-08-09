@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "build": "tsc -p tsconfig.build.json",
-    "build-parser": "peggy -o ./src/peggy-parser/generated.js ./src/peggy-parser/er-parser.pegjs",
+    "build-parser": "peggy -o ./src/parser/peggy/generated.js ./src/parser/peggy/er-parser.pegjs",
     "test": "npm run build-parser && jest"
   },
   "keywords": [],
