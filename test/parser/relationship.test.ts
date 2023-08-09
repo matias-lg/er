@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/ER";
-import { Relationship } from "../../src/types/Relationship";
+import { ER } from "../../src/types/parser/ER";
+import { Relationship } from "../../src/types/parser/Relationship";
 import { parse } from "../../src/parser";
 
 const simpleRelationship = `

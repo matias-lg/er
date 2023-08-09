@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/ER";
-import { Aggregation } from "../../src/types/Aggregation";
+import { ER } from "../../src/types/parser/ER";
+import { Aggregation } from "../../src/types/parser/Aggregation";
 import { parse } from "../../src/parser";
 
 const regularAggregation = `aggregation Cliente_compra_producto(Compra)`;

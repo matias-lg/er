@@ -1,4 +1,4 @@
-import { ER } from "../../src/types/ER";
+import { ER } from "../../src/types/parser/ER";
 import { parse } from "../../src/parser";
 
 describe("Parses ER Models with multiple elements", () => {
