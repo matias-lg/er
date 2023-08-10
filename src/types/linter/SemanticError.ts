@@ -59,9 +59,17 @@ export type WeakEntityDependsOnNonExistentRelationshipError = {
   location: TokenLocation;
 };
 
+export type WeakEntityNotInRelationshipError = {
+  type: SemanticErrorType.WEAK_ENTITY_NOT_IN_RELATIONSHIP;
+  entityName: string;
+  relationshipName: string;
+  location: TokenLocation;
+};
+
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
   | EntityNoPrimaryKeyError
   | EntityExtendsNonExistentEntityError
-  | WeakEntityDependsOnNonExistentRelationshipError;
+  | WeakEntityDependsOnNonExistentRelationshipError
+  | WeakEntityNotInRelationshipError;
