@@ -45,7 +45,15 @@ export type EntityNoPrimaryKeyError = {
   location: TokenLocation;
 };
 
+export type EntityExtendsNonExistentEntityError = {
+  type: SemanticErrorType.ENTITY_EXTENDS_NON_EXISTENT_ENTITY;
+  entityName: string;
+  extendsEntityName: string;
+  location: TokenLocation;
+};
+
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
-  | EntityNoPrimaryKeyError;
+  | EntityNoPrimaryKeyError
+  | EntityExtendsNonExistentEntityError;
