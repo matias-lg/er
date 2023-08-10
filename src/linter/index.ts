@@ -1,9 +1,10 @@
-import { ER } from "../types/parser/ER";
 import { SemanticError } from "../types/linter/SemanticError";
+import { ER } from "../types/parser/ER";
 import { checkEntityDuplicate } from "./checkEntityDuplicate";
 import { checkEntityDuplicateAttribute } from "./checkEntityDuplicateAttribute";
 import { checkEntityNoPrimaryKey } from "./checkEntityNoPrimaryKey";
 import { checkEntityExtendsNonExistentEntity } from "./checkExtendsExistingEntity";
+import { checkWeakEntityRelationshipExists } from "./checkWeakEntityRelationshipExists";
 
 type checkErrorFunction = (er: ER) => SemanticError[];
 
@@ -13,6 +14,7 @@ export const getSemanticErrors = (er: ER): SemanticError[] => {
     checkEntityDuplicateAttribute,
     checkEntityNoPrimaryKey,
     checkEntityExtendsNonExistentEntity,
+    checkWeakEntityRelationshipExists,
   ];
 
   let errors: SemanticError[] = [];
