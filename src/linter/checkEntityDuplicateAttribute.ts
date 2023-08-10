@@ -48,13 +48,15 @@ const getAllAttributes = (entityName: string, er: ER) => {
   while (hasParent) {
     // assume only one parent, more than 1 would be an error caught by another validator
     const parent = er.entities.filter((e) => e.name === entity.parentName);
-    if (parent.length === 0) hasParent = false;
+    if (parent.length === 0) break;
+
     parent[0].attributes.forEach((attr) => {
       entityAttributes.push({
         isFromParent: true,
         ...attr,
       });
     });
+
     entity = parent[0];
     hasParent = entity.hasParent;
   }
