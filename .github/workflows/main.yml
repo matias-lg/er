@@ -19,6 +19,9 @@ jobs:
       - name: Install project
         run: npm install
 
+      - name: Run eslint & prettier
+        run: npm run lint
+
       - name: Build with tsc
         run: npm run build
 
