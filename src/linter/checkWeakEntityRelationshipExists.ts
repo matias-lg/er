@@ -3,14 +3,14 @@ import { WeakEntityDependsOnNonExistentRelationshipError } from "../types/linter
 import { SemanticErrorType } from "../types/linter/SemanticError";
 
 export const checkWeakEntityRelationshipExists = (
-  er: ER
+  er: ER,
 ): WeakEntityDependsOnNonExistentRelationshipError[] => {
   const errors: WeakEntityDependsOnNonExistentRelationshipError[] = [];
   for (const entity of er.entities) {
     if (!entity.hasDependencies) continue;
     if (
       er.relationships.filter(
-        (rel) => rel.name === entity.dependsOn?.relationshipName
+        (rel) => rel.name === entity.dependsOn?.relationshipName,
       ).length === 0
     )
       errors.push({

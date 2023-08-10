@@ -30,7 +30,7 @@ describe("Linter detects duplicate attributes in entities", () => {
 
   it("detects multiple errors in an entity", () => {
     const errors = checkEntityDuplicateAttribute(
-      ERWithMultipleDuplicateAttributes
+      ERWithMultipleDuplicateAttributes,
     );
     expect(errors).toHaveLength(2);
   });
@@ -48,14 +48,14 @@ describe("Linter detects duplicate attributes in entities", () => {
     expect(errors[0].type).toBe(SemanticErrorType.ENTITY_DUPLICATE_ATTRIBUTE);
     expect(errors[0].entityName).toBe("Car");
     expect(errors[0].attributeName).toBe("Brand");
-  })
+  });
 
   it("detects error when duplicate is in subsubclass", () => {
     const errors = checkEntityDuplicateAttribute(ERWithWrongSubclass2);
-    expect (errors).toHaveLength(1);
+    expect(errors).toHaveLength(1);
     expect(errors[0].entityName).toBe("Ferrari");
     expect(errors[0].attributeName).toBe("Brand");
-  })
+  });
 });
 
 /*
@@ -480,7 +480,6 @@ const ERWith2WrongEntities: ER = {
   aggregations: [],
 };
 
-
 /*
 entity Vehicle {
   id key
@@ -498,67 +497,66 @@ entity Truck extends Vehicle {
   N_of_axles
 }
 */
-const ERWithWrongSubclass: ER = 
-{
+const ERWithWrongSubclass: ER = {
   entities: [
     {
-      type: 'entity',
-      name: 'Vehicle',
+      type: "entity",
+      name: "Vehicle",
       attributes: [
         {
-          name: 'id',
+          name: "id",
           location: {
             start: {
               offset: 19,
               line: 2,
-              column: 3
+              column: 3,
             },
             end: {
               offset: 25,
               line: 2,
-              column: 9
-            }
+              column: 9,
+            },
           },
           isKey: true,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'Brand',
+          name: "Brand",
           location: {
             start: {
               offset: 28,
               line: 3,
-              column: 3
+              column: 3,
             },
             end: {
               offset: 33,
               line: 3,
-              column: 8
-            }
+              column: 8,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'License_plate_number',
+          name: "License_plate_number",
           location: {
             start: {
               offset: 36,
               line: 4,
-              column: 3
+              column: 3,
             },
             end: {
               offset: 56,
               line: 4,
-              column: 23
-            }
+              column: 23,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: false,
       parentName: null,
@@ -568,153 +566,153 @@ const ERWithWrongSubclass: ER =
         start: {
           offset: 0,
           line: 1,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 57,
           line: 4,
-          column: 24
-        }
-      }
+          column: 24,
+        },
+      },
     },
     {
-      type: 'entity',
-      name: 'Car',
+      type: "entity",
+      name: "Car",
       attributes: [
         {
-          name: 'Max_speed',
+          name: "Max_speed",
           location: {
             start: {
               offset: 92,
               line: 7,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 101,
               line: 7,
-              column: 14
-            }
+              column: 14,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'Brand',
+          name: "Brand",
           location: {
             start: {
               offset: 106,
               line: 8,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 111,
               line: 8,
-              column: 10
-            }
+              column: 10,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'N_passengers',
+          name: "N_passengers",
           location: {
             start: {
               offset: 116,
               line: 9,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 128,
               line: 9,
-              column: 17
-            }
+              column: 17,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: true,
-      parentName: 'Vehicle',
+      parentName: "Vehicle",
       hasDependencies: false,
       dependsOn: null,
       location: {
         start: {
           offset: 59,
           line: 6,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 130,
           line: 10,
-          column: 2
-        }
-      }
+          column: 2,
+        },
+      },
     },
     {
-      type: 'entity',
-      name: 'Truck',
+      type: "entity",
+      name: "Truck",
       attributes: [
         {
-          name: 'Tonnage',
+          name: "Tonnage",
           location: {
             start: {
               offset: 165,
               line: 13,
-              column: 3
+              column: 3,
             },
             end: {
               offset: 172,
               line: 13,
-              column: 10
-            }
+              column: 10,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'N_of_axles',
+          name: "N_of_axles",
           location: {
             start: {
               offset: 175,
               line: 14,
-              column: 3
+              column: 3,
             },
             end: {
               offset: 185,
               line: 14,
-              column: 13
-            }
+              column: 13,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: true,
-      parentName: 'Vehicle',
+      parentName: "Vehicle",
       hasDependencies: false,
       dependsOn: null,
       location: {
         start: {
           offset: 132,
           line: 12,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 187,
           line: 15,
-          column: 2
-        }
-      }
-    }
+          column: 2,
+        },
+      },
+    },
   ],
   relationships: [],
-  aggregations: []
-}
+  aggregations: [],
+};
 
 /*
 entity Vehicle {
@@ -732,67 +730,66 @@ entity Ferrari extends Car {
   Color
 }
 */
-const ERWithWrongSubclass2: ER =
-{
+const ERWithWrongSubclass2: ER = {
   entities: [
     {
-      type: 'entity',
-      name: 'Vehicle',
+      type: "entity",
+      name: "Vehicle",
       attributes: [
         {
-          name: 'id',
+          name: "id",
           location: {
             start: {
               offset: 19,
               line: 2,
-              column: 3
+              column: 3,
             },
             end: {
               offset: 25,
               line: 2,
-              column: 9
-            }
+              column: 9,
+            },
           },
           isKey: true,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'Brand',
+          name: "Brand",
           location: {
             start: {
               offset: 28,
               line: 3,
-              column: 3
+              column: 3,
             },
             end: {
               offset: 33,
               line: 3,
-              column: 8
-            }
+              column: 8,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'License_plate_number',
+          name: "License_plate_number",
           location: {
             start: {
               offset: 36,
               line: 4,
-              column: 3
+              column: 3,
             },
             end: {
               offset: 56,
               line: 4,
-              column: 23
-            }
+              column: 23,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: false,
       parentName: null,
@@ -802,132 +799,132 @@ const ERWithWrongSubclass2: ER =
         start: {
           offset: 0,
           line: 1,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 57,
           line: 4,
-          column: 24
-        }
-      }
+          column: 24,
+        },
+      },
     },
     {
-      type: 'entity',
-      name: 'Car',
+      type: "entity",
+      name: "Car",
       attributes: [
         {
-          name: 'Max_speed',
+          name: "Max_speed",
           location: {
             start: {
               offset: 92,
               line: 7,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 101,
               line: 7,
-              column: 14
-            }
+              column: 14,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'N_passengers',
+          name: "N_passengers",
           location: {
             start: {
               offset: 106,
               line: 8,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 118,
               line: 8,
-              column: 17
-            }
+              column: 17,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: true,
-      parentName: 'Vehicle',
+      parentName: "Vehicle",
       hasDependencies: false,
       dependsOn: null,
       location: {
         start: {
           offset: 59,
           line: 6,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 120,
           line: 9,
-          column: 2
-        }
-      }
+          column: 2,
+        },
+      },
     },
     {
-      type: 'entity',
-      name: 'Ferrari',
+      type: "entity",
+      name: "Ferrari",
       attributes: [
         {
-          name: 'Brand',
+          name: "Brand",
           location: {
             start: {
               offset: 153,
               line: 12,
-              column: 3
+              column: 3,
             },
             end: {
               offset: 158,
               line: 12,
-              column: 8
-            }
+              column: 8,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'Color',
+          name: "Color",
           location: {
             start: {
               offset: 161,
               line: 13,
-              column: 3
+              column: 3,
             },
             end: {
               offset: 166,
               line: 13,
-              column: 8
-            }
+              column: 8,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: true,
-      parentName: 'Car',
+      parentName: "Car",
       hasDependencies: false,
       dependsOn: null,
       location: {
         start: {
           offset: 122,
           line: 11,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 168,
           line: 14,
-          column: 2
-        }
-      }
-    }
+          column: 2,
+        },
+      },
+    },
   ],
   relationships: [],
-  aggregations: []
-}
+  aggregations: [],
+};

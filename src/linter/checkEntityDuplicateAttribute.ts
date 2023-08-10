@@ -3,7 +3,7 @@ import { SemanticErrorType } from "../types/linter/SemanticError";
 import { EntityDuplicateAttributeError } from "../types/linter/SemanticError";
 
 export const checkEntityDuplicateAttribute = (
-  er: ER
+  er: ER,
 ): EntityDuplicateAttributeError[] => {
   const errors: EntityDuplicateAttributeError[] = [];
 

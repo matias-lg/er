@@ -507,49 +507,48 @@ entity cat {
     isHungry
 }
 */
-const ERWith3DuplicateEntities: ER = 
-{
+const ERWith3DuplicateEntities: ER = {
   entities: [
     {
-      type: 'entity',
-      name: 'food',
+      type: "entity",
+      name: "food",
       attributes: [
         {
-          name: 'name',
+          name: "name",
           location: {
             start: {
               offset: 15,
               line: 2,
-              column: 2
+              column: 2,
             },
             end: {
               offset: 23,
               line: 2,
-              column: 10
-            }
+              column: 10,
+            },
           },
           isKey: true,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'calories',
+          name: "calories",
           location: {
             start: {
               offset: 28,
               line: 3,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 36,
               line: 3,
-              column: 13
-            }
+              column: 13,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: false,
       parentName: null,
@@ -559,55 +558,55 @@ const ERWith3DuplicateEntities: ER =
         start: {
           offset: 0,
           line: 1,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 38,
           line: 4,
-          column: 2
-        }
-      }
+          column: 2,
+        },
+      },
     },
     {
-      type: 'entity',
-      name: 'cat',
+      type: "entity",
+      name: "cat",
       attributes: [
         {
-          name: 'name',
+          name: "name",
           location: {
             start: {
               offset: 54,
               line: 7,
-              column: 2
+              column: 2,
             },
             end: {
               offset: 62,
               line: 7,
-              column: 10
-            }
+              column: 10,
+            },
           },
           isKey: true,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'hasChip',
+          name: "hasChip",
           location: {
             start: {
               offset: 67,
               line: 8,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 74,
               line: 8,
-              column: 12
-            }
+              column: 12,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: false,
       parentName: null,
@@ -617,55 +616,55 @@ const ERWith3DuplicateEntities: ER =
         start: {
           offset: 40,
           line: 6,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 76,
           line: 9,
-          column: 2
-        }
-      }
+          column: 2,
+        },
+      },
     },
     {
-      type: 'entity',
-      name: 'food',
+      type: "entity",
+      name: "food",
       attributes: [
         {
-          name: 'name',
+          name: "name",
           location: {
             start: {
               offset: 93,
               line: 12,
-              column: 2
+              column: 2,
             },
             end: {
               offset: 101,
               line: 12,
-              column: 10
-            }
+              column: 10,
+            },
           },
           isKey: true,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'category',
+          name: "category",
           location: {
             start: {
               offset: 106,
               line: 13,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 114,
               line: 13,
-              column: 13
-            }
+              column: 13,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: false,
       parentName: null,
@@ -675,55 +674,55 @@ const ERWith3DuplicateEntities: ER =
         start: {
           offset: 78,
           line: 11,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 116,
           line: 14,
-          column: 2
-        }
-      }
+          column: 2,
+        },
+      },
     },
     {
-      type: 'entity',
-      name: 'dog',
+      type: "entity",
+      name: "dog",
       attributes: [
         {
-          name: 'name',
+          name: "name",
           location: {
             start: {
               offset: 132,
               line: 17,
-              column: 2
+              column: 2,
             },
             end: {
               offset: 140,
               line: 17,
-              column: 10
-            }
+              column: 10,
+            },
           },
           isKey: true,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'breed',
+          name: "breed",
           location: {
             start: {
               offset: 145,
               line: 18,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 150,
               line: 18,
-              column: 10
-            }
+              column: 10,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: false,
       parentName: null,
@@ -733,55 +732,55 @@ const ERWith3DuplicateEntities: ER =
         start: {
           offset: 118,
           line: 16,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 152,
           line: 19,
-          column: 2
-        }
-      }
+          column: 2,
+        },
+      },
     },
     {
-      type: 'entity',
-      name: 'dog',
+      type: "entity",
+      name: "dog",
       attributes: [
         {
-          name: 'name',
+          name: "name",
           location: {
             start: {
               offset: 168,
               line: 22,
-              column: 2
+              column: 2,
             },
             end: {
               offset: 176,
               line: 22,
-              column: 10
-            }
+              column: 10,
+            },
           },
           isKey: true,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'breed',
+          name: "breed",
           location: {
             start: {
               offset: 181,
               line: 23,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 186,
               line: 23,
-              column: 10
-            }
+              column: 10,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: false,
       parentName: null,
@@ -791,55 +790,55 @@ const ERWith3DuplicateEntities: ER =
         start: {
           offset: 154,
           line: 21,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 188,
           line: 24,
-          column: 2
-        }
-      }
+          column: 2,
+        },
+      },
     },
     {
-      type: 'entity',
-      name: 'cat',
+      type: "entity",
+      name: "cat",
       attributes: [
         {
-          name: 'name',
+          name: "name",
           location: {
             start: {
               offset: 204,
               line: 27,
-              column: 2
+              column: 2,
             },
             end: {
               offset: 212,
               line: 27,
-              column: 10
-            }
+              column: 10,
+            },
           },
           isKey: true,
           isComposite: false,
-          childAttributesNames: null
+          childAttributesNames: null,
         },
         {
-          name: 'isHungry',
+          name: "isHungry",
           location: {
             start: {
               offset: 217,
               line: 28,
-              column: 5
+              column: 5,
             },
             end: {
               offset: 225,
               line: 28,
-              column: 13
-            }
+              column: 13,
+            },
           },
           isKey: false,
           isComposite: false,
-          childAttributesNames: null
-        }
+          childAttributesNames: null,
+        },
       ],
       hasParent: false,
       parentName: null,
@@ -849,16 +848,16 @@ const ERWith3DuplicateEntities: ER =
         start: {
           offset: 190,
           line: 26,
-          column: 1
+          column: 1,
         },
         end: {
           offset: 227,
           line: 29,
-          column: 2
-        }
-      }
-    }
+          column: 2,
+        },
+      },
+    },
   ],
   relationships: [],
-  aggregations: []
-}
+  aggregations: [],
+};

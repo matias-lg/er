@@ -15,7 +15,8 @@ export const checkEntityNoPrimaryKey = (er: ER): EntityNoPrimaryKeyError[] => {
       parent != null &&
       hasParent &&
       !hasKey &&
-      /* protect against a *wrong* circular inheritance*/ parentName != entity.name
+      /* protect against a *wrong* circular inheritance*/ parentName !=
+        entity.name
     ) {
       parent = er.entities.filter((e) => e.name === parentName!)[0];
       hasParent = parent.hasParent;

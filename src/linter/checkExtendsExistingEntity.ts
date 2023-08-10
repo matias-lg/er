@@ -3,7 +3,7 @@ import { SemanticErrorType } from "../types/linter/SemanticError";
 import { EntityExtendsNonExistentEntityError } from "../types/linter/SemanticError";
 
 export const checkEntityExtendsNonExistentEntity = (
-  er: ER
+  er: ER,
 ): EntityExtendsNonExistentEntityError[] => {
   const errors: EntityExtendsNonExistentEntityError[] = [];
   for (const entity of er.entities) {

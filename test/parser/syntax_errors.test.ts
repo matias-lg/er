@@ -10,14 +10,16 @@ import { parse } from "../../src/parser";
 const checkErrorLocation = (
   invalidERString: string,
   expectedLine: number,
-  expectedColumn: number
+  expectedColumn: number,
 ): boolean => {
   try {
     parse(invalidERString);
     return false;
   } catch (error) {
     return (
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       error.location.start.line === expectedLine &&
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       error.location.start.column === expectedColumn
     );
   }
