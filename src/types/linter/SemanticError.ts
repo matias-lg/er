@@ -73,6 +73,12 @@ export type WeakEntityNotTotalParticipationError = {
   location: TokenLocation;
 };
 
+export type RelationshipDuplicateError = {
+  type: SemanticErrorType.RELATIONSHIP_DUPLICATE;
+  relationshipName: string;
+  location: TokenLocation;
+};
+
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
@@ -80,4 +86,5 @@ export type SemanticError =
   | EntityExtendsNonExistentEntityError
   | WeakEntityDependsOnNonExistentRelationshipError
   | WeakEntityNotInRelationshipError
-  | WeakEntityNotTotalParticipationError;
+  | WeakEntityNotTotalParticipationError
+  | RelationshipDuplicateError;
