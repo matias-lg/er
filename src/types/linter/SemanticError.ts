@@ -66,10 +66,18 @@ export type WeakEntityNotInRelationshipError = {
   location: TokenLocation;
 };
 
+export type WeakEntityNotTotalParticipationError = {
+  type: SemanticErrorType.WEAK_ENTITY_NOT_TOTAL_PARTICIPATION;
+  entityName: string;
+  relationshipName: string;
+  location: TokenLocation;
+};
+
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
   | EntityNoPrimaryKeyError
   | EntityExtendsNonExistentEntityError
   | WeakEntityDependsOnNonExistentRelationshipError
-  | WeakEntityNotInRelationshipError;
+  | WeakEntityNotInRelationshipError
+  | WeakEntityNotTotalParticipationError;
