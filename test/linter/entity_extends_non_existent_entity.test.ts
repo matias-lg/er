@@ -1,14 +1,11 @@
 import { checkEntityExtendsNonExistentEntity } from "../../src/linter/checkExtendsExistingEntity";
-import { SemanticErrorType } from "../../src/types/linter/SemanticError";
 import { ER } from "../../src/types/parser/ER";
 
 describe("Linter detects entity extending non-existent entity", () => {
   it("detects entity extending non-existent entity", () => {
     const errors = checkEntityExtendsNonExistentEntity(missingParentER);
     expect(errors).toHaveLength(1);
-    expect(errors[0].type).toBe(
-      SemanticErrorType.ENTITY_EXTENDS_NON_EXISTENT_ENTITY,
-    );
+    expect(errors[0].type).toBe("ENTITY_EXTENDS_NON_EXISTENT_ENTITY");
     expect(errors[0].entityName).toBe("Dog");
     expect(errors[0].extendsEntityName).toBe("Animal");
     expect(errors[0].location).toStrictEqual({

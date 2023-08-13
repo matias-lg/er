@@ -1,8 +1,5 @@
 import { ER } from "../types/parser/ER";
-import {
-  WeakEntityNotInRelationshipError,
-  SemanticErrorType,
-} from "../types/linter/SemanticError";
+import { WeakEntityNotInRelationshipError } from "../types/linter/SemanticError";
 
 export const checkWeakEntityInRelationship = (
   er: ER,
@@ -19,7 +16,7 @@ export const checkWeakEntityInRelationship = (
     );
     if (relationshipParticipants.find((p) => p === entity.name) === undefined)
       errors.push({
-        type: SemanticErrorType.WEAK_ENTITY_NOT_IN_RELATIONSHIP,
+        type: "WEAK_ENTITY_NOT_IN_RELATIONSHIP",
         entityName: entity.name,
         relationshipName: entity.dependsOn!.relationshipName,
         location: entity.location,

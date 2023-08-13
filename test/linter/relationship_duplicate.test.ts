@@ -1,5 +1,4 @@
 import { ER } from "../../src/types/parser/ER";
-import { SemanticErrorType } from "../../src/types/linter/SemanticError";
 import { checkRelationshipDuplicate } from "../../src/linter/checkRelationshipDuplicate";
 
 describe("Linter checks for duplicate relationships", () => {
@@ -7,7 +6,7 @@ describe("Linter checks for duplicate relationships", () => {
     const er: ER = duplicateRelationshipER;
     const errors = checkRelationshipDuplicate(er);
     expect(errors.length).toBe(1);
-    expect(errors[0].type).toBe(SemanticErrorType.RELATIONSHIP_DUPLICATE);
+    expect(errors[0].type).toBe("RELATIONSHIP_DUPLICATE");
     expect(errors[0].relationshipName).toBe("Owns");
     expect(errors[0].location).toEqual({
       start: {
@@ -27,7 +26,7 @@ describe("Linter checks for duplicate relationships", () => {
     const er: ER = duplicateRelationshipMultivalER;
     const errors = checkRelationshipDuplicate(er);
     expect(errors.length).toBe(1);
-    expect(errors[0].type).toBe(SemanticErrorType.RELATIONSHIP_DUPLICATE);
+    expect(errors[0].type).toBe("RELATIONSHIP_DUPLICATE");
     expect(errors[0].relationshipName).toBe("Owns");
   });
 

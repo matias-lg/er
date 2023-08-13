@@ -1,5 +1,4 @@
 import { ER } from "../types/parser/ER";
-import { SemanticErrorType } from "../types/linter/SemanticError";
 import { EntityDuplicateError } from "../types/linter/SemanticError";
 
 export const checkEntityDuplicate = (er: ER): EntityDuplicateError[] => {
@@ -20,7 +19,7 @@ export const checkEntityDuplicate = (er: ER): EntityDuplicateError[] => {
       // find the last entity with this name
       const lastEntity = er.entities.filter((e) => e.name === name).pop()!;
       errors.push({
-        type: SemanticErrorType.ENTITY_DUPLICATE,
+        type: "ENTITY_DUPLICATE",
         entityName: name,
         location: lastEntity.location,
       });

@@ -1,5 +1,4 @@
 import { ER } from "../types/parser/ER";
-import { SemanticErrorType } from "../types/linter/SemanticError";
 import { RelationshipDuplicateError } from "../types/linter/SemanticError";
 import { TokenLocation } from "../types/parser/TokenLocation";
 
@@ -31,7 +30,7 @@ export const checkRelationshipDuplicate = (
   for (const [rel, freqAndLocation] of relationshipNameFrequency) {
     if (freqAndLocation.cnt > 1) {
       errors.push({
-        type: SemanticErrorType.RELATIONSHIP_DUPLICATE,
+        type: "RELATIONSHIP_DUPLICATE",
         relationshipName: rel.split(",")[0],
         location: freqAndLocation.lastLocation,
       });

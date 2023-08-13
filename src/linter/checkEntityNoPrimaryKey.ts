@@ -1,5 +1,4 @@
 import { ER } from "../types/parser/ER";
-import { SemanticErrorType } from "../types/linter/SemanticError";
 import { EntityNoPrimaryKeyError } from "../types/linter/SemanticError";
 
 export const checkEntityNoPrimaryKey = (er: ER): EntityNoPrimaryKeyError[] => {
@@ -26,7 +25,7 @@ export const checkEntityNoPrimaryKey = (er: ER): EntityNoPrimaryKeyError[] => {
 
     if (!hasKey)
       errors.push({
-        type: SemanticErrorType.ENTITY_NO_PRIMARY_KEY,
+        type: "ENTITY_NO_PRIMARY_KEY",
         entityName: entity.name,
         location: entity.location,
       });

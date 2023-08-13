@@ -1,15 +1,12 @@
 import { ER } from "../../src/types/parser/ER";
 import { checkWeakEntityHasTotalParticipation } from "../../src/linter/checkWeakEntityHasTotalParticipation";
-import { SemanticErrorType } from "../../src/types/linter/SemanticError";
 import { parse } from "../../src/parser";
 
 describe("Linter detects that a weak entity must have total participation in its identifying relationship", () => {
   it("Returns an error when a weak entity doesn't have total participation (implicit cardinality)", () => {
     const errors = checkWeakEntityHasTotalParticipation(implicitWrongER);
     expect(errors.length).toBe(1);
-    expect(errors[0].type).toBe(
-      SemanticErrorType.WEAK_ENTITY_NOT_TOTAL_PARTICIPATION,
-    );
+    expect(errors[0].type).toBe("WEAK_ENTITY_NOT_TOTAL_PARTICIPATION");
     expect(errors[0].entityName).toBe("Sun");
     expect(errors[0].relationshipName).toBe("BelongsTo");
     expect(errors[0].location).toEqual({
@@ -29,9 +26,7 @@ describe("Linter detects that a weak entity must have total participation in its
   it("Returns an error when a weak entity doesn't have total participation (explicit cardinality)", () => {
     const errors = checkWeakEntityHasTotalParticipation(explicitWrongER);
     expect(errors.length).toBe(1);
-    expect(errors[0].type).toBe(
-      SemanticErrorType.WEAK_ENTITY_NOT_TOTAL_PARTICIPATION,
-    );
+    expect(errors[0].type).toBe("WEAK_ENTITY_NOT_TOTAL_PARTICIPATION");
     expect(errors[0].entityName).toBe("Sun");
     expect(errors[0].relationshipName).toBe("BelongsTo");
   });
@@ -48,9 +43,7 @@ describe("Linter detects that a weak entity must have total participation in its
   it("Returns an error when a weak entity is composite and doesn't have total participation", () => {
     const errors = checkWeakEntityHasTotalParticipation(compositeWrongER);
     expect(errors.length).toBe(1);
-    expect(errors[0].type).toBe(
-      SemanticErrorType.WEAK_ENTITY_NOT_TOTAL_PARTICIPATION,
-    );
+    expect(errors[0].type).toBe("WEAK_ENTITY_NOT_TOTAL_PARTICIPATION");
     expect(errors[0].entityName).toBe("Sun");
   });
 

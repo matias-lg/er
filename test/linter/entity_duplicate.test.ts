@@ -1,12 +1,11 @@
 import { checkEntityDuplicate } from "../../src/linter/checkEntityDuplicate";
-import { SemanticErrorType } from "../../src/types/linter/SemanticError";
 import { ER } from "../../src/types/parser/ER";
 
 describe("Linter detects duplicate entities", () => {
   it("Detects duplicate entities", () => {
     const errors = checkEntityDuplicate(ERWithDuplicateEntities);
     expect(errors).toHaveLength(1);
-    expect(errors[0].type).toBe(SemanticErrorType.ENTITY_DUPLICATE);
+    expect(errors[0].type).toBe("ENTITY_DUPLICATE");
     expect(errors[0].entityName).toBe("food");
     expect(errors[0].location).toStrictEqual({
       start: {

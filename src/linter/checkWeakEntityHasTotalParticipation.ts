@@ -1,8 +1,5 @@
 import { ER } from "../types/parser/ER";
-import {
-  WeakEntityNotTotalParticipationError,
-  SemanticErrorType,
-} from "../types/linter/SemanticError";
+import { WeakEntityNotTotalParticipationError } from "../types/linter/SemanticError";
 
 export const checkWeakEntityHasTotalParticipation = (
   er: ER,
@@ -37,7 +34,7 @@ export const checkWeakEntityHasTotalParticipation = (
       continue;
 
     errors.push({
-      type: SemanticErrorType.WEAK_ENTITY_NOT_TOTAL_PARTICIPATION,
+      type: "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION",
       entityName: entity.name,
       relationshipName: identifyingRelationship.name,
       location: entityInRelationship.location,

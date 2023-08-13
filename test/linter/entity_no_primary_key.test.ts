@@ -1,5 +1,4 @@
 import { checkEntityNoPrimaryKey } from "../../src/linter/checkEntityNoPrimaryKey";
-import { SemanticErrorType } from "../../src/types/linter/SemanticError";
 import { ER } from "../../src/types/parser/ER";
 
 describe("Linter detects entities without a primary key", () => {
@@ -7,7 +6,7 @@ describe("Linter detects entities without a primary key", () => {
     const er: ER = EREntityNoPrimaryKey;
     const errors = checkEntityNoPrimaryKey(er);
     expect(errors.length).toBe(1);
-    expect(errors[0].type).toBe(SemanticErrorType.ENTITY_NO_PRIMARY_KEY);
+    expect(errors[0].type).toBe("ENTITY_NO_PRIMARY_KEY");
     expect(errors[0].entityName).toBe("keyboard");
     expect(errors[0].location).toEqual({
       start: {

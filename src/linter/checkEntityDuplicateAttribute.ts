@@ -1,5 +1,4 @@
 import { ER } from "../types/parser/ER";
-import { SemanticErrorType } from "../types/linter/SemanticError";
 import { EntityDuplicateAttributeError } from "../types/linter/SemanticError";
 
 export const checkEntityDuplicateAttribute = (
@@ -24,7 +23,7 @@ export const checkEntityDuplicateAttribute = (
           .filter((e) => e.name === attrName && !e.isFromParent)
           .pop()!;
         errors.push({
-          type: SemanticErrorType.ENTITY_DUPLICATE_ATTRIBUTE,
+          type: "ENTITY_DUPLICATE_ATTRIBUTE",
           entityName: entity.name,
           attributeName: attrName,
           location: lastAttribute.location,

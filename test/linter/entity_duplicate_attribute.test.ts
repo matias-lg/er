@@ -1,12 +1,11 @@
 import { checkEntityDuplicateAttribute } from "../../src/linter/checkEntityDuplicateAttribute";
-import { SemanticErrorType } from "../../src/types/linter/SemanticError";
 import { ER } from "../../src/types/parser/ER";
 
 describe("Linter detects duplicate attributes in entities", () => {
   it("detects a duplicate attribute in an entity", () => {
     const errors = checkEntityDuplicateAttribute(ERwithDuplicateAttribute);
     expect(errors).toHaveLength(1);
-    expect(errors[0].type).toBe(SemanticErrorType.ENTITY_DUPLICATE_ATTRIBUTE);
+    expect(errors[0].type).toBe("ENTITY_DUPLICATE_ATTRIBUTE");
     expect(errors[0].entityName).toBe("Song");
     expect(errors[0].attributeName).toBe("author");
     expect(errors[0].location).toEqual({
@@ -45,7 +44,7 @@ describe("Linter detects duplicate attributes in entities", () => {
   it("detects error when duplicate is in subclass", () => {
     const errors = checkEntityDuplicateAttribute(ERWithWrongSubclass);
     expect(errors).toHaveLength(1);
-    expect(errors[0].type).toBe(SemanticErrorType.ENTITY_DUPLICATE_ATTRIBUTE);
+    expect(errors[0].type).toBe("ENTITY_DUPLICATE_ATTRIBUTE");
     expect(errors[0].entityName).toBe("Car");
     expect(errors[0].attributeName).toBe("Brand");
   });
