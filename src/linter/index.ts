@@ -8,6 +8,7 @@ import { checkWeakEntityRelationshipExists } from "./checkWeakEntityRelationship
 import { checkWeakEntityInRelationship } from "./checkWeakEntityInRelationship";
 import { checkWeakEntityHasTotalParticipation } from "./checkWeakEntityHasTotalParticipation";
 import { checkRelationshipDuplicate } from "./checkRelationshipDuplicate";
+import { checkChildEntityHasKey } from "./checkChildEntityHasKey";
 
 type checkErrorFunction = (er: ER) => SemanticError[];
 
@@ -17,6 +18,8 @@ export const getSemanticErrors = (er: ER): SemanticError[] => {
     checkEntityDuplicateAttribute,
     checkEntityNoPrimaryKey,
     checkEntityExtendsNonExistentEntity,
+
+    checkChildEntityHasKey,
 
     checkWeakEntityRelationshipExists,
     checkWeakEntityInRelationship,

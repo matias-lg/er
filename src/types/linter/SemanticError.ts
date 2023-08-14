@@ -26,6 +26,12 @@ export type EntityExtendsNonExistentEntityError = {
   location: TokenLocation;
 };
 
+export type ChildEntityHasKeyError = {
+  type: "CHILD_ENTITY_HAS_KEY";
+  entityName: string;
+  location: TokenLocation;
+};
+
 export type WeakEntityDependsOnNonExistentRelationshipError = {
   type: "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP";
   entityName: string;
@@ -58,6 +64,7 @@ export type SemanticError =
   | EntityDuplicateAttributeError
   | EntityNoPrimaryKeyError
   | EntityExtendsNonExistentEntityError
+  | ChildEntityHasKeyError
   | WeakEntityDependsOnNonExistentRelationshipError
   | WeakEntityNotInRelationshipError
   | WeakEntityNotTotalParticipationError
