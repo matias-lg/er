@@ -99,6 +99,13 @@ export type AggregationRelationshipNotExistsError = {
   location: TokenLocation;
 };
 
+export type AggregationUsesSameRelationshipError = {
+  type: "AGGREGATION_RELATIONSHIP_ALREADY_USED";
+  aggregationName: string;
+  relationshipName: string;
+  location: TokenLocation;
+};
+
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
@@ -114,4 +121,5 @@ export type SemanticError =
   | RelationshipParticipatingEntityNotExists
   | RelationshipDuplicateParticipantError
   | AggregationDuplicateError
-  | AggregationRelationshipNotExistsError;
+  | AggregationRelationshipNotExistsError
+  | AggregationUsesSameRelationshipError;

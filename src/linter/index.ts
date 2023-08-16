@@ -14,6 +14,7 @@ import { checkRelationshipLessThanTwoParticipatingEntities } from "./relationshi
 import { checkRelationshipDuplicateParticipant } from "./relationship/checkRelationshipDuplicateParticipant";
 import { checkAggregationDuplicate } from "./aggregation/checkAggregationDuplicate";
 import { checkAggregationRelationshipNotExists } from "./aggregation/checkAggregationRelationshipNotExists";
+import { checkAggregationUsesSameRelationship } from "./aggregation/checkAggregationUsesSameRelationship";
 
 type checkErrorFunction = (er: ER) => SemanticError[];
 
@@ -37,6 +38,7 @@ export const getSemanticErrors = (er: ER): SemanticError[] => {
 
     checkAggregationDuplicate,
     checkAggregationRelationshipNotExists,
+    checkAggregationUsesSameRelationship,
   ];
 
   let errors: SemanticError[] = [];
