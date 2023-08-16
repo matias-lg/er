@@ -66,6 +66,12 @@ export type RelationshipDuplicateAttributeError = {
   location: TokenLocation;
 };
 
+export type RelationshipLessThanTwoParticipatingEntitiesError = {
+  type: "RELATIONSHIP_LESS_THAN_TWO_PARTICIPATING_ENTITIES";
+  relationshipName: string;
+  location: TokenLocation;
+};
+
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
@@ -76,4 +82,5 @@ export type SemanticError =
   | WeakEntityNotInRelationshipError
   | WeakEntityNotTotalParticipationError
   | RelationshipDuplicateError
-  | RelationshipDuplicateAttributeError;
+  | RelationshipDuplicateAttributeError
+  | RelationshipLessThanTwoParticipatingEntitiesError;
