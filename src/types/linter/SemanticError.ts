@@ -86,6 +86,12 @@ export type RelationshipDuplicateParticipantError = {
   location: TokenLocation;
 };
 
+export type AggregationDuplicateError = {
+  type: "AGGREGATION_DUPLICATE";
+  aggregationName: string;
+  location: TokenLocation;
+};
+
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
@@ -99,4 +105,5 @@ export type SemanticError =
   | RelationshipDuplicateAttributeError
   | RelationshipLessThanTwoParticipatingEntitiesError
   | RelationshipParticipatingEntityNotExists
-  | RelationshipDuplicateParticipantError;
+  | RelationshipDuplicateParticipantError
+  | AggregationDuplicateError;
