@@ -1,6 +1,6 @@
-import { ER } from "../types/parser/ER";
-import { RelationshipDuplicateError } from "../types/linter/SemanticError";
-import { TokenLocation } from "../types/parser/TokenLocation";
+import { ER } from "../../types/parser/ER";
+import { RelationshipDuplicateError } from "../../types/linter/SemanticError";
+import { TokenLocation } from "../../types/parser/TokenLocation";
 
 export const checkRelationshipDuplicate = (
   er: ER,

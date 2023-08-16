@@ -1,5 +1,5 @@
-import { ER } from "../types/parser/ER";
-import { ChildEntityHasKeyError } from "../types/linter/SemanticError";
+import { ER } from "../../types/parser/ER";
+import { ChildEntityHasKeyError } from "../../types/linter/SemanticError";
 
 export const checkChildEntityHasKey = (er: ER): ChildEntityHasKeyError[] => {
   const errors: ChildEntityHasKeyError[] = [];

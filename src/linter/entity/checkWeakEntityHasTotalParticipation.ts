@@ -1,5 +1,5 @@
-import { ER } from "../types/parser/ER";
-import { WeakEntityNotTotalParticipationError } from "../types/linter/SemanticError";
+import { ER } from "../../types/parser/ER";
+import { WeakEntityNotTotalParticipationError } from "../../types/linter/SemanticError";
 
 export const checkWeakEntityHasTotalParticipation = (
   er: ER,

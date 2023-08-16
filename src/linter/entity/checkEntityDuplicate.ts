@@ -1,5 +1,5 @@
-import { ER } from "../types/parser/ER";
-import { EntityDuplicateError } from "../types/linter/SemanticError";
+import { ER } from "../../types/parser/ER";
+import { EntityDuplicateError } from "../../types/linter/SemanticError";
 
 export const checkEntityDuplicate = (er: ER): EntityDuplicateError[] => {
   const errors: EntityDuplicateError[] = [];

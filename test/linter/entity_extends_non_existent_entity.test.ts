@@ -1,4 +1,4 @@
-import { checkEntityExtendsNonExistentEntity } from "../../src/linter/checkExtendsExistingEntity";
+import { checkEntityExtendsNonExistentEntity } from "../../src/linter/entity/checkExtendsExistingEntity";
 import { ER } from "../../src/types/parser/ER";
 
 describe("Linter detects entity extending non-existent entity", () => {

@@ -1,5 +1,5 @@
-import { ER } from "../types/parser/ER";
-import { WeakEntityNotInRelationshipError } from "../types/linter/SemanticError";
+import { ER } from "../../types/parser/ER";
+import { WeakEntityNotInRelationshipError } from "../../types/linter/SemanticError";
 
 export const checkWeakEntityInRelationship = (
   er: ER,

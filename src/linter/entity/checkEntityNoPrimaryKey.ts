@@ -1,5 +1,5 @@
-import { ER } from "../types/parser/ER";
-import { EntityNoPrimaryKeyError } from "../types/linter/SemanticError";
+import { ER } from "../../types/parser/ER";
+import { EntityNoPrimaryKeyError } from "../../types/linter/SemanticError";
 
 export const checkEntityNoPrimaryKey = (er: ER): EntityNoPrimaryKeyError[] => {
   const errors: EntityNoPrimaryKeyError[] = [];

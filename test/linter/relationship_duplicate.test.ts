@@ -1,5 +1,5 @@
 import { ER } from "../../src/types/parser/ER";
-import { checkRelationshipDuplicate } from "../../src/linter/checkRelationshipDuplicate";
+import { checkRelationshipDuplicate } from "../../src/linter/relationship/checkRelationshipDuplicate";
 
 describe("Linter checks for duplicate relationships", () => {
   it("detects two duplicate relationships", () => {

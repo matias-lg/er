@@ -1,5 +1,5 @@
 import { ER } from "../../src/types/parser/ER";
-import { checkWeakEntityHasTotalParticipation } from "../../src/linter/checkWeakEntityHasTotalParticipation";
+import { checkWeakEntityHasTotalParticipation } from "../../src/linter/entity/checkWeakEntityHasTotalParticipation";
 import { parse } from "../../src/parser";
 
 describe("Linter detects that a weak entity must have total participation in its identifying relationship", () => {
