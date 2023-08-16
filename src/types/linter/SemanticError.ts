@@ -59,6 +59,13 @@ export type RelationshipDuplicateError = {
   location: TokenLocation;
 };
 
+export type RelationshipDuplicateAttributeError = {
+  type: "RELATIONSHIP_DUPLICATE_ATTRIBUTE";
+  relationshipName: string;
+  attributeName: string;
+  location: TokenLocation;
+};
+
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
@@ -68,4 +75,5 @@ export type SemanticError =
   | WeakEntityDependsOnNonExistentRelationshipError
   | WeakEntityNotInRelationshipError
   | WeakEntityNotTotalParticipationError
-  | RelationshipDuplicateError;
+  | RelationshipDuplicateError
+  | RelationshipDuplicateAttributeError;
