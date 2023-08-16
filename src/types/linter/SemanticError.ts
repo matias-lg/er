@@ -79,6 +79,13 @@ export type RelationshipParticipatingEntityNotExists = {
   location: TokenLocation;
 };
 
+export type RelationshipDuplicateParticipantError = {
+  type: "RELATIONSHIP_DUPLICATE_PARTICIPANT";
+  relationshipName: string;
+  entityName: string;
+  location: TokenLocation;
+};
+
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
@@ -91,4 +98,5 @@ export type SemanticError =
   | RelationshipDuplicateError
   | RelationshipDuplicateAttributeError
   | RelationshipLessThanTwoParticipatingEntitiesError
-  | RelationshipParticipatingEntityNotExists;
+  | RelationshipParticipatingEntityNotExists
+  | RelationshipDuplicateParticipantError;
