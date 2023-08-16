@@ -10,7 +10,6 @@ export const checkRelationshipLessThanTwoParticipatingEntities = (
     if (relationship.participantEntities.length > 1) continue;
     const singleParticipant = relationship.participantEntities[0];
     if (singleParticipant.isComposite) {
-      console.log(singleParticipant.childParticipants);
       if (singleParticipant.childParticipants.length > 1) continue;
     }
     errors.push({

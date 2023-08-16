@@ -46,7 +46,6 @@ describe("Linter detects relationships with less than two participating entities
 
   it("Returns 0 errors when there's only one partipating entity with more than 1 role", () => {
     const errors = checkRelationshipLessThanTwoParticipatingEntities(correctER);
-    console.log(errors);
     expect(errors.length).toBe(0);
   });
 
