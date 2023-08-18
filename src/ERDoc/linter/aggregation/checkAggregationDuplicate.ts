@@ -10,7 +10,6 @@ export const checkAggregationDuplicate = (
   er: ER,
 ): AggregationDuplicateError[] => {
   const errors: AggregationDuplicateError[] = [];
-
   const aggregationNames = new Map<string, number>();
   er.aggregations.forEach((agg) => {
     if (aggregationNames.has(agg.name)) {

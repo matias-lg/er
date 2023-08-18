@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkRelationshipDuplicateAttribute } from "../../src/linter/relationship/checkRelationshipDuplicateAttribute";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkRelationshipDuplicateAttribute } from "../../../src/ERDoc/linter/relationship/checkRelationshipDuplicateAttribute";
 
 describe("Linter detects duplicate attributes in relationships", () => {
   it("Returns an error when there are duplicate attributes in a relationship", () => {

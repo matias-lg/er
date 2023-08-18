@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkWeakEntityInRelationship } from "../../src/linter/entity/checkWeakEntityInRelationship";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkWeakEntityInRelationship } from "../../../src/ERDoc/linter/entity/checkWeakEntityInRelationship";
 
 describe("Linter detects that a weak entity must participate in its identifying relationship", () => {
   it("Finds an error when a weak entity doesn't participate in its identifying relationship", () => {

@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkRelationshipDuplicateParticipant } from "../../src/linter/relationship/checkRelationshipDuplicateParticipant";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkRelationshipDuplicateParticipant } from "../../../src/ERDoc/linter/relationship/checkRelationshipDuplicateParticipant";
 
 describe("Linter detects duplicate relationship participating entities", () => {
   it("Detects a duplicate entity in a relationship", () => {

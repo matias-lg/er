@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkRelationshipParticipatingEntityNotExists } from "../../src/linter/relationship/checkRelationshipParticipatingEntityNotExists";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkRelationshipParticipatingEntityNotExists } from "../../../src/ERDoc/linter/relationship/checkRelationshipParticipatingEntityNotExists";
 
 describe("Linter detects entities that are participating in a relationship but do not exist", () => {
   it("Returns an error when entity doesn't exist", () => {

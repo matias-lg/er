@@ -1,5 +1,7 @@
 {
-  "include": ["src/**/*", "src/**/**/*", "test/**/*"],
+  "include": ["src/**/*", "src/**/**/*", "test/**/*",
+              "src/**/**/*", "test/**/**/*", "src/**/**/**/*", "test/**/**/**/*",
+],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
 

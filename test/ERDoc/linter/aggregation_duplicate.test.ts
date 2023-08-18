@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkAggregationDuplicate } from "../../src/linter/aggregation/checkAggregationDuplicate";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkAggregationDuplicate } from "../../../src/ERDoc/linter/aggregation/checkAggregationDuplicate";
 
 describe("Linter detects duplicate aggregations", () => {
   it("Detects a duplicate aggregation", () => {

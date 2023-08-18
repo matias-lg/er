@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkRelationshipLessThanTwoParticipatingEntities } from "../../src/linter/relationship/checkRelationshipLessThanTwoParticipatingEntities";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkRelationshipLessThanTwoParticipatingEntities } from "../../../src/ERDoc/linter/relationship/checkRelationshipLessThanTwoParticipatingEntities";
 
 describe("Linter detects relationships with less than two participating entities", () => {
   it("Returns error when there's only one partipating entity", () => {

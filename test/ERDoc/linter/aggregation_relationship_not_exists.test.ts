@@ -1,5 +1,5 @@
-import { checkAggregationRelationshipNotExists } from "../../src/linter/aggregation/checkAggregationRelationshipNotExists";
-import { ER } from "../../src/types/parser/ER";
+import { checkAggregationRelationshipNotExists } from "../../../src/ERDoc/linter/aggregation/checkAggregationRelationshipNotExists";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
 
 describe("Linter detects aggregation that use a non existent relationship", () => {
   it("Detects a non existent relationship", () => {

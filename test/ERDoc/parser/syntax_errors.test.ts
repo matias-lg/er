@@ -1,4 +1,4 @@
-import { parse } from "../../src/parser";
+import { parse } from "../../../src/ERDoc/parser";
 
 /***
  * Checks that the error location is correct for an invalid ERDoc string

@@ -7,8 +7,7 @@ module.exports = {
     "plugin:prettier/recommended",
   ],
   ignorePatterns: [
-    "src/parser/peggy/*.js",
-    "src/peggy-parser/*.js",
+    "src/ERDoc/parser/peggy/*.js",
     "jest.config.js",
   ],
   parser: "@typescript-eslint/parser",

@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkWeakEntityRelationshipExists } from "../../src/linter/entity/checkWeakEntityRelationshipExists";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkWeakEntityRelationshipExists } from "../../../src/ERDoc/linter/entity/checkWeakEntityRelationshipExists";
 
 describe("Checks weak entities depend on existing relationships", () => {
   it("Detects missing relationship of a weak entity", () => {

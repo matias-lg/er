@@ -1,6 +1,6 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkWeakEntityHasTotalParticipation } from "../../src/linter/entity/checkWeakEntityHasTotalParticipation";
-import { parse } from "../../src/parser";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkWeakEntityHasTotalParticipation } from "../../../src/ERDoc/linter/entity/checkWeakEntityHasTotalParticipation";
+import { parse } from "../../../src/ERDoc/parser";
 
 describe("Linter detects that a weak entity must have total participation in its identifying relationship", () => {
   it("Returns an error when a weak entity doesn't have total participation (implicit cardinality)", () => {

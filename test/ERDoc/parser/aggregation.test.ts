@@ -1,6 +1,6 @@
-import { ER } from "../../src/types/parser/ER";
-import { Aggregation } from "../../src/types/parser/Aggregation";
-import { parse } from "../../src/parser";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { Aggregation } from "../../../src/ERDoc/types/parser/Aggregation";
+import { parse } from "../../../src/ERDoc/parser";
 
 const regularAggregation = `aggregation Cliente_compra_producto(Compra)`;
 const explicitCurlyAggregation = `aggregation Cliente_compra_producto(Compra) {}`;

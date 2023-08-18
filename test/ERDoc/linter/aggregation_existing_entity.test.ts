@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkAggregationUsesEntityName } from "../../src/linter/aggregation/checkAggregationUsesEntityName";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkAggregationUsesEntityName } from "../../../src/ERDoc/linter/aggregation/checkAggregationUsesEntityName";
 
 describe("Linter detects aggregations with same name as existing entity", () => {
   it("Detects aggregation with same name as existing entity", () => {

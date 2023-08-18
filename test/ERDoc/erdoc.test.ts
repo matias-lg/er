@@ -1,4 +1,4 @@
-import { getERDoc } from "../src";
+import { getERDoc } from "../../src/ERDoc";
 
 describe("Parses and get semantic errors for a ERDoc string", () => {
   it("Should successfully parse and get no semantic errors for a semantically valid ERDoc string", () => {

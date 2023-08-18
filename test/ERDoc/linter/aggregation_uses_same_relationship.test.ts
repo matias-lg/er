@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkAggregationUsesSameRelationship } from "../../src/linter/aggregation/checkAggregationUsesSameRelationship";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkAggregationUsesSameRelationship } from "../../../src/ERDoc/linter/aggregation/checkAggregationUsesSameRelationship";
 
 describe("Linter detects when two aggregations use the same relationship", () => {
   it("return an error when two aggregations use the same relationship", () => {
