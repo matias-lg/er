@@ -8,6 +8,8 @@ module.exports = {
   ],
   ignorePatterns: [
     "src/ERDoc/parser/peggy/*.js",
+    ".eslintrc.cjs",
+    "next-env.d.ts",
     "jest.config.js",
   ],
   parser: "@typescript-eslint/parser",

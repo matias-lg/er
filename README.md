@@ -7,7 +7,11 @@ build the parser:
 ```bash
 npm run build-parser
 ```
-and run the test suite:
+run the test suite:
 ```bash
 npm test
+```
+run the web app:
+```bash
+npm start dev
 ```
