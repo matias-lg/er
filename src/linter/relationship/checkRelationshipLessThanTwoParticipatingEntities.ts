@@ -1,6 +1,11 @@
 import { ER } from "../../types/parser/ER";
 import { RelationshipLessThanTwoParticipatingEntitiesError } from "../../types/linter/SemanticError";
 
+/**
+ * Finds relationships with less than 2 participants in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {RelationshipLessThanTwoParticipatingEntitiesError[]} An array of errors for each relationship with less than 2 participants
+ */
 export const checkRelationshipLessThanTwoParticipatingEntities = (
   er: ER,
 ): RelationshipLessThanTwoParticipatingEntitiesError[] => {

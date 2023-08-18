@@ -1,6 +1,11 @@
 import { ER } from "../../types/parser/ER";
 import { RelationshipDuplicateAttributeError } from "../../types/linter/SemanticError";
 
+/**
+ * Finds duplicate attributes in relationships in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {RelationshipDuplicateAttributeError[]} An array of errors for each duplicate relationship attribute
+ */
 export const checkRelationshipDuplicateAttribute = (
   er: ER,
 ): RelationshipDuplicateAttributeError[] => {

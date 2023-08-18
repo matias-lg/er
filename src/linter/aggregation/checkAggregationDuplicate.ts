@@ -1,6 +1,11 @@
 import { ER } from "../../types/parser/ER";
 import { AggregationDuplicateError } from "../../types/linter/SemanticError";
 
+/**
+ * Finds duplicate aggregations by name in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {AggregationDuplicateError[]} An array of errors for each duplicate aggregation
+ */
 export const checkAggregationDuplicate = (
   er: ER,
 ): AggregationDuplicateError[] => {

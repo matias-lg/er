@@ -1,6 +1,11 @@
 import { ER } from "../../types/parser/ER";
 import { WeakEntityNotInRelationshipError } from "../../types/linter/SemanticError";
 
+/**
+ * Finds weak entities that participate in their identifying relationship in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {WeakEntityNotInRelationshipError[]} An array of errors for each weak entity that doesn't participate in its identifying relationship
+ */
 export const checkWeakEntityInRelationship = (
   er: ER,
 ): WeakEntityNotInRelationshipError[] => {

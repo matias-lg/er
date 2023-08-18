@@ -1,6 +1,11 @@
 import { ER } from "../../types/parser/ER";
 import { EntityExtendsNonExistentEntityError } from "../../types/linter/SemanticError";
 
+/**
+ * Finds entities that extend an entity that doesn't exist in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {EntityExtendsNonExistentEntityError[]} An array of errors for each entity that extends a non-existent entity
+ */
 export const checkEntityExtendsNonExistentEntity = (
   er: ER,
 ): EntityExtendsNonExistentEntityError[] => {

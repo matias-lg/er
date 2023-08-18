@@ -2,7 +2,7 @@ import { SemanticError } from "../types/linter/SemanticError";
 import { ER } from "../types/parser/ER";
 import { checkEntityDuplicate } from "./entity/checkEntityDuplicate";
 import { checkEntityDuplicateAttribute } from "./entity/checkEntityDuplicateAttribute";
-import { checkEntityNoPrimaryKey } from "./entity/checkEntityNoPrimaryKey";
+import { checkEntityNoKey } from "./entity/checkEntityNoKey";
 import { checkEntityExtendsNonExistentEntity } from "./entity/checkExtendsExistingEntity";
 import { checkWeakEntityRelationshipExists } from "./entity/checkWeakEntityRelationshipExists";
 import { checkWeakEntityInRelationship } from "./entity/checkWeakEntityInRelationship";
@@ -18,29 +18,29 @@ import { checkAggregationUsesSameRelationship } from "./aggregation/checkAggrega
 
 type checkErrorFunction = (er: ER) => SemanticError[];
 
+const validators: checkErrorFunction[] = [
+  checkEntityDuplicate,
+  checkEntityDuplicateAttribute,
+  checkEntityNoKey,
+  checkEntityExtendsNonExistentEntity,
+
+  checkChildEntityHasKey,
+
+  checkWeakEntityRelationshipExists,
+  checkWeakEntityInRelationship,
+  checkWeakEntityHasTotalParticipation,
+
+  checkRelationshipDuplicate,
+  checkRelationshipDuplicateAttribute,
+  checkRelationshipLessThanTwoParticipatingEntities,
+  checkRelationshipDuplicateParticipant,
+
+  checkAggregationDuplicate,
+  checkAggregationRelationshipNotExists,
+  checkAggregationUsesSameRelationship,
+];
+
 export const getSemanticErrors = (er: ER): SemanticError[] => {
-  const validators: checkErrorFunction[] = [
-    checkEntityDuplicate,
-    checkEntityDuplicateAttribute,
-    checkEntityNoPrimaryKey,
-    checkEntityExtendsNonExistentEntity,
-
-    checkChildEntityHasKey,
-
-    checkWeakEntityRelationshipExists,
-    checkWeakEntityInRelationship,
-    checkWeakEntityHasTotalParticipation,
-
-    checkRelationshipDuplicate,
-    checkRelationshipDuplicateAttribute,
-    checkRelationshipLessThanTwoParticipatingEntities,
-    checkRelationshipDuplicateParticipant,
-
-    checkAggregationDuplicate,
-    checkAggregationRelationshipNotExists,
-    checkAggregationUsesSameRelationship,
-  ];
-
   let errors: SemanticError[] = [];
   for (const validator of validators) {
     errors = errors.concat(validator(er));

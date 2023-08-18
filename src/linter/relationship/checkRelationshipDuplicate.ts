@@ -2,6 +2,11 @@ import { ER } from "../../types/parser/ER";
 import { RelationshipDuplicateError } from "../../types/linter/SemanticError";
 import { TokenLocation } from "../../types/parser/TokenLocation";
 
+/**
+ * Finds duplicate relationships by name and participants in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {RelationshipDuplicateError[]} An array of errors for each duplicate relationship
+ */
 export const checkRelationshipDuplicate = (
   er: ER,
 ): RelationshipDuplicateError[] => {

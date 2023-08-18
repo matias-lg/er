@@ -1,8 +1,13 @@
 import { ER } from "../../types/parser/ER";
-import { EntityNoPrimaryKeyError } from "../../types/linter/SemanticError";
+import { EntityHasNoKeyError } from "../../types/linter/SemanticError";
 
-export const checkEntityNoPrimaryKey = (er: ER): EntityNoPrimaryKeyError[] => {
-  const errors: EntityNoPrimaryKeyError[] = [];
+/**
+ * Finds entities without key attributes in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {EntityHasNoKeyError[]} An array of errors for each entity without a key
+ */
+export const checkEntityNoKey = (er: ER): EntityHasNoKeyError[] => {
+  const errors: EntityHasNoKeyError[] = [];
   for (const entity of er.entities) {
     let hasKey = entity.attributes.some((attr) => attr.isKey);
 
@@ -25,7 +30,7 @@ export const checkEntityNoPrimaryKey = (er: ER): EntityNoPrimaryKeyError[] => {
 
     if (!hasKey)
       errors.push({
-        type: "ENTITY_NO_PRIMARY_KEY",
+        type: "ENTITY_HAS_NO_KEY",
         entityName: entity.name,
         location: entity.location,
       });

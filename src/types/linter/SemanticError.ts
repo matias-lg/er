@@ -13,8 +13,8 @@ export type EntityDuplicateAttributeError = {
   location: TokenLocation;
 };
 
-export type EntityNoPrimaryKeyError = {
-  type: "ENTITY_NO_PRIMARY_KEY";
+export type EntityHasNoKeyError = {
+  type: "ENTITY_HAS_NO_KEY";
   entityName: string;
   location: TokenLocation;
 };
@@ -109,7 +109,7 @@ export type AggregationUsesSameRelationshipError = {
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
-  | EntityNoPrimaryKeyError
+  | EntityHasNoKeyError
   | EntityExtendsNonExistentEntityError
   | ChildEntityHasKeyError
   | WeakEntityDependsOnNonExistentRelationshipError

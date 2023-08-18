@@ -1,6 +1,11 @@
 import { ER } from "../../types/parser/ER";
 import { AggregationRelationshipNotExistsError } from "../../types/linter/SemanticError";
 
+/**
+ * Finds aggregations that reference relationships that don't exist in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {AggregationRelationshipNotExistsError[]} An array of errors for each aggregation that uses an invalid relationship
+ */
 export const checkAggregationRelationshipNotExists = (
   er: ER,
 ): AggregationRelationshipNotExistsError[] => {

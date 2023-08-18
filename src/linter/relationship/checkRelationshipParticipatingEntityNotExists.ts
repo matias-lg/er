@@ -1,6 +1,11 @@
 import { ER } from "../../types/parser/ER";
 import { RelationshipParticipatingEntityNotExists } from "../../types/linter/SemanticError";
 
+/**
+ * Finds relationships with a participant that doesn't exist in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {RelationshipParticipatingEntityNotExists[]} An array of errors for each relationship with a participant that doesn't exist
+ */
 export const checkRelationshipParticipatingEntityNotExists = (
   er: ER,
 ): RelationshipParticipatingEntityNotExists[] => {

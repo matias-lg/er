@@ -1,6 +1,11 @@
 import { ER } from "../../types/parser/ER";
 import { WeakEntityNotTotalParticipationError } from "../../types/linter/SemanticError";
 
+/**
+ * Finds weak entities that don't have total participation in their identifying relationship in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {WeakEntityNotTotalParticipationError[]} An array of errors for each weak entity that doesn't have total participation in its identifying relationship
+ */
 export const checkWeakEntityHasTotalParticipation = (
   er: ER,
 ): WeakEntityNotTotalParticipationError[] => {

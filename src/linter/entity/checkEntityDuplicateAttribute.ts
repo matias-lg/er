@@ -1,6 +1,11 @@
 import { ER } from "../../types/parser/ER";
 import { EntityDuplicateAttributeError } from "../../types/linter/SemanticError";
 
+/**
+ * Finds duplicate attributes in entities in an ER object
+ * @param {ER} er - The ER object to lint
+ * @return {EntityDuplicateAttributeError[]} An array of errors for each duplicate attribute
+ */
 export const checkEntityDuplicateAttribute = (
   er: ER,
 ): EntityDuplicateAttributeError[] => {
