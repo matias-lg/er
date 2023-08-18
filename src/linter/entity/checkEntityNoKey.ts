@@ -9,6 +9,7 @@ import { EntityHasNoKeyError } from "../../types/linter/SemanticError";
 export const checkEntityNoKey = (er: ER): EntityHasNoKeyError[] => {
   const errors: EntityHasNoKeyError[] = [];
   for (const entity of er.entities) {
+    if (entity.hasDependencies) continue;
     let hasKey = entity.attributes.some((attr) => attr.isKey);
 
     // check if parents have a key

@@ -57,6 +57,11 @@ describe("Linter detects entities without a primary key", () => {
     const errors = checkEntityNoKey(er);
     expect(errors.length).toBe(0);
   });
+
+  it("Finds no error for a weak entity", () => {
+    const errors = checkEntityNoKey(WeakEntityER);
+    expect(errors.length).toBe(0);
+  });
 });
 
 /*
@@ -1116,6 +1121,98 @@ const ERCorrectSubSubclass: ER = {
         end: {
           offset: 182,
           line: 13,
+          column: 2,
+        },
+      },
+    },
+  ],
+  relationships: [],
+  aggregations: [],
+};
+
+/*
+entity keyboard depends on Types {
+	  model
+    brand
+    switchType
+}
+*/
+const WeakEntityER: ER = {
+  entities: [
+    {
+      type: "entity",
+      name: "keyboard",
+      attributes: [
+        {
+          name: "model",
+          location: {
+            start: {
+              offset: 38,
+              line: 2,
+              column: 4,
+            },
+            end: {
+              offset: 43,
+              line: 2,
+              column: 9,
+            },
+          },
+          isKey: false,
+          isComposite: false,
+          childAttributesNames: null,
+        },
+        {
+          name: "brand",
+          location: {
+            start: {
+              offset: 48,
+              line: 3,
+              column: 5,
+            },
+            end: {
+              offset: 53,
+              line: 3,
+              column: 10,
+            },
+          },
+          isKey: false,
+          isComposite: false,
+          childAttributesNames: null,
+        },
+        {
+          name: "switchType",
+          location: {
+            start: {
+              offset: 58,
+              line: 4,
+              column: 5,
+            },
+            end: {
+              offset: 68,
+              line: 4,
+              column: 15,
+            },
+          },
+          isKey: false,
+          isComposite: false,
+          childAttributesNames: null,
+        },
+      ],
+      hasParent: false,
+      parentName: null,
+      hasDependencies: true,
+      dependsOn: {
+        relationshipName: "Types",
+      },
+      location: {
+        start: {
+          offset: 0,
+          line: 1,
+          column: 1,
+        },
+        end: {
+          offset: 70,
+          line: 5,
           column: 2,
         },
       },
