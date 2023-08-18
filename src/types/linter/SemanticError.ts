@@ -106,6 +106,12 @@ export type AggregationUsesSameRelationshipError = {
   location: TokenLocation;
 };
 
+export type AggregationUsesEntityName = {
+  type: "AGGREGATION_USES_ENTITY_NAME";
+  aggregationName: string;
+  location: TokenLocation;
+};
+
 export type SemanticError =
   | EntityDuplicateError
   | EntityDuplicateAttributeError
@@ -122,4 +128,5 @@ export type SemanticError =
   | RelationshipDuplicateParticipantError
   | AggregationDuplicateError
   | AggregationRelationshipNotExistsError
-  | AggregationUsesSameRelationshipError;
+  | AggregationUsesSameRelationshipError
+  | AggregationUsesEntityName;

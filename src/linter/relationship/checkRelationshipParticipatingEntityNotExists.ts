@@ -12,6 +12,7 @@ export const checkRelationshipParticipatingEntityNotExists = (
   const errors: RelationshipParticipatingEntityNotExists[] = [];
   const existingEntities = new Map<string, boolean>();
   er.entities.forEach((ent) => existingEntities.set(ent.name, true));
+  er.aggregations.forEach((agg) => existingEntities.set(agg.name, true));
   for (const rel of er.relationships) {
     for (const participatingEntity of rel.participantEntities) {
       const exists = existingEntities.get(participatingEntity.entityName);
