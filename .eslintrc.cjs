@@ -6,8 +6,21 @@ module.exports = {
     "prettier",
     "plugin:prettier/recommended",
   ],
-  ignorePatterns: ["src/parser/peggy/*.js", "src/peggy-parser/*.js", "jest.config.js"],
+  ignorePatterns: [
+    "src/parser/peggy/*.js",
+    "src/peggy-parser/*.js",
+    "jest.config.js",
+  ],
   parser: "@typescript-eslint/parser",
+  rules: {
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        varsIgnorePattern: "^_",
+        argsIgnorePattern: "^_"
+      },
+    ],
+  },
   parserOptions: {
     project: true,
     tsconfigRootDir: __dirname,
