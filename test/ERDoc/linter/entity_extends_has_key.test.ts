@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { checkChildEntityHasKey } from "../../src/linter/entity/checkChildEntityHasKey";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { checkChildEntityHasKey } from "../../../src/ERDoc/linter/entity/checkChildEntityHasKey";
 
 describe("Linter detects when a child entity has a key", () => {
   it("Returns an error when a child entity has a key", () => {

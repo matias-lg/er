@@ -7,8 +7,12 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "build": "tsc -p tsconfig.build.json",
-    "build-parser": "peggy -o ./src/parser/peggy/generated.js ./src/parser/peggy/er-parser.pegjs",
-    "test": "npm run build-parser && jest"
+    "build:parser": "peggy -o ./src/ERDoc/parser/peggy/generated.js ./src/ERDoc/parser/peggy/er-parser.pegjs",
+    "test": "npm run build:parser && jest",
+    "dev": "next dev",
+    "build:next": "next build",
+    "start": "next start",
+    "lint:next": "next lint"
   },
   "keywords": [],
   "author": "",
@@ -22,10 +26,14 @@
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.5.0",
     "ts-jest": "^29.1.0",
+    "@types/react": "^18.2.20",
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "next": "^13.4.18",
     "peggy": "^3.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "zod": "^3.21.4"
   }
 }

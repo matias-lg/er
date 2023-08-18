@@ -1,6 +1,6 @@
-import { ER } from "../../src/types/parser/ER";
-import { parse } from "../../src/parser";
-import { Entity } from "../../src/types/parser/Entity";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { parse } from "../../../src/ERDoc/parser";
+import { Entity } from "../../../src/ERDoc/types/parser/Entity";
 
 const simpleEntity = `
 entity Dog {

@@ -1,5 +1,5 @@
-import { ER } from "../../src/types/parser/ER";
-import { parse } from "../../src/parser";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { parse } from "../../../src/ERDoc/parser";
 
 describe("Parses ER Models with multiple elements", () => {
   it("parses a simple ER Model", () => {

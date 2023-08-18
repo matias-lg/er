@@ -1,5 +1,5 @@
-import { checkEntityDuplicate } from "../../src/linter/entity/checkEntityDuplicate";
-import { ER } from "../../src/types/parser/ER";
+import { checkEntityDuplicate } from "../../../src/ERDoc/linter/entity/checkEntityDuplicate";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
 
 describe("Linter detects duplicate entities", () => {
   it("Detects duplicate entities", () => {

@@ -1,5 +1,5 @@
-import { checkEntityNoKey } from "../../src/linter/entity/checkEntityNoKey";
-import { ER } from "../../src/types/parser/ER";
+import { checkEntityNoKey } from "../../../src/ERDoc/linter/entity/checkEntityNoKey";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
 
 describe("Linter detects entities without a primary key", () => {
   it("Detects an entity without a primary key", () => {

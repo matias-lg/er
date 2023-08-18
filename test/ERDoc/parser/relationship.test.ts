@@ -1,6 +1,6 @@
-import { ER } from "../../src/types/parser/ER";
-import { Relationship } from "../../src/types/parser/Relationship";
-import { parse } from "../../src/parser";
+import { ER } from "../../../src/ERDoc/types/parser/ER";
+import { Relationship } from "../../../src/ERDoc/types/parser/Relationship";
+import { parse } from "../../../src/ERDoc/parser";
 
 const simpleRelationship = `
 relation Teaches(student, professor){
