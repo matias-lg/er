@@ -5,10 +5,16 @@ import { ER, ERSchema } from "../types/parser/ER";
 /**
  * Parses an ERDoc string into an ER object
  * @param {string} erString - The ERDoc string to parse
+ * @param {boolean} useZodValidate - use zod to validate the parsed ER object at runtime.
+ *  Useful for modifying the parser, but slows down parsing by ~2x. Defaults to false.
  * @return {ER} ER object representing the successfully parsed ERDoc string
  * @throws {SyntaxError} If the ERDoc string is not valid
  */
-export const parse = (erString: string): ER => {
-  const parsed = peggyParse(erString);
-  return ERSchema.parse(parsed);
+export const parse = (
+  erString: string,
+  useZodValidate: boolean = false,
+): ER => {
+  let parsed: ER = peggyParse(erString);
+  if (useZodValidate) parsed = ERSchema.parse(parsed);
+  return parsed;
 };
