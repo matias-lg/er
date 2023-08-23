@@ -1,3 +1,5 @@
+const { default: postcss } = require("postcss");
+
 /* eslint-env node */
 module.exports = {
   extends: [
@@ -8,6 +10,8 @@ module.exports = {
   ],
   ignorePatterns: [
     "src/ERDoc/parser/peggy/*.js",
+    "tailwind.config.js",
+    "postcss.config.js",
     ".eslintrc.cjs",
     "next-env.d.ts",
     "jest.config.js",
@@ -18,7 +22,7 @@ module.exports = {
       "error",
       {
         varsIgnorePattern: "^_",
-        argsIgnorePattern: "^_"
+        argsIgnorePattern: "^_",
       },
     ],
   },
