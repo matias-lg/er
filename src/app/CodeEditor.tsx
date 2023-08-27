@@ -13,7 +13,16 @@ const CodeEditor = ({ editorText, onEditorTextChange }: Props) => {
     [],
   );
 
-  return <CodeMirror value={editorText} onChange={onChange}></CodeMirror>;
+  return (
+    <CodeMirror
+      className="w-full"
+      theme="dark"
+      height="100%"
+      width="100%"
+      value={editorText}
+      onChange={onChange}
+    ></CodeMirror>
+  );
 };
 
 export default CodeEditor;

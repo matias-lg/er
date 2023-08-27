@@ -11,7 +11,7 @@ const getErrorMessage = (err: SemanticError): string => {
       return `Entity "${err.entityName}" has no key`;
 
     case "ENTITY_DUPLICATE_ATTRIBUTE":
-      return `Entity "${err.entityName}" has duplicated attribute "${err.attributeName}"`;
+      return `Entity "${err.entityName}" has duplicate attribute "${err.attributeName}"`;
 
     case "ENTITY_EXTENDS_NON_EXISTENT_ENTITY":
       return `Entity "${err.entityName}" extends non-existent entity "${err.extendsEntityName}"`;
