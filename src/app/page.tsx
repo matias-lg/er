@@ -18,7 +18,9 @@ const Page = () => {
   useEffect(() => {
     try {
       setHasSyntaxError(false);
+      const t0 = performance.now();
       const [erDoc, errors] = getERDoc(inputText);
+      console.log("Parse + lint took " + (performance.now() - t0) + "ms");
       setERDoc(erDoc);
       setSemanticErrors(errors);
     } catch (e) {
@@ -27,45 +29,54 @@ const Page = () => {
     }
   }, [inputText]);
   return (
-    <>
-      <CodeEditor editorText={inputText} onEditorTextChange={setInputText} />
-      <br/>
-      <div className="relative overflow-x-auto w-1/2">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            {hasSyntaxError ? (
-              <tr>
-                <th className="px-6 py-3"> Syntax Error </th>
-              </tr>
-            ) : (
-              <tr>
-                <th className="px-6 py-3"> Error: </th>
-                <th className="px-6 py-3"> Location: </th>
-              </tr>
-                )}
-          </thead>
-          <tbody>
-            {hasSyntaxError ? (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <td className="px-6 py-4"> {JSON.stringify(syntaxError)} </td>
-              </tr>
-            ) : (
-              semanticErrors.map((err) => {
-                return (
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td className="px-6 py-4"> {getErrorMessage(err)} </td>
-                    <td className="px-6 py-4">
-                      {" "}
-                      {JSON.stringify(err.location)}{" "}
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
+    <div className="flex h-full">
+      <div className="w-[600px] xl:w-1/3">
+        <div className="flex h-[70%] w-full">
+          <CodeEditor
+            editorText={inputText}
+            onEditorTextChange={setInputText}
+          />
+        </div>
+        <div className="h-[30%] overflow-auto">
+          <table className="h-full w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              {hasSyntaxError ? (
+                <tr>
+                  <th className="px-6 py-3 sticky top-0 bg-gray-700">
+                    Syntax Error
+                  </th>
+                </tr>
+              ) : (
+                <tr>
+                  <th className="px-6 py-3 sticky top-0 bg-gray-700">Error:</th>
+                  <th className="px-6 py-3 sticky top-0 bg-gray-700">
+                    Location:
+                  </th>
+                </tr>
+              )}
+            </thead>
+            <tbody>
+              {hasSyntaxError ? (
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <td className="px-6 py-4"> {JSON.stringify(syntaxError)} </td>
+                </tr>
+              ) : (
+                semanticErrors.map((err) => {
+                  return (
+                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <td className="px-6 py-4"> {getErrorMessage(err)} </td>
+                      <td className="px-6 py-4">
+                        {JSON.stringify(err.location)}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
