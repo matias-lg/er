@@ -4,6 +4,7 @@ import { getERDoc } from "../ERDoc";
 import CodeEditor from "./CodeEditor";
 import { SemanticError } from "../ERDoc/types/linter/SemanticError";
 import { ER } from "../ERDoc/types/parser/ER";
+import getErrorMessage from "./util/errorMessages";
 
 const Page = () => {
   const [ERDoc, setERDoc] = useState<ER | null>(null);
@@ -28,17 +29,41 @@ const Page = () => {
   return (
     <>
       <CodeEditor editorText={inputText} onEditorTextChange={setInputText} />
-      <p className="pt-11 text-sky-600 text-1xl"> Errores: </p>
-      <div className="text-1l">
-        {hasSyntaxError
-          ? JSON.stringify(syntaxError)
-          : semanticErrors.map((err) => {
-              return (
-                <>
-                  <br /> <p> {JSON.stringify(err) + "\n\n"} </p>
-                </>
-              );
-            })}
+      <br/>
+      <div className="relative overflow-x-auto w-1/2">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            {hasSyntaxError ? (
+              <tr>
+                <th className="px-6 py-3"> Syntax Error </th>
+              </tr>
+            ) : (
+              <tr>
+                <th className="px-6 py-3"> Error: </th>
+                <th className="px-6 py-3"> Location: </th>
+              </tr>
+                )}
+          </thead>
+          <tbody>
+            {hasSyntaxError ? (
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td className="px-6 py-4"> {JSON.stringify(syntaxError)} </td>
+              </tr>
+            ) : (
+              semanticErrors.map((err) => {
+                return (
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td className="px-6 py-4"> {getErrorMessage(err)} </td>
+                    <td className="px-6 py-4">
+                      {" "}
+                      {JSON.stringify(err.location)}{" "}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
       </div>
     </>
   );
