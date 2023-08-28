@@ -15,7 +15,7 @@ const CodeEditor = ({ editorText, onEditorTextChange }: Props) => {
 
   return (
     <CodeMirror
-      className="w-full"
+      className="text-sm w-full"
       theme="dark"
       height="100%"
       width="100%"

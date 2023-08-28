@@ -7,37 +7,37 @@ import { ER } from "../ERDoc/types/parser/ER";
 import getErrorMessage from "./util/errorMessages";
 
 const Page = () => {
-  const [ERDoc, setERDoc] = useState<ER | null>(null);
+  const [_, setERDoc] = useState<ER | null>(null);
   const [inputText, setInputText] = useState<string>("");
 
   const [semanticErrors, setSemanticErrors] = useState<SemanticError[]>([]);
 
   const [hasSyntaxError, setHasSyntaxError] = useState<boolean>(false);
-  const [syntaxError, setSyntaxError] = useState<any | null>(null);
+  const [syntaxError, setSyntaxError] = useState<Error | null>(null);
 
   useEffect(() => {
     try {
       setHasSyntaxError(false);
       const t0 = performance.now();
       const [erDoc, errors] = getERDoc(inputText);
-      console.log("Parse + lint took " + (performance.now() - t0) + "ms");
       setERDoc(erDoc);
+      console.log("Parse + lint took " + (performance.now() - t0) + "ms");
       setSemanticErrors(errors);
     } catch (e) {
       setHasSyntaxError(true);
-      setSyntaxError(e);
+      if (e instanceof Error) setSyntaxError(e);
     }
   }, [inputText]);
   return (
     <div className="flex h-full">
       <div className="w-[600px] xl:w-1/3">
-        <div className="flex h-[70%] w-full">
+        <div className="flex h-[60%] w-full">
           <CodeEditor
             editorText={inputText}
             onEditorTextChange={setInputText}
           />
         </div>
-        <div className="h-[30%] overflow-auto">
+        <div className="h-[40%] overflow-auto">
           <table className="h-full w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               {hasSyntaxError ? (
@@ -64,7 +64,10 @@ const Page = () => {
                 semanticErrors.map((err) => {
                   return (
                     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <td className="px-6 py-4"> {getErrorMessage(err)} </td>
+                      <td className="text-lg px-6 py-4">
+                        {" "}
+                        {getErrorMessage(err)}{" "}
+                      </td>
                       <td className="px-6 py-4">
                         {JSON.stringify(err.location)}
                       </td>
