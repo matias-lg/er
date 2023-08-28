@@ -17,7 +17,7 @@ const getErrorMessage = (err: SemanticError): string => {
       return `Entity "${err.entityName}" extends non-existent entity "${err.extendsEntityName}"`;
 
     case "WEAK_ENTITY_NOT_IN_RELATIONSHIP":
-      return `Weak entity "${err.entityName}" depends on non-existent relationship "${err.relationshipName}"`;
+      return `Weak entity "${err.entityName}" depends on relationship "${err.relationshipName}", but it doesn't participate in it`;
 
     case "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION":
       return `Weak entity "${err.entityName}" doesn't have total participation in relationship "${err.relationshipName}"`;
@@ -56,9 +56,12 @@ const getErrorMessage = (err: SemanticError): string => {
     case "AGGREGATION_RELATIONSHIP_ALREADY_USED":
       return `Aggregation "${err.aggregationName}" encapsulates relationship "${err.relationshipName}" which is already used`;
 
-    default:
+    default: {
       const exhaustiveCheck: never = err;
-      throw new Error(`UNEXPECTED ERROR: "${exhaustiveCheck}"`);
+      throw new Error(
+        `Unhandled error type: ${JSON.stringify(exhaustiveCheck)}`,
+      );
+    }
   }
 };
 
