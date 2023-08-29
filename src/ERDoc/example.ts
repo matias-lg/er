@@ -1,4 +1,4 @@
-import { getERDoc } from "./ERDoc";
+import { getERDoc } from ".";
 import { performance } from "perf_hooks";
 
 const sample_er = `
