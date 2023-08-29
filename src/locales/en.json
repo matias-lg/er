@@ -1,0 +1,44 @@
+{
+  "home": {
+    "title": "Hello world!",
+
+    "errorsTable": {
+      "syntaxError": "Syntax error",
+      "semanticErrorMessages": {
+        "ENTITY_DUPLICATE": "Entity \"{entityName}\" is duplicate",
+
+        "ENTITY_HAS_NO_KEY": "Entity \"{entityName}\" has no key",
+
+        "ENTITY_DUPLICATE_ATTRIBUTE": "Entity \"{entityName}\" has duplicate attribute \"{attributeName}\"",
+
+        "ENTITY_EXTENDS_NON_EXISTENT_ENTITY": "Entity \"{entityName}\" extends non-existent entity \"{extendsEntityName}\"",
+
+        "WEAK_ENTITY_NOT_IN_RELATIONSHIP": "Weak entity \"{entityName}\" depends on relationship \"{relationshipName}\", but it doesn't participate in it",
+
+        "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION": "Weak entity \"{entityName}\" doesn't have total participation in relationship \"{relationshipName}\"",
+
+        "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP": "Weak entity \"{entityName}\" depends on non-existent relationship \"{relationshipName}\"",
+
+        "CHILD_ENTITY_HAS_KEY": "Child entity \"{entityName}\" has identifying key",
+
+        "RELATIONSHIP_DUPLICATE": "Relationship \"{relationshipName}\" is duplicate",
+
+        "RELATIONSHIP_DUPLICATE_ATTRIBUTE": "Relationship \"{relationshipName}\" has duplicate attribute \"{attributeName}\"",
+
+        "RELATIONSHIP_DUPLICATE_PARTICIPANT": "Relationship \"{relationshipName}\" has duplicate participant \"{entityName}\"",
+
+        "RELATIONSHIP_PARTICIPATING_ENTITY_NOT_EXISTS": "Relationship \"{relationshipName}\" has non-existent participating entity \"{entityName}\"",
+
+        "RELATIONSHIP_LESS_THAN_TWO_PARTICIPATING_ENTITIES": "Relationship \"{relationshipName}\" has less than two participating entities",
+
+        "AGGREGATION_USES_ENTITY_NAME": "Entity with name \"{aggregationName}\" already exists",
+
+        "AGGREGATION_DUPLICATE": "Aggregation \"{aggregationName}\" is duplicate",
+
+        "AGGREGATION_RELATIONSHIP_NOT_EXISTS": "Aggregation \"{aggregationName}\" encapsulates non-existent relationship \"{relationshipName}\"",
+
+        "AGGREGATION_RELATIONSHIP_ALREADY_USED": "Aggregation \"{aggregationName}\" encapsulates relationship \"{relationshipName}\" which is already used"
+      }
+    }
+  }
+}

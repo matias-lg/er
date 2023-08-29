@@ -1,60 +1,101 @@
 import { SemanticError } from "../../ERDoc/types/linter/SemanticError";
+import { useTranslations } from "next-intl";
 
-// TODO: refactor, test, i18n
-const getErrorMessage = (err: SemanticError): string => {
+type translation = ReturnType<typeof useTranslations<string>>;
+
+// TODO: refactor, test
+const getErrorMessage = (t: translation, err: SemanticError): string => {
   switch (err.type) {
     // Entity errors
     case "ENTITY_DUPLICATE":
-      return `Entity "${err.entityName}" is duplicate`;
+      return t("ENTITY_DUPLICATE", { entityName: err.entityName });
 
     case "ENTITY_HAS_NO_KEY":
-      return `Entity "${err.entityName}" has no key`;
+      return t("ENTITY_HAS_NO_KEY", { entityName: err.entityName });
 
     case "ENTITY_DUPLICATE_ATTRIBUTE":
-      return `Entity "${err.entityName}" has duplicate attribute "${err.attributeName}"`;
+      return t("ENTITY_DUPLICATE_ATTRIBUTE", {
+        entityName: err.entityName,
+        attributeName: err.attributeName,
+      });
 
     case "ENTITY_EXTENDS_NON_EXISTENT_ENTITY":
-      return `Entity "${err.entityName}" extends non-existent entity "${err.extendsEntityName}"`;
+      return t("ENTITY_EXTENDS_NON_EXISTENT_ENTITY", {
+        entityName: err.entityName,
+        extendsEntityName: err.extendsEntityName,
+      });
 
     case "WEAK_ENTITY_NOT_IN_RELATIONSHIP":
-      return `Weak entity "${err.entityName}" depends on relationship "${err.relationshipName}", but it doesn't participate in it`;
+      return t("WEAK_ENTITY_NOT_IN_RELATIONSHIP", {
+        entityName: err.entityName,
+        relationshipName: err.relationshipName,
+      });
 
     case "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION":
-      return `Weak entity "${err.entityName}" doesn't have total participation in relationship "${err.relationshipName}"`;
+      return t("WEAK_ENTITY_NOT_TOTAL_PARTICIPATION", {
+        entityName: err.entityName,
+        relationshipName: err.relationshipName,
+      });
 
     case "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP":
-      return `Weak entity "${err.entityName}" depends on non-existent relationship "${err.relationshipName}"`;
+      return t("WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP", {
+        entityName: err.entityName,
+        relationshipName: err.relationshipName,
+      });
 
     case "CHILD_ENTITY_HAS_KEY":
-      return `Child entity "${err.entityName}" has identifying key`;
+      return t("CHILD_ENTITY_HAS_KEY", { entityName: err.entityName });
 
     // Relationship errors
     case "RELATIONSHIP_DUPLICATE":
-      return `Relationship "${err.relationshipName}" is duplicate`;
+      return t("RELATIONSHIP_DUPLICATE", {
+        relationshipName: err.relationshipName,
+      });
 
     case "RELATIONSHIP_DUPLICATE_ATTRIBUTE":
-      return `Relationship "${err.relationshipName}" has duplicate attribute "${err.attributeName}"`;
+      return t("RELATIONSHIP_DUPLICATE_ATTRIBUTE", {
+        relationshipName: err.relationshipName,
+        attributeName: err.attributeName,
+      });
 
     case "RELATIONSHIP_DUPLICATE_PARTICIPANT":
-      return `Relationship "${err.relationshipName}" has duplicate participant "${err.entityName}"`;
+      return t("RELATIONSHIP_DUPLICATE_PARTICIPANT", {
+        relationshipName: err.relationshipName,
+        entityName: err.entityName,
+      });
 
     case "RELATIONSHIP_PARTICIPATING_ENTITY_NOT_EXISTS":
-      return `Relationship "${err.relationshipName}" has non-existent participating entity "${err.entityName}"`;
+      return t("RELATIONSHIP_PARTICIPATING_ENTITY_NOT_EXISTS", {
+        relationshipName: err.relationshipName,
+        entityName: err.entityName,
+      });
 
     case "RELATIONSHIP_LESS_THAN_TWO_PARTICIPATING_ENTITIES":
-      return `Relationship "${err.relationshipName}" has less than two participating entities`;
+      return t("RELATIONSHIP_LESS_THAN_TWO_PARTICIPATING_ENTITIES", {
+        relationshipName: err.relationshipName,
+      });
 
     case "AGGREGATION_USES_ENTITY_NAME":
-      return `Entity with name "${err.aggregationName}" already exists`;
+      return t("AGGREGATION_USES_ENTITY_NAME", {
+        aggregationName: err.aggregationName,
+      });
 
     case "AGGREGATION_DUPLICATE":
-      return `Aggregation "${err.aggregationName}" is duplicate`;
+      return t("AGGREGATION_DUPLICATE", {
+        aggregationName: err.aggregationName,
+      });
 
     case "AGGREGATION_RELATIONSHIP_NOT_EXISTS":
-      return `Aggregation "${err.aggregationName}" encapsulates non-existent relationship "${err.relationshipName}"`;
+      return t("AGGREGATION_RELATIONSHIP_NOT_EXISTS", {
+        aggregationName: err.aggregationName,
+        relationshipName: err.relationshipName,
+      });
 
     case "AGGREGATION_RELATIONSHIP_ALREADY_USED":
-      return `Aggregation "${err.aggregationName}" encapsulates relationship "${err.relationshipName}" which is already used`;
+      return t("AGGREGATION_RELATIONSHIP_ALREADY_USED", {
+        aggregationName: err.aggregationName,
+        relationshipName: err.relationshipName,
+      });
 
     default: {
       const exhaustiveCheck: never = err;
