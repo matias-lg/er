@@ -37,7 +37,7 @@
 
         "AGGREGATION_RELATIONSHIP_NOT_EXISTS": "Aggregation \"{aggregationName}\" encapsulates non-existent relationship \"{relationshipName}\"",
 
-        "AGGREGATION_RELATIONSHIP_ALREADY_USED": "Aggregation \"{aggregationName}\" encapsulates relationship \"{relationshipName}\" which is already used"
+        "AGGREGATION_RELATIONSHIP_ALREADY_USED": "Aggregation \"{aggregationName}\" encapsulates relationship \"{relationshipName}\", which is already used"
       }
     }
   }
