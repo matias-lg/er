@@ -38,9 +38,9 @@ const ErrorTable = ({
               <td className="px-6 py-4"> {JSON.stringify(syntaxError)} </td>
             </tr>
           ) : (
-            semanticErrors.map((err) => {
+            semanticErrors.map((err, idx) => {
               return (
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <tr key={idx} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="text-lg px-6 py-4">
                     {getErrorMessage(semanticT, err)}
                   </td>

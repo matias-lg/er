@@ -14,7 +14,7 @@ module.exports = {
     "postcss.config.js",
     ".eslintrc.cjs",
     "next-env.d.ts",
-    "jest.config.js",
+    "jest.config.mjs",
   ],
   parser: "@typescript-eslint/parser",
   rules: {
