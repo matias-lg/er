@@ -1,9 +1,10 @@
 import { render } from "@testing-library/react";
 import ErrorTable from "../../src/app/[locale]/components/ErrorTable";
-import { NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider, useLocale, useTranslations } from "next-intl";
 import { SemanticError } from "../../src/ERDoc/types/linter/SemanticError";
 import messages from "../../src/locales/en.json";
 import { ChakraProvider } from "@chakra-ui/react";
+import getErrorMessage from "../../src/app/util/errorMessages";
 
 describe("Semantic Error messages", () => {
   const defaultLocation = {

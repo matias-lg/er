@@ -1,13 +1,13 @@
 "use client";
 import CodeMirror from "@uiw/react-codemirror";
-import { useCallback, Dispatch, useEffect, useState } from "react";
+import { useCallback, Dispatch } from "react";
 import { colors } from "../../util/colors";
 import { createTheme } from "@uiw/codemirror-themes";
-import { editor } from "monaco-editor";
-import { Editor } from "@monaco-editor/react";
+import { ErrorMessage } from "../../types/ErrorMessage";
 
 type Props = {
   editorText: string;
+  semanticErrorMessages: ErrorMessage[];
   onEditorTextChange: Dispatch<string>;
 };
 
@@ -23,30 +23,25 @@ const myTheme = createTheme({
   styles: [],
 });
 
-const CodeEditor = ({ editorText, onEditorTextChange }: Props) => {
+const CodeEditor = ({
+  semanticErrorMessages,
+  editorText,
+  onEditorTextChange,
+}: Props) => {
   const onChange = useCallback(
-    (content: string | undefined, _: any) =>
-      onEditorTextChange(content as string),
+    (content: string, _: never) => onEditorTextChange(content),
     [],
   );
 
   return (
-    <div className="p-4 h-full w-full">
-    <Editor
-      height={"100%"}
+    <CodeMirror
+      className="text-sm w-full min-h-full"
+      theme={myTheme}
+      height="100%"
+      width="100%"
       value={editorText}
       onChange={onChange}
-      options={{
-        scrollBeyondLastLine: true,
-        padding: {
-          bottom: 0,
-        },
-        minimap: {
-          enabled: false,
-        },
-      }}
-    />
-    </div>
+    ></CodeMirror>
   );
 };
 
