@@ -13,5 +13,5 @@ npm test
 ```
 run the web app:
 ```bash
-npm start dev
+npm run dev
 ```
