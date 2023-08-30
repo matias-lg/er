@@ -18,10 +18,8 @@ const Page = () => {
   useEffect(() => {
     try {
       setHasSyntaxError(false);
-      const t0 = performance.now();
       const [erDoc, errors] = getERDoc(inputText);
       setERDoc(erDoc);
-      console.log("Parse + lint took " + (performance.now() - t0) + "ms");
       setSemanticErrors(errors);
     } catch (e) {
       setHasSyntaxError(true);
@@ -29,14 +27,11 @@ const Page = () => {
     }
   }, [inputText]);
   return (
-    <div className="flex h-full">
-      <div className="w-[600px] xl:w-1/3">
-        <div className="flex h-[60%] w-full">
-          <CodeEditor
-            editorText={inputText}
-            onEditorTextChange={setInputText}
-          />
-        </div>
+    <div className="flex flex-col justify-between w-[600px] xl:w-1/3 h-full max-h-screen">
+      <div className="flex h-full w-full">
+        <CodeEditor editorText={inputText} onEditorTextChange={setInputText} />
+      </div>
+      <div className="min-h-max max-h-[36%]">
         <ErrorTable
           hasSyntaxError={hasSyntaxError}
           semanticErrors={semanticErrors}
@@ -46,5 +41,4 @@ const Page = () => {
     </div>
   );
 };
-
 export default Page;

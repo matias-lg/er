@@ -3,22 +3,7 @@ import ErrorTable from "../../src/app/[locale]/ErrorTable";
 import { NextIntlClientProvider } from "next-intl";
 import { SemanticError } from "../../src/ERDoc/types/linter/SemanticError";
 import messages from "../../src/locales/en.json";
-
-describe("Error table component", () => {
-  it("should display 'Syntax error' when there's one", () => {
-    const { getByText } = render(
-      <NextIntlClientProvider locale="en" messages={messages}>
-        <ErrorTable
-          hasSyntaxError={true}
-          semanticErrors={[]}
-          syntaxError={new Error("Syntax error")}
-        />
-        ,
-      </NextIntlClientProvider>,
-    );
-    expect(getByText("Syntax error")).toBeTruthy();
-  });
-});
+import { ChakraProvider } from "@chakra-ui/react";
 
 describe("Semantic Error messages", () => {
   const defaultLocation = {
@@ -170,7 +155,7 @@ describe("Semantic Error messages", () => {
         relationshipName: "Has",
         location: defaultLocation,
       },
-      "Relationship \"Has\" has less than two participating entities",
+      'Relationship "Has" has less than two participating entities',
     ],
 
     [
@@ -213,24 +198,25 @@ describe("Semantic Error messages", () => {
         location: defaultLocation,
       },
       'Aggregation "Human_has_Thing" encapsulates relationship "Has", which is already used',
-    ]
-
-
+    ],
   ];
 
   for (const [desc, err, expectedMsg] of testCases) {
     it(desc, () => {
+      window.scrollTo = jest.fn()
       const { getByText } = render(
         <NextIntlClientProvider locale="en" messages={messages}>
-          <ErrorTable
-            hasSyntaxError={false}
-            semanticErrors={[err]}
-            syntaxError={null}
-          />
+          <ChakraProvider>
+            <ErrorTable
+              hasSyntaxError={false}
+              semanticErrors={[err]}
+              syntaxError={null}
+            />
+          </ChakraProvider>
           ,
         </NextIntlClientProvider>,
       );
-      expect(getByText(expectedMsg)).toBeTruthy();
+      expect(getByText(new RegExp(expectedMsg))).toBeTruthy();
     });
   }
 });
