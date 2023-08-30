@@ -17,16 +17,12 @@ type ErrorTableProps = {
   hasSyntaxError: boolean;
   syntaxError: Error | null;
   semanticErrors: SemanticError[];
-  isOpen: boolean;
-  onClickHandler: () => void;
 };
 
 const ErrorTable = ({
-  isOpen,
   hasSyntaxError,
   syntaxError,
   semanticErrors,
-  onClickHandler,
 }: ErrorTableProps) => {
   const t = useTranslations("home.errorsTable");
   const semanticT = useTranslations("home.errorsTable.semanticErrorMessages");
@@ -38,14 +34,14 @@ const ErrorTable = ({
       borderBottomColor={"#6b7280"}
     >
       <AccordionItem backgroundColor={colors.textEditorBackground}>
-        <AccordionButton onClick={onClickHandler} textColor={"#a8a29e"}>
+        <AccordionButton textColor={"#a8a29e"}>
           <Box as="span" flex="1" textAlign="left">
             {t("errors")}{" "}
             {semanticErrors.length > 0 ? `(${semanticErrors.length})` : ""}
           </Box>
           <AccordionIcon />
         </AccordionButton>
-        <AccordionPanel textColor={"#a8a29e"} overflow={"scroll"}>
+        <AccordionPanel textColor={"#a8a29e"} overflow={"auto"}>
           <UnorderedList>
             {hasSyntaxError && (
               <ListItem>{JSON.stringify(syntaxError)}</ListItem>

@@ -1,11 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getERDoc } from "../../ERDoc";
 import CodeEditor from "./components/CodeEditor";
 import { SemanticError } from "../../ERDoc/types/linter/SemanticError";
 import { ER } from "../../ERDoc/types/parser/ER";
-import { Grid, GridItem, Card, CardBody, Box } from "@chakra-ui/react";
+import { Grid, GridItem, Box } from "@chakra-ui/react";
 import ErrorTable from "./components/ErrorTable";
+import { colors } from "../util/colors";
+import { useTranslations } from "next-intl";
+import getErrorMessage from "../util/errorMessages";
+import { ErrorMessage } from "../types/ErrorMessage";
 
 const Page = () => {
   const [_, setERDoc] = useState<ER | null>(null);
@@ -15,7 +19,19 @@ const Page = () => {
 
   const [hasSyntaxError, setHasSyntaxError] = useState<boolean>(false);
   const [syntaxError, setSyntaxError] = useState<Error | null>(null);
-  const [errorTableIsOpen, setErrorTableIsOpen] = useState<boolean>(true);
+
+  const semanticErrT = useTranslations(
+    "home.errorsTable.semanticErrorMessages",
+  );
+
+  const SemanticErrorMessages = useMemo<ErrorMessage[]>(
+    () =>
+      semanticErrors.map((err) => ({
+        errorMessage: getErrorMessage(semanticErrT, err),
+        location: err.location,
+      })),
+    [semanticErrors],
+  );
 
   useEffect(() => {
     try {
@@ -48,21 +64,33 @@ const Page = () => {
         overflow={"hidden"}
         justifyContent={"space-between"}
       >
-        <Box resize="none" width='full' height='full' overflow='auto' bg='pink.400' >
+        <Box
+          resize="none"
+          width="full"
+          height="full"
+          overflow="auto"
+          bg={colors.textEditorBackground}
+          p={0}
+        >
           <CodeEditor
-              editorText={inputText}
-              onEditorTextChange={setInputText}
-            />
+            semanticErrorMessages={SemanticErrorMessages}
+            editorText={inputText}
+            onEditorTextChange={setInputText}
+          />
         </Box>
 
-        <Box width='full' height='fit-content' overflow='hidden' bg='orange.400' >
+        <Box
+          width="full"
+          height="fit-content"
+          maxH={"40%"}
+          overflow="hidden"
+          bg="orange.400"
+        >
           <ErrorTable
-              isOpen={errorTableIsOpen}
-              onClickHandler={() => setErrorTableIsOpen((isOpen) => !isOpen)}
-              hasSyntaxError={hasSyntaxError}
-              semanticErrors={semanticErrors}
-              syntaxError={syntaxError}
-            />
+            hasSyntaxError={hasSyntaxError}
+            semanticErrors={semanticErrors}
+            syntaxError={syntaxError}
+          />
         </Box>
       </GridItem>
       <GridItem area="erd">"ER goes here"</GridItem>
