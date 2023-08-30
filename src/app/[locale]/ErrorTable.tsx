@@ -1,6 +1,17 @@
 import getErrorMessage from "../util/errorMessages";
 import { SemanticError } from "../../ERDoc/types/linter/SemanticError";
 import { useTranslations } from "next-intl";
+import {
+  ListItem,
+  UnorderedList,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Box,
+} from "@chakra-ui/react";
+import { colors } from "../util/colors";
 
 type ErrorTableProps = {
   hasSyntaxError: boolean;
@@ -16,42 +27,48 @@ const ErrorTable = ({
   const t = useTranslations("home.errorsTable");
   const semanticT = useTranslations("home.errorsTable.semanticErrorMessages");
   return (
-    <div className="h-[40%] overflow-auto">
-      <table className="h-full w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          {hasSyntaxError ? (
-            <tr>
-              <th className="px-6 py-3 sticky top-0 bg-gray-700">
-                {t("syntaxError")}
-              </th>
-            </tr>
-          ) : (
-            <tr>
-              <th className="px-6 py-3 sticky top-0 bg-gray-700">Error:</th>
-              <th className="px-6 py-3 sticky top-0 bg-gray-700">Location:</th>
-            </tr>
-          )}
-        </thead>
-        <tbody>
-          {hasSyntaxError ? (
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <td className="px-6 py-4"> {JSON.stringify(syntaxError)} </td>
-            </tr>
-          ) : (
-            semanticErrors.map((err, idx) => {
-              return (
-                <tr key={idx} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <td className="text-lg px-6 py-4">
-                    {getErrorMessage(semanticT, err)}
-                  </td>
-                  <td className="px-6 py-4">{JSON.stringify(err.location)}</td>
-                </tr>
-              );
-            })
-          )}
-        </tbody>
-      </table>
-    </div>
+    <Accordion
+      allowToggle
+      defaultIndex={0}
+      maxHeight={"800px"}
+      // overflow={"hidden"}
+      border={0}
+      borderTopColor={"#6b7280"}
+      borderBottomColor={"#6b7280"}
+    >
+      <AccordionItem
+        backgroundColor={colors.textEditorBackground}
+        maxHeight={"full"}
+        overflow={"hidden"}
+      >
+        <AccordionButton textColor={"#a8a29e"}>
+          <Box as="span" flex="1" textAlign="left">
+            {t("errors")}{" "}
+            {semanticErrors.length > 0 ? `(${semanticErrors.length})` : ""}
+          </Box>
+          <AccordionIcon />
+        </AccordionButton>
+        <AccordionPanel
+          textColor={"#a8a29e"}
+          maxHeight={"390px"}
+          overflow={"hidden"}
+        >
+          <div className={"overflow-auto max-h-[250px]"}>
+            <UnorderedList height={"full"}>
+              {hasSyntaxError && (
+                <ListItem>{JSON.stringify(syntaxError)}</ListItem>
+              )}
+              {semanticErrors.map((err, idx) => (
+                <ListItem key={idx}>
+                  {getErrorMessage(semanticT, err)} ({err.location.start.line}:
+                  {err.location.start.column})
+                </ListItem>
+              ))}
+            </UnorderedList>
+          </div>
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
   );
 };
 
