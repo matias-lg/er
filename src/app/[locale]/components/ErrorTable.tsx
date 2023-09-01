@@ -26,7 +26,7 @@ const ErrorTable = ({ semanticErrorMessages }: ErrorTableProps) => {
       borderBottomColor={"#6b7280"}
     >
       <AccordionItem backgroundColor={colors.textEditorBackground}>
-        <AccordionButton textColor={"#a8a29e"}>
+        <AccordionButton textColor={"#D4D4D4"}>
           <Box as="span" flex="1" textAlign="left">
             {t("errors")}{" "}
             {semanticErrorMessages.length > 0
@@ -35,7 +35,7 @@ const ErrorTable = ({ semanticErrorMessages }: ErrorTableProps) => {
           </Box>
           <AccordionIcon />
         </AccordionButton>
-        <AccordionPanel textColor={"#a8a29e"} overflow={"auto"}>
+        <AccordionPanel textColor={"#D4D4D4"} overflow={"auto"}>
           <UnorderedList>
             {semanticErrorMessages.map((err, idx) => (
               <ListItem key={idx}>
