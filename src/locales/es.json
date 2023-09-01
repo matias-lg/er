@@ -16,6 +16,8 @@
 
         "ENTITY_EXTENDS_NON_EXISTENT_ENTITY": "Entity \"{entityName}\" extends non-existent entity \"{extendsEntityName}\"",
 
+        "ENTITY_EXTENDS_CHILD_ENTITY": "Entity \"{parentEntityName}\" extends child entity \"{childEntityName}\"",
+
         "WEAK_ENTITY_NOT_IN_RELATIONSHIP": "Weak entity \"{entityName}\" depends on relationship \"{relationshipName}\", but it doesn't participate in it",
 
         "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION": "Weak entity \"{entityName}\" doesn't have total participation in relationship \"{relationshipName}\"",
