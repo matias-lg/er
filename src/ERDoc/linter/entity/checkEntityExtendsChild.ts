@@ -27,7 +27,7 @@ export const checkEntityExtendsChildEntity = (
 
     if (!entity.hasParent) continue;
     let parent = er.entities.find((e) => e.name === entity.parentName);
-    while (parent !== undefined && parent!.name !== entity.name) {
+    while (parent !== undefined && parent.name !== entity.name) {
       // parent can't be in my childs
       const myChilds = inheritsFrom.get(entity.name);
       if (myChilds !== undefined) {
