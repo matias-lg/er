@@ -21,11 +21,20 @@ const editor_tokenizer: monaco.languages.IMonarchLanguage = {
     root: [
       // identifiers and keywords
       [
-        /[a-z_$][\w$]*/,
+        /depends[ ]on|[a-z_][\w]*/,
         {
           cases: {
             "@keywords": "keyword",
             "@keyKeywords": "string",
+          },
+        },
+      ],
+
+      [
+        /\w+\s\w+/,
+        {
+          cases: {
+            "@keywords": "keyword",
           },
         },
       ],
@@ -42,7 +51,10 @@ const CodeEditor = ({
 
   const semanticErrT = useTranslations("home.codeEditor.semanticErrorMessages");
 
-  const setEditorErrors = (errorMessages: ErrorMessage[]) => {
+  const setEditorErrors = (
+    errorMessages: ErrorMessage[],
+    severity: monaco.MarkerSeverity,
+  ) => {
     if (!editorRef.current) return;
 
     const errors: monaco.editor.IMarkerData[] = errorMessages.map((err) => ({
@@ -51,7 +63,7 @@ const CodeEditor = ({
       endLineNumber: err.location.end.line,
       endColumn: err.location.end.column,
       message: err.errorMessage,
-      severity: monaco.MarkerSeverity.Error,
+      severity,
     }));
 
     thisEditor?.editor.setModelMarkers(
@@ -69,17 +81,20 @@ const CodeEditor = ({
         errorMessage: getErrorMessage(semanticErrT, err),
         location: err.location,
       }));
-      setEditorErrors(errorMsgs);
+      setEditorErrors(errorMsgs, monaco.MarkerSeverity.Error);
       onSemanticErrorMessagesChange(errorMsgs);
     } catch (e) {
-      setEditorErrors([
-        {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-          errorMessage: e.message,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-          location: e.location,
-        },
-      ]);
+      setEditorErrors(
+        [
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+            errorMessage: e.message,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+            location: e.location,
+          },
+        ],
+        monaco.MarkerSeverity.Error,
+      );
     }
   };
 
@@ -92,7 +107,19 @@ const CodeEditor = ({
     // mount erdoc tokenizer
     m.languages.register({ id: "erdoc" });
     m.languages.setMonarchTokensProvider("erdoc", editor_tokenizer);
-    console.log("registered erdoc tokens");
+    // custom theme
+    m.editor.defineTheme("onedark", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "keyword", foreground: "#c678dd" },
+        { token: "string", foreground: "#98c379" },
+      ],
+      colors: {
+        "editor.background": "#21252b",
+      },
+    });
+    m.editor.setTheme("onedark");
   };
 
   return (
@@ -101,7 +128,7 @@ const CodeEditor = ({
       value={DEFAULT_ERDOC}
       onChange={(content, _) => handleEditorContent(content!)}
       onMount={handleEditorMount}
-      theme="vs-dark"
+      // theme="vs-dark"
       language="erdoc"
       options={{
         scrollBeyondLastLine: false,

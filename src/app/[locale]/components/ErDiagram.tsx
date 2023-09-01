@@ -112,7 +112,7 @@ function ErDiagram({ erDoc }: ErDiagramProps) {
       onEdgesChange={onEdgesChange}
       nodeTypes={nodeTypes}
     >
-      <Background color="#ccc" variant={BackgroundVariant.Cross} />
+      <Background variant={BackgroundVariant.Cross} />
       <Controls />
     </ReactFlow>
   );

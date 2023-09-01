@@ -26,10 +26,13 @@ const Page = () => {
       h="100%"
       gap="0"
     >
-      <GridItem area="header">
+      <GridItem padding={0} area="header">
         <Header />
       </GridItem>
+
       <GridItem
+        m={0}
+        p={0}
         area={"textZone"}
         display={"flex"}
         h={"100%"}
@@ -51,16 +54,11 @@ const Page = () => {
           />
         </Box>
 
-        <Box
-          width="full"
-          height="fit-content"
-          maxH={"40%"}
-          overflow="hidden"
-          bg="orange.400"
-        >
+        <Box width="full" height="fit-content" maxH={"40%"} overflow="hidden">
           <ErrorTable semanticErrorMessages={semanticErrorMessages} />
         </Box>
       </GridItem>
+
       <GridItem area="erd">
         <Box width="full" height="full">
           <ErDiagram erDoc={erDoc!} />
