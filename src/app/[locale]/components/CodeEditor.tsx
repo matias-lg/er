@@ -40,8 +40,7 @@ const CodeEditor = ({
     );
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleEditorChange = (content: string | undefined, _: any) => {
+  const handleEditorContent = (content: string) => {
     try {
       const [erDoc, errors] = getERDoc(content!);
       onErDocChange(erDoc);
@@ -55,18 +54,19 @@ const CodeEditor = ({
       // TODO: Syntax errors
       return;
     }
-  };
+  }
 
   return (
     <Editor
       height="100%"
       value={DEFAULT_ERDOC}
-      onChange={handleEditorChange}
+      onChange={(content, _) => handleEditorContent(content!) }
       onMount={(editor, _) => {
         editorRef.current = editor;
+        handleEditorContent(DEFAULT_ERDOC);
       }}
+      theme="vs-dark"
       options={{
-        theme: "vs-dark",
         scrollBeyondLastLine: false,
         minimap: {
           enabled: false,
