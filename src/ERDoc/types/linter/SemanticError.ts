@@ -19,6 +19,13 @@ export type EntityHasNoKeyError = {
   location: TokenLocation;
 };
 
+export type EntityExtendsChildEntityError = {
+  type: "ENTITY_EXTENDS_CHILD_ENTITY";
+  parentEntityName: string;
+  childEntityName: string;
+  location: TokenLocation;
+};
+
 export type EntityExtendsNonExistentEntityError = {
   type: "ENTITY_EXTENDS_NON_EXISTENT_ENTITY";
   entityName: string;
@@ -117,6 +124,7 @@ export type SemanticError =
   | EntityDuplicateAttributeError
   | EntityHasNoKeyError
   | EntityExtendsNonExistentEntityError
+  | EntityExtendsChildEntityError
   | ChildEntityHasKeyError
   | WeakEntityDependsOnNonExistentRelationshipError
   | WeakEntityNotInRelationshipError

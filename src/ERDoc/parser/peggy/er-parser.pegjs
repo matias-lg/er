@@ -1,4 +1,14 @@
 {{
+  const KEYWORDS = [
+"entity",
+"extends",
+"key",
+"pkey",
+"relation",
+"aggregation",
+"depends on"
+  ]
+
   function getLocation(location_fun) {
     const location = location_fun();
     const { source, ...rest } = location;
@@ -222,7 +232,7 @@ aggregation = declareAggregation _ identifier:aggregationIdentifier _0 Lparen ag
 
 aggregationIdentifier "aggregation identifier" = validWord
 // TOKENS
-validWord = characters:[a-zA-Z0-9_áéíóúÁÉÍÓÚñÑ]+ {return characters.join('')}
+validWord = characters:([a-zA-Z0-9_áéíóúÁÉÍÓÚñÑ]+) ! {return KEYWORDS.some(kw => kw == characters.join('').toLowerCase())} {return characters.join('')}
 Lcurly = "{"
 Rcurly = "}"
 Lbracket = "["
@@ -232,12 +242,16 @@ Rparen = ")"
 
 declareEntity = "entity"i
 declareExtends = "extends"i
-_ "1 or more whitespaces" = [ \t\n]+
-_0 "0 or more whitespaces" = [ \t\n]*
 declareIsKey "key" = "key"
 declareIsPartialKey "partial key" = "pkey"
-
+declareRelationship = "relation"i
+declareAggregation = "aggregation"i
 dependsOn = "depends on"i
+
+_ "1 or more whitespaces" = [ \t\n]+
+_0 "0 or more whitespaces" = [ \t\n]*
+
+
 through = "through"i
 relationshipDependencyIdentifier "relationship identifier" = validWord
 entityIdentifier "entity identifier" = validWord
@@ -245,5 +259,3 @@ attributeIdentifier "attribute identifier" = validWord
 parentIdentifier "parent identifier" = validWord
 relationshipIdentifier "relationship identifier" = validWord
 
-declareRelationship = "relation"i
-declareAggregation = "aggregation"i

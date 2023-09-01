@@ -55,6 +55,11 @@ describe("Linter detects duplicate attributes in entities", () => {
     expect(errors[0].entityName).toBe("Ferrari");
     expect(errors[0].attributeName).toBe("Brand");
   });
+
+  it("returns when there is a circular inheritance", () => {
+    const errors = checkEntityDuplicateAttribute(ERWithCircularInheritance);
+    expect(errors).toHaveLength(0);
+  });
 });
 
 /*
@@ -919,6 +924,190 @@ const ERWithWrongSubclass2: ER = {
         end: {
           offset: 168,
           line: 14,
+          column: 2,
+        },
+      },
+    },
+  ],
+  relationships: [],
+  aggregations: [],
+};
+
+/*
+entity Dog extends Mammal {
+    breed
+}
+
+entity Mammal extends Animal {
+    hasHair
+}
+
+entity Animal extends Life {
+    age
+}
+
+entity Life extends Dog {
+    l_id key
+}
+*/
+const ERWithCircularInheritance: ER = {
+  entities: [
+    {
+      type: "entity",
+      name: "Dog",
+      attributes: [
+        {
+          name: "breed",
+          location: {
+            start: {
+              offset: 32,
+              line: 2,
+              column: 5,
+            },
+            end: {
+              offset: 37,
+              line: 2,
+              column: 10,
+            },
+          },
+          isKey: false,
+          isComposite: false,
+          childAttributesNames: null,
+        },
+      ],
+      hasParent: true,
+      parentName: "Mammal",
+      hasDependencies: false,
+      dependsOn: null,
+      location: {
+        start: {
+          offset: 0,
+          line: 1,
+          column: 1,
+        },
+        end: {
+          offset: 39,
+          line: 3,
+          column: 2,
+        },
+      },
+    },
+    {
+      type: "entity",
+      name: "Mammal",
+      attributes: [
+        {
+          name: "hasHair",
+          location: {
+            start: {
+              offset: 73,
+              line: 6,
+              column: 2,
+            },
+            end: {
+              offset: 80,
+              line: 6,
+              column: 9,
+            },
+          },
+          isKey: false,
+          isComposite: false,
+          childAttributesNames: null,
+        },
+      ],
+      hasParent: true,
+      parentName: "Animal",
+      hasDependencies: false,
+      dependsOn: null,
+      location: {
+        start: {
+          offset: 41,
+          line: 5,
+          column: 1,
+        },
+        end: {
+          offset: 82,
+          line: 7,
+          column: 2,
+        },
+      },
+    },
+    {
+      type: "entity",
+      name: "Animal",
+      attributes: [
+        {
+          name: "age",
+          location: {
+            start: {
+              offset: 114,
+              line: 10,
+              column: 2,
+            },
+            end: {
+              offset: 117,
+              line: 10,
+              column: 5,
+            },
+          },
+          isKey: false,
+          isComposite: false,
+          childAttributesNames: null,
+        },
+      ],
+      hasParent: true,
+      parentName: "Life",
+      hasDependencies: false,
+      dependsOn: null,
+      location: {
+        start: {
+          offset: 84,
+          line: 9,
+          column: 1,
+        },
+        end: {
+          offset: 119,
+          line: 11,
+          column: 2,
+        },
+      },
+    },
+    {
+      type: "entity",
+      name: "Life",
+      attributes: [
+        {
+          name: "l_id",
+          location: {
+            start: {
+              offset: 148,
+              line: 14,
+              column: 2,
+            },
+            end: {
+              offset: 156,
+              line: 14,
+              column: 10,
+            },
+          },
+          isKey: true,
+          isComposite: false,
+          childAttributesNames: null,
+        },
+      ],
+      hasParent: true,
+      parentName: "Dog",
+      hasDependencies: false,
+      dependsOn: null,
+      location: {
+        start: {
+          offset: 121,
+          line: 13,
+          column: 1,
+        },
+        end: {
+          offset: 158,
+          line: 15,
           column: 2,
         },
       },
