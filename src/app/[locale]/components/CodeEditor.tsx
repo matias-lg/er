@@ -1,15 +1,36 @@
 import Editor, { useMonaco } from "@monaco-editor/react";
-import { ErrorMessage } from "../../types/ErrorMessage";
-import { Dispatch, useRef } from "react";
 import * as monaco from "monaco-editor";
-import { getERDoc } from "../../../ERDoc";
-import getErrorMessage from "../../util/errorMessages";
 import { useTranslations } from "next-intl";
+import { Dispatch, useRef } from "react";
+import { getERDoc } from "../../../ERDoc";
 import { ER } from "../../../ERDoc/types/parser/ER";
+import { ErrorMessage } from "../../types/ErrorMessage";
+import getErrorMessage from "../../util/errorMessages";
 
 type EditorProps = {
   onErDocChange: Dispatch<ER>;
   onSemanticErrorMessagesChange: Dispatch<ErrorMessage[]>;
+};
+
+const editor_tokenizer: monaco.languages.IMonarchLanguage = {
+  keywords: ["entity", "relation", "aggregation", "depends on", "extends"],
+  keyKeywords: ["key", "pkey"],
+  keywordsRegex: /entity|relation|aggregation|depends on|extends/,
+  ignoreCase: true,
+  tokenizer: {
+    root: [
+      // identifiers and keywords
+      [
+        /[a-z_$][\w$]*/,
+        {
+          cases: {
+            "@keywords": "keyword",
+            "@keyKeywords": "string",
+          },
+        },
+      ],
+    ],
+  },
 };
 
 const CodeEditor = ({
@@ -35,14 +56,14 @@ const CodeEditor = ({
 
     thisEditor?.editor.setModelMarkers(
       editorRef.current.getModel()!,
-      "errors",
+      "semanticErrors",
       errors,
     );
   };
 
   const handleEditorContent = (content: string) => {
     try {
-      const [erDoc, errors] = getERDoc(content!);
+      const [erDoc, errors] = getERDoc(content);
       onErDocChange(erDoc);
       const errorMsgs: ErrorMessage[] = errors.map((err) => ({
         errorMessage: getErrorMessage(semanticErrT, err),
@@ -54,18 +75,28 @@ const CodeEditor = ({
       // TODO: Syntax errors
       return;
     }
-  }
+  };
+
+  const handleEditorMount = (
+    editor: monaco.editor.IStandaloneCodeEditor,
+    m: typeof monaco,
+  ) => {
+    editorRef.current = editor;
+    handleEditorContent(DEFAULT_ERDOC);
+    // mount erdoc tokenizer
+    m.languages.register({ id: "erdoc" });
+    m.languages.setMonarchTokensProvider("erdoc", editor_tokenizer);
+    console.log("registered erdoc tokens");
+  };
 
   return (
     <Editor
       height="100%"
       value={DEFAULT_ERDOC}
-      onChange={(content, _) => handleEditorContent(content!) }
-      onMount={(editor, _) => {
-        editorRef.current = editor;
-        handleEditorContent(DEFAULT_ERDOC);
-      }}
+      onChange={(content, _) => handleEditorContent(content!)}
+      onMount={handleEditorMount}
       theme="vs-dark"
+      language="erdoc"
       options={{
         scrollBeyondLastLine: false,
         minimap: {
