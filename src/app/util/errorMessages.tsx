@@ -25,6 +25,12 @@ const getErrorMessage = (t: translation, err: SemanticError): string => {
         extendsEntityName: err.extendsEntityName,
       });
 
+    case "ENTITY_EXTENDS_CHILD_ENTITY":
+      return t("ENTITY_EXTENDS_CHILD_ENTITY", {
+        childEntityName: err.childEntityName,
+        parentEntityName: err.parentEntityName,
+      });
+
     case "WEAK_ENTITY_NOT_IN_RELATIONSHIP":
       return t("WEAK_ENTITY_NOT_IN_RELATIONSHIP", {
         entityName: err.entityName,
