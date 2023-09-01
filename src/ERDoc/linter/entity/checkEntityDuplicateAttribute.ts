@@ -41,18 +41,22 @@ export const checkEntityDuplicateAttribute = (
 };
 
 const getAllAttributes = (entityName: string, er: ER) => {
-  let entity = er.entities.filter((e) => e.name === entityName).pop()!;
-  const entityAttributes = entity.attributes.map((attr) => ({
+  let currentEntity = er.entities.filter((e) => e.name === entityName).pop()!;
+  const entityAttributes = currentEntity.attributes.map((attr) => ({
     isFromParent: false,
     ...attr,
   }));
 
-  if (!entity.hasParent) return entityAttributes;
+  if (!currentEntity.hasParent) return entityAttributes;
   let hasParent = true;
   while (hasParent) {
     // assume only one parent, more than 1 would be an error caught by another validator
-    const parent = er.entities.filter((e) => e.name === entity.parentName);
+    const parent = er.entities.filter(
+      (e) => e.name === currentEntity.parentName,
+    );
     if (parent.length === 0) break;
+    // if it reaches itself it's a circular inheritance. WRONG.
+    if (parent[0].name === entityName) return [];
 
     parent[0].attributes.forEach((attr) => {
       entityAttributes.push({
@@ -61,8 +65,8 @@ const getAllAttributes = (entityName: string, er: ER) => {
       });
     });
 
-    entity = parent[0];
-    hasParent = entity.hasParent;
+    currentEntity = parent[0];
+    hasParent = currentEntity.hasParent;
   }
   return entityAttributes;
 };

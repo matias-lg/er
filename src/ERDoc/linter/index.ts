@@ -17,6 +17,7 @@ import { checkAggregationRelationshipNotExists } from "./aggregation/checkAggreg
 import { checkAggregationUsesSameRelationship } from "./aggregation/checkAggregationUsesSameRelationship";
 import { checkAggregationUsesEntityName } from "./aggregation/checkAggregationUsesEntityName";
 import { checkRelationshipParticipatingEntityNotExists } from "./relationship/checkRelationshipParticipatingEntityNotExists";
+import { checkEntityExtendsChildEntity } from "./entity/checkEntityExtendsChild";
 
 type checkErrorFunction = (er: ER) => SemanticError[];
 
@@ -25,6 +26,7 @@ const validators: checkErrorFunction[] = [
   checkEntityDuplicateAttribute,
   checkEntityNoKey,
   checkEntityExtendsNonExistentEntity,
+  checkEntityExtendsChildEntity,
 
   checkChildEntityHasKey,
 
