@@ -1,49 +1,20 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
-import { getERDoc } from "../../ERDoc";
-import CodeEditor from "./components/CodeEditor";
-import { SemanticError } from "../../ERDoc/types/linter/SemanticError";
+import { useState } from "react";
 import { ER } from "../../ERDoc/types/parser/ER";
 import { Grid, GridItem, Box } from "@chakra-ui/react";
 import ErrorTable from "./components/ErrorTable";
 import { colors } from "../util/colors";
-import { useTranslations } from "next-intl";
-import getErrorMessage from "../util/errorMessages";
+import Header from "./components/Header";
+import ErDiagram from "./components/ErDiagram";
+import CodeEditor from "./components/CodeEditor";
 import { ErrorMessage } from "../types/ErrorMessage";
 
 const Page = () => {
-  const [_, setERDoc] = useState<ER | null>(null);
-  const [inputText, setInputText] = useState<string>(DEFAULT_ERDOC_STR);
+  const [erDoc, setErDoc] = useState<ER | null>(null);
+  const [semanticErrorMessages, setSemanticErrorMessages] = useState<
+    ErrorMessage[]
+  >([]);
 
-  const [semanticErrors, setSemanticErrors] = useState<SemanticError[]>([]);
-
-  const [hasSyntaxError, setHasSyntaxError] = useState<boolean>(false);
-  const [syntaxError, setSyntaxError] = useState<Error | null>(null);
-
-  const semanticErrT = useTranslations(
-    "home.errorsTable.semanticErrorMessages",
-  );
-
-  const SemanticErrorMessages = useMemo<ErrorMessage[]>(
-    () =>
-      semanticErrors.map((err) => ({
-        errorMessage: getErrorMessage(semanticErrT, err),
-        location: err.location,
-      })),
-    [semanticErrors],
-  );
-
-  useEffect(() => {
-    try {
-      setHasSyntaxError(false);
-      const [erDoc, errors] = getERDoc(inputText);
-      setERDoc(erDoc);
-      setSemanticErrors(errors);
-    } catch (e) {
-      setHasSyntaxError(true);
-      if (e instanceof Error) setSyntaxError(e);
-    }
-  }, [inputText]);
   return (
     <Grid
       templateAreas={`
@@ -55,7 +26,9 @@ const Page = () => {
       h="100%"
       gap="0"
     >
-      <GridItem area="header">"Header goes here"</GridItem>
+      <GridItem area="header">
+        <Header />
+      </GridItem>
       <GridItem
         area={"textZone"}
         display={"flex"}
@@ -70,12 +43,11 @@ const Page = () => {
           height="full"
           overflow="auto"
           bg={colors.textEditorBackground}
-          p={0}
+          pt={2}
         >
           <CodeEditor
-            semanticErrorMessages={SemanticErrorMessages}
-            editorText={inputText}
-            onEditorTextChange={setInputText}
+            onErDocChange={setErDoc}
+            onSemanticErrorMessagesChange={setSemanticErrorMessages}
           />
         </Box>
 
@@ -86,38 +58,15 @@ const Page = () => {
           overflow="hidden"
           bg="orange.400"
         >
-          <ErrorTable
-            hasSyntaxError={hasSyntaxError}
-            semanticErrors={semanticErrors}
-            syntaxError={syntaxError}
-          />
+          <ErrorTable semanticErrorMessages={semanticErrorMessages} />
         </Box>
       </GridItem>
-      <GridItem area="erd">"ER goes here"</GridItem>
+      <GridItem area="erd">
+        <Box width="full" height="full">
+          <ErDiagram erDoc={erDoc!} />
+        </Box>
+      </GridItem>
     </Grid>
   );
 };
 export default Page;
-
-const DEFAULT_ERDOC_STR = `
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-entity milita{}
-`;

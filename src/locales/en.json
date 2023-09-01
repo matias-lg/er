@@ -3,7 +3,9 @@
     "title": "Hello world!",
 
     "errorsTable": {
-      "errors": "Errors",
+      "errors": "Errors"
+    },
+    "codeEditor": {
       "syntaxError": "Syntax error",
       "semanticErrorMessages": {
         "ENTITY_DUPLICATE": "Entity \"{entityName}\" is duplicate",
