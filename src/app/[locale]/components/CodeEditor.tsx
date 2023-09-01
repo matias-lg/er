@@ -1,48 +1,120 @@
-"use client";
-import CodeMirror from "@uiw/react-codemirror";
-import { useCallback, Dispatch } from "react";
-import { colors } from "../../util/colors";
-import { createTheme } from "@uiw/codemirror-themes";
+import Editor, { useMonaco } from "@monaco-editor/react";
 import { ErrorMessage } from "../../types/ErrorMessage";
+import { Dispatch, useRef } from "react";
+import * as monaco from "monaco-editor";
+import { getERDoc } from "../../../ERDoc";
+import getErrorMessage from "../../util/errorMessages";
+import { useTranslations } from "next-intl";
+import { ER } from "../../../ERDoc/types/parser/ER";
 
-type Props = {
-  editorText: string;
-  semanticErrorMessages: ErrorMessage[];
-  onEditorTextChange: Dispatch<string>;
+type EditorProps = {
+  onErDocChange: Dispatch<ER>;
+  onSemanticErrorMessagesChange: Dispatch<ErrorMessage[]>;
 };
 
-const myTheme = createTheme({
-  theme: "dark",
-  settings: {
-    background: colors.textEditorBackground,
-    foreground: "#939EB2",
-    gutterBackground: colors.textEditorBackground,
-    gutterForeground: "#939EB2",
-    lineHighlight: colors.textEditorBackground,
-  },
-  styles: [],
-});
-
 const CodeEditor = ({
-  semanticErrorMessages,
-  editorText,
-  onEditorTextChange,
-}: Props) => {
-  const onChange = useCallback(
-    (content: string, _: never) => onEditorTextChange(content),
-    [],
-  );
+  onErDocChange,
+  onSemanticErrorMessagesChange,
+}: EditorProps) => {
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+  const thisEditor = useMonaco();
+
+  const semanticErrT = useTranslations("home.codeEditor.semanticErrorMessages");
+
+  const setEditorErrors = (errorMessages: ErrorMessage[]) => {
+    if (!editorRef.current) return;
+
+    const errors: monaco.editor.IMarkerData[] = errorMessages.map((err) => ({
+      startLineNumber: err.location.start.line,
+      startColumn: err.location.start.column,
+      endLineNumber: err.location.end.line,
+      endColumn: err.location.end.column,
+      message: err.errorMessage,
+      severity: monaco.MarkerSeverity.Error,
+    }));
+
+    thisEditor?.editor.setModelMarkers(
+      editorRef.current.getModel()!,
+      "errors",
+      errors,
+    );
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleEditorChange = (content: string | undefined, _: any) => {
+    try {
+      const [erDoc, errors] = getERDoc(content!);
+      onErDocChange(erDoc);
+      const errorMsgs: ErrorMessage[] = errors.map((err) => ({
+        errorMessage: getErrorMessage(semanticErrT, err),
+        location: err.location,
+      }));
+      setEditorErrors(errorMsgs);
+      onSemanticErrorMessagesChange(errorMsgs);
+    } catch (e) {
+      // TODO: Syntax errors
+      return;
+    }
+  };
 
   return (
-    <CodeMirror
-      className="text-sm w-full min-h-full"
-      theme={myTheme}
+    <Editor
       height="100%"
-      width="100%"
-      value={editorText}
-      onChange={onChange}
-    ></CodeMirror>
+      value={DEFAULT_ERDOC}
+      onChange={handleEditorChange}
+      onMount={(editor, _) => {
+        editorRef.current = editor;
+      }}
+      options={{
+        theme: "vs-dark",
+        scrollBeyondLastLine: false,
+        minimap: {
+          enabled: false,
+        },
+      }}
+    />
   );
 };
 
 export default CodeEditor;
+
+const DEFAULT_ERDOC = `
+entity bank {
+    code key
+    name
+    addr
+}
+
+entity bank_branch depends on has_branches {
+    addr
+    branch_no pkey
+}
+
+relation has_branches(bank 1!, bank_branch N!)
+
+entity account {
+    acct_no key
+    balance
+    type
+}
+
+entity loan {
+    loan_no key
+    amount
+    type
+}
+
+relation accts(bank_branch 1, account N!)
+relation loans(bank_branch 1, loan N!)
+
+entity customer {
+    ssn key
+    name
+    addr
+    phone
+}
+
+relation a_c(customer N, account M!)
+relation l_c(customer N, loan M!)
+
+`;

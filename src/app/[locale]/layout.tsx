@@ -2,6 +2,7 @@ import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import ClientProviders from "./ClientProviders";
+import { StrictMode } from "react";
 
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "es" }];
@@ -24,10 +25,12 @@ const RootLayout = async ({
 
   return (
     <html className="h-full" lang={locale}>
-      <body className="bg-slate-400 h-full">
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <ClientProviders>{children}</ClientProviders>
-        </NextIntlClientProvider>
+      <body className="bg-slate-50 h-full">
+        <StrictMode>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <ClientProviders>{children}</ClientProviders>
+          </NextIntlClientProvider>
+        </StrictMode>
       </body>
     </html>
   );

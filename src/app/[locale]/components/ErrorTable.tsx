@@ -1,5 +1,3 @@
-import getErrorMessage from "../../util/errorMessages";
-import { SemanticError } from "../../../ERDoc/types/linter/SemanticError";
 import { useTranslations } from "next-intl";
 import {
   ListItem,
@@ -12,20 +10,14 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { colors } from "../../util/colors";
+import { ErrorMessage } from "../../types/ErrorMessage";
 
 type ErrorTableProps = {
-  hasSyntaxError: boolean;
-  syntaxError: Error | null;
-  semanticErrors: SemanticError[];
+  semanticErrorMessages: ErrorMessage[];
 };
 
-const ErrorTable = ({
-  hasSyntaxError,
-  syntaxError,
-  semanticErrors,
-}: ErrorTableProps) => {
+const ErrorTable = ({ semanticErrorMessages }: ErrorTableProps) => {
   const t = useTranslations("home.errorsTable");
-  const semanticT = useTranslations("home.errorsTable.semanticErrorMessages");
   return (
     <Accordion
       allowToggle
@@ -37,18 +29,17 @@ const ErrorTable = ({
         <AccordionButton textColor={"#a8a29e"}>
           <Box as="span" flex="1" textAlign="left">
             {t("errors")}{" "}
-            {semanticErrors.length > 0 ? `(${semanticErrors.length})` : ""}
+            {semanticErrorMessages.length > 0
+              ? `(${semanticErrorMessages.length})`
+              : ""}
           </Box>
           <AccordionIcon />
         </AccordionButton>
         <AccordionPanel textColor={"#a8a29e"} overflow={"auto"}>
           <UnorderedList>
-            {hasSyntaxError && (
-              <ListItem>{JSON.stringify(syntaxError)}</ListItem>
-            )}
-            {semanticErrors.map((err, idx) => (
+            {semanticErrorMessages.map((err, idx) => (
               <ListItem key={idx}>
-                {getErrorMessage(semanticT, err)} ({err.location.start.line}:
+                {err.errorMessage} ({err.location.start.line}:
                 {err.location.start.column})
               </ListItem>
             ))}
