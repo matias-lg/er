@@ -124,7 +124,7 @@ const CodeEditor = ({
 
   return (
     <Editor
-      height="100%"
+      height={"100%"}
       value={DEFAULT_ERDOC}
       onChange={(content, _) => handleEditorContent(content!)}
       onMount={handleEditorMount}
