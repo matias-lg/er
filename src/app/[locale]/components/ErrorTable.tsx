@@ -14,7 +14,7 @@ const ErrorTable = ({ errors }: ErrorTableProps) => {
   return (
     <div className="h-full w-full text-white mb-4">
       <button
-        className="w-full p-2 text-left border-t border-t-slate-50/[0.16] hover:bg-[#21252b/0.96] focus:outline-none"
+        className="w-full p-2 text-left border-t border-t-slate-50/[0.16] hover:bg-[#232a34] focus:outline-none"
         onClick={() => setIsOpen((o) => !o)}
       >
         <div className="flex items-center justify-between">
