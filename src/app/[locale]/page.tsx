@@ -2,12 +2,15 @@
 import { useState } from "react";
 import { ER } from "../../ERDoc/types/parser/ER";
 import { Grid, GridItem, Box } from "@chakra-ui/react";
+import dynamic from "next/dynamic";
 import { colors } from "../util/colors";
 import Header from "./components/Header";
 import ErDiagram from "./components/ErDiagram";
-import CodeEditor from "./components/CodeEditor";
 import { ErrorMessage } from "../types/ErrorMessage";
 import ErrorTable from "./components/ErrorTable";
+const CodeEditor = dynamic(() => import("./components/CodeEditor"), {
+  ssr: false,
+});
 
 const Page = () => {
   const [erDoc, setErDoc] = useState<ER | null>(null);

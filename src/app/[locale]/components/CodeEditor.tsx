@@ -1,5 +1,5 @@
 import Editor, { useMonaco } from "@monaco-editor/react";
-import * as monaco from "monaco-editor";
+import { type editor, type languages, MarkerSeverity } from "monaco-editor";
 import { useTranslations } from "next-intl";
 import { Dispatch, useRef } from "react";
 import { getERDoc } from "../../../ERDoc";
@@ -12,7 +12,7 @@ type EditorProps = {
   onSemanticErrorMessagesChange: Dispatch<ErrorMessage[]>;
 };
 
-const editor_tokenizer: monaco.languages.IMonarchLanguage = {
+const editor_tokenizer: languages.IMonarchLanguage = {
   keywords: ["entity", "relation", "aggregation", "depends on", "extends"],
   keyKeywords: ["key", "pkey"],
   keywordsRegex: /entity|relation|aggregation|depends on|extends/,
@@ -46,18 +46,18 @@ const CodeEditor = ({
   onErDocChange,
   onSemanticErrorMessagesChange,
 }: EditorProps) => {
-  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const thisEditor = useMonaco();
 
   const semanticErrT = useTranslations("home.codeEditor.semanticErrorMessages");
 
   const setEditorErrors = (
     errorMessages: ErrorMessage[],
-    severity: monaco.MarkerSeverity,
+    severity: MarkerSeverity,
   ) => {
     if (!editorRef.current) return;
 
-    const errors: monaco.editor.IMarkerData[] = errorMessages.map((err) => ({
+    const errors: editor.IMarkerData[] = errorMessages.map((err) => ({
       startLineNumber: err.location.start.line,
       startColumn: err.location.start.column,
       endLineNumber: err.location.end.line,
@@ -81,7 +81,7 @@ const CodeEditor = ({
         errorMessage: getErrorMessage(semanticErrT, err),
         location: err.location,
       }));
-      setEditorErrors(errorMsgs, monaco.MarkerSeverity.Error);
+      setEditorErrors(errorMsgs, MarkerSeverity.Error);
       onSemanticErrorMessagesChange(errorMsgs);
     } catch (e) {
       setEditorErrors(
@@ -93,14 +93,16 @@ const CodeEditor = ({
             location: e.location,
           },
         ],
-        monaco.MarkerSeverity.Error,
+        MarkerSeverity.Error,
       );
     }
   };
 
   const handleEditorMount = (
-    editor: monaco.editor.IStandaloneCodeEditor,
-    m: typeof monaco,
+    editor: editor.IStandaloneCodeEditor,
+    m: Parameters<
+      NonNullable<React.ComponentProps<typeof Editor>["onMount"]>
+    >[1],
   ) => {
     editorRef.current = editor;
     handleEditorContent(DEFAULT_ERDOC);
