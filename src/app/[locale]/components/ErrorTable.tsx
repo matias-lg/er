@@ -1,52 +1,46 @@
-import { useTranslations } from "next-intl";
-import {
-  ListItem,
-  UnorderedList,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Box,
-} from "@chakra-ui/react";
-import { colors } from "../../util/colors";
+import { useState } from "react";
 import { ErrorMessage } from "../../types/ErrorMessage";
+import { useTranslations } from "use-intl";
+import { List, ListItem } from "@chakra-ui/layout";
 
-type ErrorTableProps = {
-  semanticErrorMessages: ErrorMessage[];
-};
+interface ErrorTableProps {
+  errors: ErrorMessage[];
+}
 
-const ErrorTable = ({ semanticErrorMessages }: ErrorTableProps) => {
+const ErrorTable = ({ errors }: ErrorTableProps) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const t = useTranslations("home.errorsTable");
+
   return (
-    <Accordion
-      allowToggle
-      defaultIndex={0}
-      borderTopColor={"#6b7280"}
-      borderBottomColor={"#6b7280"}
-    >
-      <AccordionItem backgroundColor={colors.textEditorBackground}>
-        <AccordionButton textColor={"#D4D4D4"}>
-          <Box as="span" flex="1" textAlign="left">
-            {t("errors")}{" "}
-            {semanticErrorMessages.length > 0
-              ? `(${semanticErrorMessages.length})`
-              : ""}
-          </Box>
-          <AccordionIcon />
-        </AccordionButton>
-        <AccordionPanel textColor={"#D4D4D4"} overflow={"auto"}>
-          <UnorderedList>
-            {semanticErrorMessages.map((err, idx) => (
-              <ListItem key={idx}>
-                {err.errorMessage} ({err.location.start.line}:
-                {err.location.start.column})
+    <div className="h-full w-full text-white mb-4">
+      <button
+        className="w-full p-2 text-left border-t border-t-slate-50/[0.16] hover:bg-[#21252b/0.96] focus:outline-none"
+        onClick={() => setIsOpen((o) => !o)}
+      >
+        <div className="flex items-center justify-between">
+          <span className="font-semibold">
+            {t("errors")} {errors.length > 0 && ` (${errors.length})`}
+          </span>
+          <span
+            className={`transform ${
+              isOpen ? "rotate-180" : "rotate-0"
+            } transition-transform`}
+          ></span>
+        </div>
+      </button>
+      {isOpen && (
+        <div className="h-full overflow-auto p-2 pb-10 border-l border-r border-b border-slate-50/[0.16] rounded-b-md bg-[#21252b]">
+          <List overflow={"auto"} pb={"5"}>
+            {errors.map((err) => (
+              <ListItem>
+                {"- "}
+                {err.errorMessage}
               </ListItem>
             ))}
-          </UnorderedList>
-        </AccordionPanel>
-      </AccordionItem>
-    </Accordion>
+          </List>
+        </div>
+      )}
+    </div>
   );
 };
 
