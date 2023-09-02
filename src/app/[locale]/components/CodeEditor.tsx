@@ -1,5 +1,6 @@
-import Editor, { useMonaco } from "@monaco-editor/react";
-import { type editor, type languages, MarkerSeverity } from "monaco-editor";
+import Editor, { useMonaco, OnMount } from "@monaco-editor/react";
+import { languages, editor } from "monaco-types";
+import { MarkerSeverity } from "../../types/CodeEditor";
 import { useTranslations } from "next-intl";
 import { Dispatch, useRef } from "react";
 import { getERDoc } from "../../../ERDoc";
@@ -98,12 +99,7 @@ const CodeEditor = ({
     }
   };
 
-  const handleEditorMount = (
-    editor: editor.IStandaloneCodeEditor,
-    m: Parameters<
-      NonNullable<React.ComponentProps<typeof Editor>["onMount"]>
-    >[1],
-  ) => {
+  const handleEditorMount: OnMount = (editor, m) => {
     editorRef.current = editor;
     handleEditorContent(DEFAULT_ERDOC);
     // mount erdoc tokenizer

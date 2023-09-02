@@ -30,6 +30,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.6.4",
     "jest-environment-jsdom": "^29.6.4",
+    "monaco-types": "^0.1.0",
     "peggy": "^3.0.2",
     "postcss": "^8.4.28",
     "tailwindcss": "^3.3.3",
