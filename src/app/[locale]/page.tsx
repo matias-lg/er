@@ -25,16 +25,18 @@ const Page = () => {
       h="100%"
       gap="0"
     >
-      <GridItem mb={0}
-      textColor={"white"}
-      display={"flex"}
-      justifyContent={"between"}
-      padding={3}
-      flex={"wrap"}
-      backgroundColor={colors.textEditorBackground}
-      borderBottom={"1px"}
-      borderBottomColor={"rgb(248 250 252 / 0.16)"}
-      area="header">
+      <GridItem
+        mb={0}
+        textColor={"white"}
+        display={"flex"}
+        justifyContent={"between"}
+        padding={3}
+        flex={"wrap"}
+        backgroundColor={colors.textEditorBackground}
+        borderBottom={"1px"}
+        borderBottomColor={"rgb(248 250 252 / 0.16)"}
+        area="header"
+      >
         <Header />
       </GridItem>
 

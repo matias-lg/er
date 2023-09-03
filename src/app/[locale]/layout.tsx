@@ -25,7 +25,7 @@ const RootLayout = async ({
 
   return (
     <html className="h-full" lang={locale}>
-      <body className="bg-slate-50 h-full">
+      <body className="h-full bg-slate-50">
         <StrictMode>
           <NextIntlClientProvider locale={locale} messages={messages}>
             <ClientProviders>{children}</ClientProviders>
