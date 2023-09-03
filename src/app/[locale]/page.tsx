@@ -25,17 +25,23 @@ const Page = () => {
       h="100%"
       gap="0"
     >
-      <GridItem padding={0} area="header">
+      <GridItem mb={0}
+      textColor={"white"}
+      display={"flex"}
+      justifyContent={"between"}
+      padding={3}
+      flex={"wrap"}
+      backgroundColor={colors.textEditorBackground}
+      borderBottom={"1px"}
+      borderBottomColor={"rgb(248 250 252 / 0.16)"}
+      area="header">
         <Header />
       </GridItem>
 
       <GridItem
         overflow={"hidden"}
-        mt={2}
-        pt={0}
         area={"main"}
         display={"flex"}
-        // h={"100%"}
         w={"100%"}
         flexDir={"row"}
         justifyContent={"space-between"}
@@ -49,6 +55,7 @@ const Page = () => {
         >
           <Box
             resize="none"
+            pt={1}
             flex={"1 1 auto"}
             width="full"
             height="max-content"
