@@ -30,7 +30,8 @@ const Page = () => {
         textColor={"white"}
         display={"flex"}
         justifyContent={"between"}
-        padding={3}
+        paddingY={2}
+        paddingX={4}
         flex={"wrap"}
         backgroundColor={colors.textEditorBackground}
         borderBottom={"1px"}
