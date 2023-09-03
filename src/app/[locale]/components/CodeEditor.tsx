@@ -126,7 +126,6 @@ const CodeEditor = ({
       value={DEFAULT_ERDOC}
       onChange={(content, _) => handleEditorContent(content!)}
       onMount={handleEditorMount}
-      // theme="vs-dark"
       language="erdoc"
       options={{
         scrollBeyondLastLine: false,
