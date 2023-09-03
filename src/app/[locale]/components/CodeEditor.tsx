@@ -13,6 +13,26 @@ type EditorProps = {
   onSemanticErrorMessagesChange: Dispatch<ErrorMessage[]>;
 };
 
+const editor_themes: [themeName: string, theme: editor.IStandaloneThemeData][] = [
+  [
+    "onedark",
+    {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "keyword", foreground: "#c678dd" },
+        { token: "string", foreground: "#98c379" },
+      ],
+      colors: {
+        "editor.background": "#21252b",
+      },
+    },
+  ],
+];
+
+const DEFAULT_THEME = "onedark";
+
+
 const editor_tokenizer: languages.IMonarchLanguage = {
   keywords: ["entity", "relation", "aggregation", "depends on", "extends"],
   keyKeywords: ["key", "pkey"],
@@ -105,19 +125,11 @@ const CodeEditor = ({
     // mount erdoc tokenizer
     m.languages.register({ id: "erdoc" });
     m.languages.setMonarchTokensProvider("erdoc", editor_tokenizer);
-    // custom theme
-    m.editor.defineTheme("onedark", {
-      base: "vs-dark",
-      inherit: true,
-      rules: [
-        { token: "keyword", foreground: "#c678dd" },
-        { token: "string", foreground: "#98c379" },
-      ],
-      colors: {
-        "editor.background": "#21252b",
-      },
-    });
-    m.editor.setTheme("onedark");
+    // custom themes
+    for (const [themeName, theme] of editor_themes) {
+      m.editor.defineTheme(themeName, theme);
+    }
+    m.editor.setTheme(DEFAULT_THEME);
   };
 
   return (
@@ -128,6 +140,7 @@ const CodeEditor = ({
       onMount={handleEditorMount}
       language="erdoc"
       options={{
+        autoClosingBrackets: "always",
         scrollBeyondLastLine: false,
         minimap: {
           enabled: false,
