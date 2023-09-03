@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ErrorMessage } from "../../types/ErrorMessage";
 import { useTranslations } from "use-intl";
 import { List, ListItem } from "@chakra-ui/layout";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 interface ErrorTableProps {
   errors: ErrorMessage[];
@@ -21,11 +22,9 @@ const ErrorTable = ({ errors }: ErrorTableProps) => {
           <span className="font-semibold">
             {t("errors")} {errors.length > 0 && ` (${errors.length})`}
           </span>
-          <span
-            className={`transform ${
-              isOpen ? "rotate-180" : "rotate-0"
-            } transition-transform`}
-          ></span>
+          <span>
+            {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+          </span>
         </div>
       </button>
       {isOpen && (
