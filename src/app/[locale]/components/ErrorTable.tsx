@@ -12,9 +12,9 @@ const ErrorTable = ({ errors }: ErrorTableProps) => {
   const t = useTranslations("home.errorsTable");
 
   return (
-    <div className="h-full w-full text-white mb-4">
+    <div className="mb-4 h-full w-full text-white">
       <button
-        className="w-full p-2 text-left border-t border-t-slate-50/[0.16] hover:bg-[#232a34] focus:outline-none"
+        className="w-full border-t border-t-slate-50/[0.16] p-2 text-left hover:bg-[#232a34] focus:outline-none"
         onClick={() => setIsOpen((o) => !o)}
       >
         <div className="flex items-center justify-between">
@@ -29,7 +29,7 @@ const ErrorTable = ({ errors }: ErrorTableProps) => {
         </div>
       </button>
       {isOpen && (
-        <div className="h-full overflow-auto p-2 pb-10 border-l border-r border-b border-slate-50/[0.16] rounded-b-md bg-[#21252b]">
+        <div className="h-full overflow-auto rounded-b-md border-b border-l border-r border-slate-50/[0.16] bg-[#21252b] p-2 pb-10">
           <List overflow={"auto"} pb={"5"}>
             {errors.map((err) => (
               <ListItem>
