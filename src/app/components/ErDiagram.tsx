@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import ReactFlow, {
   Node,
   Handle,
@@ -22,20 +22,46 @@ type ErDiagramProps = {
 const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
-const BestNode = () => {
-  return (
-    <>
-      <Handle type="target" id="top" position={Position.Top} />
-      <Handle type="target" id="right" position={Position.Right} />
-      <Handle type="target" id="bottom" position={Position.Bottom} />
-      <Handle type="target" id="left" position={Position.Left} />
-    </>
-  );
-};
-
-const nodeTypes = {
-  best: BestNode,
-};
+const BestNode = ({ data }) => (
+  <>
+    <div className="border-2 border-black p-2">
+      <strong>{data.label}</strong>
+    </div>
+    <Handle
+      position={Position.Top}
+      type="source"
+      style={{
+        background: "red",
+        position: "absolute",
+        top: "50%",
+        right: "50%",
+        transform: "translate(50%,-50%)",
+      }}
+    />
+    <Handle
+      position={Position.Top}
+      type="source"
+      style={{
+        background: "red",
+        position: "absolute",
+        top: "50%",
+        right: "50%",
+        transform: "translate(50%,-50%)",
+      }}
+    />
+    <Handle
+      position={Position.Top}
+      type="source"
+      style={{
+        background: "red",
+        position: "absolute",
+        top: "50%",
+        right: "50%",
+        transform: "translate(50%,-50%)",
+      }}
+    />
+  </>
+);
 
 function ErDiagram({ erDoc }: ErDiagramProps) {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
@@ -59,6 +85,7 @@ function ErDiagram({ erDoc }: ErDiagramProps) {
     for (const entity of erDoc.entities) {
       const newEntityNode = {
         id: entity.name,
+        type: "best",
         data: { label: entity.name },
         position: {
           x: 0,
@@ -80,22 +107,19 @@ function ErDiagram({ erDoc }: ErDiagramProps) {
 
       const relationshipNode: Node = {
         id: relationshipID,
+        type: "best",
         data: { label: rel.name },
         position: { x: 0, y: 0 },
-        type: "best",
       };
       relationshipNodes.push(relationshipNode);
 
       // add an edge to each entity
-      const availableHandles = ["top", "right", "bottom", "left"];
       for (const entity of rel.participantEntities) {
         EREdges.push({
-          id: `${relationshipID}==${entity.entityName}`,
+          id: `${relationshipID}-${entity.entityName}`,
           source: entity.entityName,
-          targetHandle: availableHandles.pop() || "top",
           target: relationshipID,
-          label: "",
-          type: "step",
+          type: "straight",
         });
       }
     }
@@ -103,6 +127,8 @@ function ErDiagram({ erDoc }: ErDiagramProps) {
     setNodes([...entityNodes, ...relationshipNodes]);
     setEdges([...EREdges]);
   }, [erDoc]);
+
+  const nodeTypes = useMemo(() => ({ best: BestNode }), []);
 
   return (
     <ReactFlow
