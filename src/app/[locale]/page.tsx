@@ -3,11 +3,11 @@ import { useState } from "react";
 import { ER } from "../../ERDoc/types/parser/ER";
 import { Grid, GridItem, Box } from "@chakra-ui/react";
 import { colors } from "../util/colors";
-import Header from "./components/Header";
-import ErDiagram from "./components/ErDiagram";
+import Header from "../components/Header";
+import ErDiagram from "../components/ErDiagram";
 import { ErrorMessage } from "../types/ErrorMessage";
-import ErrorTable from "./components/ErrorTable";
-import CodeEditor from "./components/CodeEditor";
+import ErrorTable from "../components/ErrorTable";
+import CodeEditor from "../components/CodeEditor";
 
 const Page = () => {
   const [erDoc, setErDoc] = useState<ER | null>(null);

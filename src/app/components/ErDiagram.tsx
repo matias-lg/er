@@ -12,7 +12,7 @@ import ReactFlow, {
   applyNodeChanges,
   applyEdgeChanges,
 } from "reactflow";
-import { ER } from "../../../ERDoc/types/parser/ER";
+import { ER } from "../../ERDoc/types/parser/ER";
 import "reactflow/dist/style.css";
 
 type ErDiagramProps = {
