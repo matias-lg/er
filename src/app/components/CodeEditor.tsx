@@ -1,12 +1,12 @@
 import Editor, { useMonaco, OnMount } from "@monaco-editor/react";
 import { languages, editor } from "monaco-types";
-import { MarkerSeverity } from "../../types/CodeEditor";
+import { MarkerSeverity } from "../types/CodeEditor";
 import { useTranslations } from "next-intl";
 import { Dispatch, useRef } from "react";
-import { getERDoc } from "../../../ERDoc";
-import { ER } from "../../../ERDoc/types/parser/ER";
-import { ErrorMessage } from "../../types/ErrorMessage";
-import getErrorMessage from "../../util/errorMessages";
+import { getERDoc } from "../../ERDoc";
+import { ER } from "../../ERDoc/types/parser/ER";
+import { ErrorMessage } from "../types/ErrorMessage";
+import getErrorMessage from "../util/errorMessages";
 import { Spinner } from "@chakra-ui/react";
 
 type EditorProps = {
