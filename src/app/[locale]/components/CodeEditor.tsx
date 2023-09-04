@@ -7,31 +7,32 @@ import { getERDoc } from "../../../ERDoc";
 import { ER } from "../../../ERDoc/types/parser/ER";
 import { ErrorMessage } from "../../types/ErrorMessage";
 import getErrorMessage from "../../util/errorMessages";
+import { Spinner } from "@chakra-ui/react";
 
 type EditorProps = {
   onErDocChange: Dispatch<ER>;
   onSemanticErrorMessagesChange: Dispatch<ErrorMessage[]>;
 };
 
-const editor_themes: [themeName: string, theme: editor.IStandaloneThemeData][] = [
+const editor_themes: [themeName: string, theme: editor.IStandaloneThemeData][] =
   [
-    "onedark",
-    {
-      base: "vs-dark",
-      inherit: true,
-      rules: [
-        { token: "keyword", foreground: "#c678dd" },
-        { token: "string", foreground: "#98c379" },
-      ],
-      colors: {
-        "editor.background": "#21252b",
+    [
+      "onedark",
+      {
+        base: "vs-dark",
+        inherit: true,
+        rules: [
+          { token: "keyword", foreground: "#c678dd" },
+          { token: "string", foreground: "#98c379" },
+        ],
+        colors: {
+          "editor.background": "#21252b",
+        },
       },
-    },
-  ],
-];
+    ],
+  ];
 
 const DEFAULT_THEME = "onedark";
-
 
 const editor_tokenizer: languages.IMonarchLanguage = {
   keywords: ["entity", "relation", "aggregation", "depends on", "extends"],
@@ -138,6 +139,7 @@ const CodeEditor = ({
       value={DEFAULT_ERDOC}
       onChange={(content, _) => handleEditorContent(content!)}
       onMount={handleEditorMount}
+      loading={<Spinner color="white" />}
       language="erdoc"
       options={{
         autoClosingBrackets: "always",
