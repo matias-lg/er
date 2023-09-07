@@ -1,8 +1,6 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import ReactFlow, {
   Node,
-  Handle,
-  Position,
   NodeChange,
   Edge,
   EdgeChange,
@@ -11,51 +9,30 @@ import ReactFlow, {
   BackgroundVariant,
   applyNodeChanges,
   applyEdgeChanges,
+  NodeTypes,
 } from "reactflow";
 import { ER } from "../../../ERDoc/types/parser/ER";
 import "reactflow/dist/style.css";
+import ArrowNotation from "./notations/ArrowNotation";
+import { entityToReactflowElements } from "../../util/entityToReactflowElements";
 
 type ErDiagramProps = {
   erDoc: ER;
+  notation: NodeTypes;
 };
 
 const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
-const BestNode = ({ data }: { data: { label: string } }) => (
-  <>
-    <div className="border-2 border-black p-2">
-      <strong>{data.label}</strong>
-    </div>
-    <Handle
-      position={Position.Top}
-      type="source"
-      style={{
-        position: "absolute",
-        top: "50%",
-        right: "50%",
-        transform: "translate(50%,-50%)",
-      }}
-    />
-    <Handle
-      position={Position.Top}
-      type="target"
-      style={{
-        position: "absolute",
-        top: "50%",
-        right: "50%",
-        transform: "translate(50%,-50%)",
-      }}
-    />
-  </>
-);
+const NotationSelectorErDiagram = ({ erDoc }: { erDoc: ER }) => {
+  const [currentNotation, _] = useState<NodeTypes>(ArrowNotation);
+  return <ErDiagram erDoc={erDoc} notation={currentNotation} />;
+};
 
-const nodeTypes = { best: BestNode };
-
-function ErDiagram({ erDoc }: ErDiagramProps) {
+function ErDiagram({ erDoc, notation }: ErDiagramProps) {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
-
+  const nodeTypes = useMemo(() => notation, []);
   const onNodesChange = useCallback(
     (changes: NodeChange[]) =>
       setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -70,41 +47,23 @@ function ErDiagram({ erDoc }: ErDiagramProps) {
   useEffect(() => {
     if (erDoc === null) return;
     const entityNodes: Node[] = [];
-    const attributeNodes: Node[] = [];
+    const relationshipNodes: Node[] = [];
+    const attributeNodes: Node<{
+      label: string;
+      isKey: boolean;
+      entityIsWeak: boolean;
+    }>[] = [];
+
     const attributeEdges: Edge[] = [];
+    const relationshipEdges: Edge[] = [];
+    // TODO: Aggregations
 
     for (const entity of erDoc.entities) {
-      const newEntityNode = {
-        id: entity.name,
-        type: "best",
-        data: { label: entity.name },
-        position: {
-          x: 0,
-          y: 0,
-        },
-      };
-      entityNodes.push(newEntityNode);
-      // create attr nodes and an edge to the entity
-      for (const attr of entity.attributes) {
-        const attrID = `${entity.name}-${attr.name}`;
-        attributeNodes.push({
-          id: attrID,
-          type: "best",
-          data: { label: attr.name },
-          position: { x: 0, y: 0 },
-        });
-
-        attributeEdges.push({
-          id: `${attrID}-${entity.name}`,
-          source: attrID,
-          target: entity.name,
-          type: "straight",
-        });
-      }
+      const [newEntityNodes, newEntityEdges] =
+        entityToReactflowElements(entity);
+      entityNodes.push(...newEntityNodes);
+      attributeEdges.push(...newEntityEdges);
     }
-
-    const relationshipNodes: Node[] = [];
-    const relationshipEdges: Edge[] = [];
 
     for (const rel of erDoc.relationships) {
       // create a node for the relationship
@@ -113,15 +72,42 @@ function ErDiagram({ erDoc }: ErDiagramProps) {
         .sort()
         .join("-")}`;
 
-      const relationshipNode: Node = {
+      // TODO: Calculate this somewhere else.
+      // check if the relationship has a dependant entity
+      const hasDependant = rel.participantEntities.some(
+        (part) =>
+          erDoc.entities.find((e) => e.name === part.entityName)?.dependsOn
+            ?.relationshipName === rel.name,
+      );
+
+      const relationshipNode = {
         id: relationshipID,
-        type: "best",
-        data: { label: rel.name },
+        type: "relationship",
+        data: { label: rel.name, hasDependant },
         position: { x: 0, y: 0 },
       };
       relationshipNodes.push(relationshipNode);
 
-      console.log(relationshipID);
+      // create a node and add an edge to each own attribute
+      for (const attr of rel.attributes) {
+        const attrID = `${relationshipID}-${attr.name}`;
+        if (!attr.isComposite) {
+          attributeNodes.push({
+            id: attrID,
+            type: "relationship-attribute",
+            data: { label: attr.name, isKey: false },
+            position: { x: 0, y: 0 },
+          });
+        }
+        // TODO check composite case
+
+        attributeEdges.push({
+          id: `${attrID}-${relationshipID}`,
+          source: attrID,
+          target: relationshipID,
+          type: "straight",
+        });
+      }
 
       // add an edge to each entity
       for (const entity of rel.participantEntities) {
@@ -133,7 +119,7 @@ function ErDiagram({ erDoc }: ErDiagramProps) {
         });
       }
     }
-    console.log(edges);
+    // aggregations are a subflow encapsulating a relationship, its attributes and its entities (including their attributes)
 
     setNodes([...entityNodes, ...relationshipNodes, ...attributeNodes]);
     setEdges([...relationshipEdges, ...attributeEdges]);
@@ -153,4 +139,5 @@ function ErDiagram({ erDoc }: ErDiagramProps) {
   );
 }
 
+export { NotationSelectorErDiagram };
 export default ErDiagram;
