@@ -1,6 +1,7 @@
+import { memo } from "react";
 import DefaultHandle from "./DefaultHandle";
 
-export const DefaultAttribute = ({
+const DefaultAttribute = ({
   data,
 }: {
   data: { label: string; isKey: boolean; entityIsWeak: boolean };
@@ -19,3 +20,5 @@ export const DefaultAttribute = ({
     <DefaultHandle />
   </>
 );
+
+export default memo(DefaultAttribute);
