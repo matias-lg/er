@@ -1,8 +1,8 @@
 import { NodeTypes } from "reactflow";
 import DefaultHandle from "./DefaultHandle";
-import { DefaultRelationship } from "./DefaultRelationship";
-import { DefaultAttribute } from "./DefaultAttribute";
-import { DefaultEntity } from "./DefaultEntity";
+import DefaultRelationship from "./DefaultRelationship";
+import DefaultAttribute from "./DefaultAttribute";
+import DefaultEntity from "./DefaultEntity";
 
 const tmp = ({ data }: { data: { label: string } }) => (
   <>
@@ -19,6 +19,7 @@ const ArrowNotation: NodeTypes = {
     selected,
   }: {
     data: { label: string; isWeak: boolean };
+    selected: boolean;
   }) => <DefaultEntity data={data} selected={selected} />,
 
   "entity-attribute": ({
