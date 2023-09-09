@@ -39,7 +39,6 @@ export const relationshipToReactflowElements = (
     .map((part) => part.entityName)
     .sort()
     .join("$")}`;
-  console.log(relationshipID);
   const relationshipIDprefixed = `relationship: ${relationshipID}`;
 
   relationshipNodes.push({
@@ -88,6 +87,5 @@ export const relationshipToReactflowElements = (
       });
     }
   }
-  console.log(relationshipEdges);
   return [relationshipNodes, relationshipEdges];
 };

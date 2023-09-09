@@ -1,17 +1,8 @@
 import { NodeTypes } from "reactflow";
-import DefaultHandle from "./DefaultHandle";
 import DefaultRelationship from "./DefaultRelationship";
 import DefaultAttribute from "./DefaultAttribute";
 import DefaultEntity from "./DefaultEntity";
-
-const tmp = ({ data }: { data: { label: string } }) => (
-  <>
-    <div className="border-2 border-black p-2">
-      <strong>{data.label}</strong>
-    </div>
-    <DefaultHandle />
-  </>
-);
+import DefaultAggregation from "./DefaultAggregation";
 
 const ArrowNotation: NodeTypes = {
   entity: ({
@@ -23,6 +14,12 @@ const ArrowNotation: NodeTypes = {
   }) => <DefaultEntity data={data} selected={selected} />,
 
   "entity-attribute": ({
+    data,
+  }: {
+    data: { label: string; isKey: boolean; entityIsWeak: boolean };
+  }) => <DefaultAttribute data={data} />,
+
+  "composite-attribute": ({
     data,
   }: {
     data: { label: string; isKey: boolean; entityIsWeak: boolean };
@@ -40,7 +37,9 @@ const ArrowNotation: NodeTypes = {
     data: { label: string; isKey: boolean; entityIsWeak: boolean };
   }) => <DefaultAttribute data={{ ...data, isKey: false }} />,
 
-  aggregation: tmp,
+  aggregation: ({ data }: { data: { label: string } }) => (
+    <DefaultAggregation data={data} />
+  ),
 };
 
 export default ArrowNotation;
