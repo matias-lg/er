@@ -9,16 +9,15 @@ const DefaultEntity = ({
   selected: boolean;
   data: { label: string; isWeak: boolean };
 }) => {
-  console.log("selected:", selected);
   return (
     <>
       <NodeResizer isVisible={selected} />
       <div
-        className={`flex ${
-          data.isWeak ? "border-4 border-double" : "border-[1px]"
-        } border-black bg-white p-2`}
+        className={`flex items-center justify-center ${
+          data.isWeak ? "border-4 border-double" : "border-2"
+        } z-10 min-w-[90px] border-black bg-white p-2`}
       >
-        <div>{data.label}</div>
+        {data.label}
       </div>
       <DefaultHandle />
     </>
