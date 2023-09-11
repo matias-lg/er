@@ -62,7 +62,9 @@ export const entityToReactflowElements = (
       id: `entity-attr: ${entity.name}->${attr.name}`,
       source: attrID,
       target: entID,
-      type: "floating",
+      sourceHandle: "l",
+      targetHandle: "r",
+      type: "simple",
     });
 
     // if the attribute is composite, create nodes and edges for its components
@@ -79,7 +81,9 @@ export const entityToReactflowElements = (
         id: `entity-attr-composite: ${entity.name} ${attr.name}->${childAttrName}`,
         source: childAttrID,
         target: attrID,
-        type: "floating",
+        sourceHandle: "l",
+        targetHandle: "r",
+        type: "simple",
       });
     }
   }

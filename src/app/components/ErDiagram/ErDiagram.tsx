@@ -3,15 +3,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
-  Connection,
   Controls,
   Edge,
-  MarkerType,
   Node,
   NodeTypes,
   Panel,
   Position,
-  addEdge,
   useEdgesState,
   useNodesState,
 } from "reactflow";
@@ -20,8 +17,8 @@ import { ER } from "../../../ERDoc/types/parser/ER";
 import { entityToReactflowElements } from "../../util/entityToReactflowElements";
 import { relationshipToReactflowElements } from "../../util/relationshipToReactflowElements";
 import { updateGraphElementsWithAggregation } from "../../util/updateGraphElementsWithAggregation";
-import FloatingEdge from "./FloatingEdge";
 import ArrowNotation from "./notations/ArrowNotation";
+import SimpleFloatingEdge from "./notations/SimpleFloatingEdge";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -71,7 +68,7 @@ const getLayoutedElements = (
 };
 
 const edgeTypes = {
-  floating: FloatingEdge,
+  simple: SimpleFloatingEdge,
 };
 
 const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
@@ -84,21 +81,6 @@ const ErDiagram = ({ erDoc, notation }: ErDiagramProps) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const nodeTypes = useMemo(() => notation, []);
-
-  const onConnect = useCallback(
-    (params: Connection) =>
-      setEdges((eds) =>
-        addEdge(
-          {
-            ...params,
-            type: "floating",
-            markerEnd: { type: MarkerType.Arrow },
-          },
-          eds,
-        ),
-      ),
-    [setEdges],
-  );
 
   const relationshipsWithDependants = useMemo(() => {
     if (erDoc === null) return [];
@@ -198,7 +180,6 @@ const ErDiagram = ({ erDoc, notation }: ErDiagramProps) => {
       edges={edges}
       onEdgesChange={onEdgesChange}
       edgeTypes={edgeTypes}
-      onConnect={onConnect}
       proOptions={{ hideAttribution: true }}
     >
       <Background variant={BackgroundVariant.Cross} />

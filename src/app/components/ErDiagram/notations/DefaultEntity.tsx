@@ -1,17 +1,13 @@
 import { memo } from "react";
 import { DefaultHandle } from "./DefaultHandle";
-import { NodeResizer } from "reactflow";
 
 const DefaultEntity = ({
   data,
-  selected,
 }: {
-  selected: boolean;
   data: { label: string; isWeak: boolean };
 }) => {
   return (
     <>
-      <NodeResizer isVisible={selected} />
       <div
         className={`flex items-center justify-center ${
           data.isWeak ? "border-4 border-double" : "border-2"
