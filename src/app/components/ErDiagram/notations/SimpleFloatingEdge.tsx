@@ -1,9 +1,14 @@
 import { useCallback } from "react";
 import { useStore, getStraightPath, EdgeProps } from "reactflow";
+import { getSimpleEdgeParams } from "../../../util/getSimpleEdgeParams";
 
-import { getEdgeParams } from "../../util/getEdgeParams";
-
-function FloatingEdge({ id, source, target, markerEnd, style }: EdgeProps) {
+function SimpleFloatingEdge({
+  id,
+  source,
+  target,
+  markerEnd,
+  style,
+}: EdgeProps) {
   const sourceNode = useStore(
     useCallback((store) => store.nodeInternals.get(source), [source]),
   );
@@ -15,7 +20,7 @@ function FloatingEdge({ id, source, target, markerEnd, style }: EdgeProps) {
     return null;
   }
 
-  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
+  const { sx, sy, tx, ty } = getSimpleEdgeParams(sourceNode, targetNode);
 
   const [edgePath] = getStraightPath({
     sourceX: sx,
@@ -29,10 +34,11 @@ function FloatingEdge({ id, source, target, markerEnd, style }: EdgeProps) {
       id={id}
       className="react-flow__edge-path"
       d={edgePath}
+      strokeWidth={5}
       markerEnd={markerEnd}
       style={style}
     />
   );
 }
 
-export default FloatingEdge;
+export default SimpleFloatingEdge;
