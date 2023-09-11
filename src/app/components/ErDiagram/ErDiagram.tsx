@@ -3,22 +3,24 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
+  Connection,
   Controls,
   Edge,
-  EdgeChange,
+  MarkerType,
   Node,
-  NodeChange,
   NodeTypes,
   Panel,
   Position,
-  applyEdgeChanges,
-  applyNodeChanges,
+  addEdge,
+  useEdgesState,
+  useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
 import { entityToReactflowElements } from "../../util/entityToReactflowElements";
 import { relationshipToReactflowElements } from "../../util/relationshipToReactflowElements";
 import { updateGraphElementsWithAggregation } from "../../util/updateGraphElementsWithAggregation";
+import FloatingEdge from "./FloatingEdge";
 import ArrowNotation from "./notations/ArrowNotation";
 
 type ErDiagramProps = {
@@ -67,25 +69,35 @@ const getLayoutedElements = (
 
   return { nodes, edges };
 };
-const NotationSelectorErDiagram = ({ erDoc }: { erDoc: ER }) => {
+
+const edgeTypes = {
+  floating: FloatingEdge,
+};
+
+const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
   const [currentNotation, _] = useState<NodeTypes>(ArrowNotation);
   return <ErDiagram erDoc={erDoc} notation={currentNotation} />;
 };
 
-function ErDiagram({ erDoc, notation }: ErDiagramProps) {
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
+const ErDiagram = ({ erDoc, notation }: ErDiagramProps) => {
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
   const nodeTypes = useMemo(() => notation, []);
 
-  const onNodesChange = useCallback(
-    (changes: NodeChange[]) =>
-      setNodes((nds) => applyNodeChanges(changes, nds)),
-    [],
-  );
-  const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) =>
-      setEdges((eds) => applyEdgeChanges(changes, eds)),
-    [],
+  const onConnect = useCallback(
+    (params: Connection) =>
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            type: "floating",
+            markerEnd: { type: MarkerType.Arrow },
+          },
+          eds,
+        ),
+      ),
+    [setEdges],
   );
 
   const relationshipsWithDependants = useMemo(() => {
@@ -158,11 +170,6 @@ function ErDiagram({ erDoc, notation }: ErDiagramProps) {
         });
       }
     }
-    for (const e of entityNodes) {
-      if (e.type == "group") {
-        console.log(e);
-      }
-    }
 
     // if the node already exists, keep its position
     setNodes((nodes) => {
@@ -187,10 +194,12 @@ function ErDiagram({ erDoc, notation }: ErDiagramProps) {
     <ReactFlow
       nodes={nodes}
       onNodesChange={onNodesChange}
+      nodeTypes={nodeTypes}
       edges={edges}
       onEdgesChange={onEdgesChange}
+      edgeTypes={edgeTypes}
+      onConnect={onConnect}
       proOptions={{ hideAttribution: true }}
-      nodeTypes={nodeTypes}
     >
       <Background variant={BackgroundVariant.Cross} />
       <Controls />
@@ -202,7 +211,6 @@ function ErDiagram({ erDoc, notation }: ErDiagramProps) {
       </Panel>
     </ReactFlow>
   );
-}
+};
 
-export { NotationSelectorErDiagram };
-export default ErDiagram;
+export { NotationSelectorErDiagramWrapper as ErDiagram };
