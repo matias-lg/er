@@ -1,4 +1,4 @@
-import dagre from "@dagrejs/dagre";
+import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   Background,
@@ -8,7 +8,8 @@ import ReactFlow, {
   Node,
   NodeTypes,
   Panel,
-  Position,
+  useReactFlow,
+  ReactFlowProvider,
   useEdgesState,
   useNodesState,
 } from "reactflow";
@@ -20,51 +21,51 @@ import { updateGraphElementsWithAggregation } from "../../util/updateGraphElemen
 import ArrowNotation from "./notations/ArrowNotation";
 import SimpleFloatingEdge from "./notations/SimpleFloatingEdge";
 
+const elk = new ELK();
+
+const useLayoutedElements = () => {
+  const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
+  const defaultOptions = {
+    "elk.algorithm": "layered",
+    // "elk.layered.spacing.nodeNodeBetweenLayers": 50,
+    // "elk.spacing.nodeNode": 100000,
+  };
+
+  const getLayoutedElements = useCallback(
+    async (options: { [key: string]: string }) => {
+      const layoutOptions = { ...defaultOptions, ...options };
+      const graph = {
+        id: "root",
+        layoutOptions: layoutOptions,
+        children: getNodes(),
+        edges: getEdges(),
+      };
+
+      const { children, edges } = await elk.layout(graph as unknown as ElkNode);
+      console.log(children);
+      console.log(edges);
+      // By mutating the children in-place we saves ourselves from creating a
+      // needless copy of the nodes array.
+      children?.forEach((node) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        node.position = { x: node.x, y: node.y };
+      });
+
+      setNodes(children as Node[]);
+      window.requestAnimationFrame(() => {
+        fitView();
+      });
+    },
+    [],
+  );
+
+  return { getLayoutedElements };
+};
+
 type ErDiagramProps = {
   erDoc: ER;
   notation: NodeTypes;
-};
-
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
-
-const NODE_WIDTH = 90;
-const NODE_HEIGHT = 90;
-
-const getLayoutedElements = (
-  nodes: Node[],
-  edges: Edge[],
-  direction = "TB",
-) => {
-  const isHorizontal = direction === "LR";
-  dagreGraph.setGraph({ rankdir: direction });
-
-  nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });
-  });
-
-  edges.forEach((edge) => {
-    dagreGraph.setEdge(edge.source, edge.target);
-  });
-
-  dagre.layout(dagreGraph);
-
-  nodes.forEach((node) => {
-    const nodeWithPosition = dagreGraph.node(node.id);
-    node.targetPosition = isHorizontal ? Position.Left : Position.Top;
-    node.sourcePosition = isHorizontal ? Position.Right : Position.Bottom;
-
-    // We are shifting the dagre node position (anchor=center center) to the top left
-    // so it matches the React Flow node anchor point (top left).
-    node.position = {
-      x: nodeWithPosition.x - NODE_WIDTH / 2,
-      y: nodeWithPosition.y - NODE_HEIGHT / 2,
-    };
-
-    return node;
-  });
-
-  return { nodes, edges };
 };
 
 const edgeTypes = {
@@ -73,12 +74,18 @@ const edgeTypes = {
 
 const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
   const [currentNotation, _] = useState<NodeTypes>(ArrowNotation);
-  return <ErDiagram erDoc={erDoc} notation={currentNotation} />;
+  return (
+    <ReactFlowProvider>
+      {" "}
+      <ErDiagram erDoc={erDoc} notation={currentNotation} />{" "}
+    </ReactFlowProvider>
+  );
 };
 
 const ErDiagram = ({ erDoc, notation }: ErDiagramProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const { getLayoutedElements } = useLayoutedElements();
 
   const nodeTypes = useMemo(() => notation, []);
 
@@ -92,17 +99,6 @@ const ErDiagram = ({ erDoc, notation }: ErDiagramProps) => {
       ),
     );
   }, [erDoc]);
-
-  const onLayout = useCallback(
-    (direction: "TB" | "LR") => {
-      const { nodes: layoutedNodes, edges: layoutedEdges } =
-        getLayoutedElements(nodes, edges, direction);
-
-      setNodes([...layoutedNodes]);
-      setEdges([...layoutedEdges]);
-    },
-    [nodes, edges],
-  );
 
   useEffect(() => {
     if (erDoc === null) return;
@@ -183,13 +179,43 @@ const ErDiagram = ({ erDoc, notation }: ErDiagramProps) => {
       proOptions={{ hideAttribution: true }}
     >
       <Background variant={BackgroundVariant.Cross} />
-      <Controls />
-
       <Panel position="top-center">
-        <button onClick={() => onLayout("TB")}>vertical layout</button>
         <br />
-        <button onClick={() => onLayout("LR")}>horizontal layout</button>
+        <button
+          onClick={() => {
+            void getLayoutedElements({
+              "elk.algorithm": "org.eclipse.elk.stress",
+              "elk.stress.desiredEdgeLength": "150",
+            });
+          }}
+        >
+          stress layout
+        </button>
+        <br />
+        <button
+          onClick={() => {
+            void getLayoutedElements({
+              "elk.algorithm": "org.eclipse.elk.radial",
+              "elk.portLabels.placement": "ALWAYS_SAME_SIDE",
+            });
+          }}
+        >
+          radial layout
+        </button>
+
+        <br />
+        <button
+          onClick={() => {
+            void getLayoutedElements({
+              "elk.algorithm": "org.eclipse.elk.force",
+            });
+          }}
+        >
+          force layout
+        </button>
       </Panel>
+
+      <Controls />
     </ReactFlow>
   );
 };
