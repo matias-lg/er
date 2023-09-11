@@ -4,7 +4,7 @@ import { ER } from "../../ERDoc/types/parser/ER";
 import { Grid, GridItem, Box } from "@chakra-ui/react";
 import { colors } from "../util/colors";
 import Header from "../components/Header";
-import { NotationSelectorErDiagram } from "../components/ErDiagram/ErDiagram";
+import { ErDiagram } from "../components/ErDiagram/ErDiagram";
 import ErrorReportingEditor from "../components/ErrorReportingEditor/ErrorReportingEditor";
 
 const Page = () => {
@@ -55,8 +55,7 @@ const Page = () => {
         </Box>
 
         <Box pt={1} width={"150%"} height="full">
-          <NotationSelectorErDiagram erDoc={erDoc!} />
-          {/* <ErDiagram erDoc={erDoc!} /> */}
+          <ErDiagram erDoc={erDoc!} />
         </Box>
       </GridItem>
     </Grid>

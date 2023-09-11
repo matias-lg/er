@@ -2,7 +2,9 @@ import { Handle, Position } from "reactflow";
 
 export const DefaultHandle = () => (
   <>
-    <Handle
+    <Handle type="source" position={Position.Right} />
+    <Handle type="target" position={Position.Left} />
+    {/* <Handle
       position={Position.Top}
       type="source"
       style={{
@@ -21,7 +23,7 @@ export const DefaultHandle = () => (
         right: "50%",
         transform: "translate(50%,-50%)",
       }}
-    />
+    /> */}
   </>
 );
 

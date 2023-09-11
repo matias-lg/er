@@ -75,7 +75,7 @@ export const relationshipToReactflowElements = (
           label: child.entityName,
           source: `entity: ${entity.entityName}`,
           target: relationshipIDprefixed,
-          type: "straight",
+          type: "floating",
         });
       });
     } else {
@@ -83,7 +83,7 @@ export const relationshipToReactflowElements = (
         id: `relationship-part: ${relationshipID}->${entity.entityName}`,
         source: `entity: ${entity.entityName}`,
         target: relationshipIDprefixed,
-        type: "straight",
+        type: "floating",
       });
     }
   }
