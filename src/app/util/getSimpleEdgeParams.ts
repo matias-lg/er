@@ -31,26 +31,8 @@ function getHandleCoordsByPosition(
     (h) => h.position === handlePosition,
   );
 
-  let offsetX = handle!.width / 2;
-  let offsetY = handle!.height / 2;
-
-  // this is a tiny detail to make the markerEnd of an edge visible.
-  // The handle position that gets calculated has the origin top-left, so depending which side we are using, we add a little offset
-  // when the handlePosition is Position.Right for example, we need to add an offset as big as the handle itself in order to get the correct position
-  switch (handlePosition) {
-    case Position.Left:
-      offsetX = 0;
-      break;
-    case Position.Right:
-      offsetX = handle!.width;
-      break;
-    case Position.Top:
-      offsetY = 0;
-      break;
-    case Position.Bottom:
-      offsetY = handle!.height;
-      break;
-  }
+  const offsetX = handle!.width / 2;
+  const offsetY = handle!.height / 2;
 
   const x = node.positionAbsolute!.x + handle!.x + offsetX;
   const y = node.positionAbsolute!.y + handle!.y + offsetY;
