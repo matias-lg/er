@@ -5,6 +5,11 @@
     "errorsTable": {
       "errors": "Errors"
     },
+
+    "erDiagram": {
+      "layoutButtonTooltip": "Auto Layout"
+    },
+
     "codeEditor": {
       "syntaxError": "Syntax error",
       "semanticErrorMessages": {

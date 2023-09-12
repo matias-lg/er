@@ -20,6 +20,9 @@ import { relationshipToReactflowElements } from "../../util/relationshipToReactf
 import { updateGraphElementsWithAggregation } from "../../util/updateGraphElementsWithAggregation";
 import ArrowNotation from "./notations/ArrowNotation";
 import SimpleFloatingEdge from "./notations/SimpleFloatingEdge";
+import { FaWandMagicSparkles } from "react-icons/fa6";
+import { Tooltip } from "@chakra-ui/react";
+import { useTranslations } from "next-intl";
 
 const elk = new ELK();
 
@@ -86,6 +89,7 @@ const ErDiagram = ({ erDoc, notation }: ErDiagramProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { getLayoutedElements } = useLayoutedElements();
+  const t = useTranslations("home.erDiagram");
 
   const nodeTypes = useMemo(() => notation, []);
 
@@ -179,13 +183,31 @@ const ErDiagram = ({ erDoc, notation }: ErDiagramProps) => {
       proOptions={{ hideAttribution: true }}
     >
       <Background variant={BackgroundVariant.Cross} />
+      <Panel position="bottom-right">
+        <div className="flex h-16 w-16 justify-center rounded-full border-2 border-black bg-[#21252b] p-3 text-[#c678dd] drop-shadow-xl">
+          <button
+            onClick={() => {
+              void getLayoutedElements({
+                "elk.algorithm": "org.eclipse.elk.stress",
+                "elk.stress.desiredEdgeLength": "110",
+              });
+            }}
+          >
+            <Tooltip label={t("layoutButtonTooltip")} aria-label="stress layout">
+              <span>
+                <FaWandMagicSparkles id="layout-button" size={"90%"} />
+              </span>
+            </Tooltip>
+          </button>
+        </div>
+      </Panel>
       <Panel position="top-center">
         <br />
         <button
           onClick={() => {
             void getLayoutedElements({
               "elk.algorithm": "org.eclipse.elk.stress",
-              "elk.stress.desiredEdgeLength": "150",
+              "elk.stress.desiredEdgeLength": "110",
             });
           }}
         >
