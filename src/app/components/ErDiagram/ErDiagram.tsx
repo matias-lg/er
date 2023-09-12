@@ -106,22 +106,14 @@ const ErDiagram = ({ erDoc, erNodeTypes, erEdgeTypes }: ErDiagramProps) => {
 
   useEffect(() => {
     if (erDoc === null) return;
-    const entityNodes: Node[] = [];
-    const relationshipNodes: Node[] = [];
-    const attributeNodes: Node<{
-      label: string;
-      isKey: boolean;
-      entityIsWeak: boolean;
-    }>[] = [];
-
-    const attributeEdges: Edge[] = [];
-    const relationshipEdges: Edge[] = [];
+    const newNodes: Node[] = [];
+    const newEdges: Edge[] = [];
 
     for (const entity of erDoc.entities) {
       const [newEntityNodes, newEntityEdges] =
         entityToReactflowElements(entity);
-      entityNodes.push(...newEntityNodes);
-      attributeEdges.push(...newEntityEdges);
+      newNodes.push(...newEntityNodes);
+      newEdges.push(...newEntityEdges);
     }
 
     for (const rel of erDoc.relationships) {
@@ -129,8 +121,8 @@ const ErDiagram = ({ erDoc, erNodeTypes, erEdgeTypes }: ErDiagramProps) => {
         rel,
         relationshipsWithDependants.some((r) => r.name === rel.name),
       );
-      relationshipNodes.push(...newRelNodes);
-      relationshipEdges.push(...newRelEdges);
+      newNodes.push(...newRelNodes);
+      newEdges.push(...newRelEdges);
 
       // Aggregations
       const foundAgg = erDoc.aggregations.find(
@@ -142,11 +134,8 @@ const ErDiagram = ({ erDoc, erNodeTypes, erEdgeTypes }: ErDiagramProps) => {
 
       if (foundAgg !== undefined) {
         updateGraphElementsWithAggregation({
-          entityNodes,
-          attributeNodes,
-          relationshipNodes,
-          attributeEdges,
-          relationshipEdges,
+          nodes: newNodes,
+          edges: newEdges,
           aggregationName: foundAgg.name,
           aggregatedRelationshipNodeId: aggregatedRelationshipNodeId!,
         });
@@ -155,11 +144,6 @@ const ErDiagram = ({ erDoc, erNodeTypes, erEdgeTypes }: ErDiagramProps) => {
 
     // if the node already exists, keep its position
     setNodes((nodes) => {
-      const newNodes = [
-        ...entityNodes,
-        ...relationshipNodes,
-        ...attributeNodes,
-      ];
       for (const n of newNodes) {
         const oldNode = nodes.find((nd) => nd.id === n.id);
         if (oldNode !== undefined) {
@@ -169,7 +153,7 @@ const ErDiagram = ({ erDoc, erNodeTypes, erEdgeTypes }: ErDiagramProps) => {
       return newNodes;
     });
 
-    setEdges([...relationshipEdges, ...attributeEdges]);
+    setEdges(newEdges);
   }, [erDoc]);
 
   return (
