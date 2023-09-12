@@ -58,6 +58,11 @@ describe("Linter detects duplicate relationship participating entities", () => {
     const errors = checkRelationshipDuplicateParticipant(correctER);
     expect(errors).toHaveLength(0);
   });
+
+  it("should detect a duplicate participant when an entity has duplicate roles", () => {
+    const errors = checkRelationshipDuplicateParticipant(duplicateRoleER);
+    expect(errors).toHaveLength(1);
+  });
 });
 
 /*
@@ -479,6 +484,89 @@ const correctER: ER = {
           offset: 75,
           line: 2,
           column: 34,
+        },
+      },
+    },
+  ],
+  aggregations: [],
+};
+
+/*
+relation dances(Human: [dancer, dancer])
+*/
+const duplicateRoleER: ER = {
+  entities: [],
+  relationships: [
+    {
+      type: "relationship",
+      name: "dances",
+      participantEntities: [
+        {
+          entityName: "Human",
+          isComposite: true,
+          childParticipants: [
+            {
+              entityName: "dancer",
+              isComposite: false,
+              cardinality: "N",
+              participation: "partial",
+              location: {
+                start: {
+                  offset: 24,
+                  line: 1,
+                  column: 25,
+                },
+                end: {
+                  offset: 30,
+                  line: 1,
+                  column: 31,
+                },
+              },
+            },
+            {
+              entityName: "dancer",
+              isComposite: false,
+              cardinality: "N",
+              participation: "partial",
+              location: {
+                start: {
+                  offset: 32,
+                  line: 1,
+                  column: 33,
+                },
+                end: {
+                  offset: 38,
+                  line: 1,
+                  column: 39,
+                },
+              },
+            },
+          ],
+          location: {
+            start: {
+              offset: 16,
+              line: 1,
+              column: 17,
+            },
+            end: {
+              offset: 39,
+              line: 1,
+              column: 40,
+            },
+          },
+        },
+      ],
+      attributes: [],
+      location: {
+        start: {
+          offset: 0,
+          line: 1,
+          column: 1,
+        },
+        end: {
+          offset: 40,
+          line: 1,
+          column: 41,
         },
       },
     },

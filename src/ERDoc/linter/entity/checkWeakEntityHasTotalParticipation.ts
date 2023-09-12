@@ -27,9 +27,9 @@ export const checkWeakEntityHasTotalParticipation = (
 
     // finally check if entity has total participation
     if (
-      /* entity is composite and every child has total participation */
+      /* entity is composite,at least 1 child has total participation */
       (entityInRelationship.isComposite &&
-        entityInRelationship.childParticipants.every(
+        entityInRelationship.childParticipants.some(
           (child) => child.participation === "total",
         )) ||
       /* entity is not composite and has total participation */
