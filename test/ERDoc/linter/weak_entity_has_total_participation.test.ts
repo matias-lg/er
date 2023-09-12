@@ -322,7 +322,7 @@ entity Sun depends on BelongsTo {
     temperature
 }
 
-relation BelongsTo(Earth, Sun: [SmallSun, BiggerSun N!])
+relation BelongsTo(Earth, Sun: [SmallSun, BiggerSun])
 */
 const compositeWrongER: ER = {
   entities: [
@@ -415,7 +415,7 @@ const compositeWrongER: ER = {
           isComposite: true,
           childParticipants: [
             {
-              entityName: "Sun",
+              entityName: "SmallSun",
               isComposite: false,
               cardinality: "N",
               participation: "partial",
@@ -426,9 +426,9 @@ const compositeWrongER: ER = {
                   column: 33,
                 },
                 end: {
-                  offset: 100,
+                  offset: 105,
                   line: 6,
-                  column: 36,
+                  column: 41,
                 },
               },
             },
@@ -436,17 +436,17 @@ const compositeWrongER: ER = {
               entityName: "BiggerSun",
               isComposite: false,
               cardinality: "N",
-              participation: "total",
+              participation: "partial",
               location: {
                 start: {
-                  offset: 102,
+                  offset: 107,
                   line: 6,
-                  column: 38,
+                  column: 43,
                 },
                 end: {
-                  offset: 114,
+                  offset: 116,
                   line: 6,
-                  column: 50,
+                  column: 52,
                 },
               },
             },
@@ -458,9 +458,9 @@ const compositeWrongER: ER = {
               column: 27,
             },
             end: {
-              offset: 115,
+              offset: 117,
               line: 6,
-              column: 51,
+              column: 53,
             },
           },
         },
@@ -473,9 +473,9 @@ const compositeWrongER: ER = {
           column: 1,
         },
         end: {
-          offset: 116,
+          offset: 118,
           line: 6,
-          column: 52,
+          column: 54,
         },
       },
     },
@@ -686,7 +686,7 @@ entity Sun depends on BelongsTo {
     temperature
 }
 
-relation BelongsTo(Earth, Sun: [SmallSun 1!, BiggerSun N!])
+relation BelongsTo(Earth, Sun: [SmallSun 1, BiggerSun N!])
   `),
 
   parse(`

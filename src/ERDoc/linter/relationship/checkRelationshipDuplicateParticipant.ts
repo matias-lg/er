@@ -21,7 +21,29 @@ export const checkRelationshipDuplicateParticipant = (
           participantNames.get(participantName)! + 1,
         );
       else participantNames.set(participantName, 1);
+
+      if (participant.isComposite) {
+        const childNames = participant.childParticipants.map(
+          (p) => p.entityName,
+        );
+        const duplicateChildNames = childNames.filter(
+          (name, index) => childNames.indexOf(name) !== index,
+        );
+        duplicateChildNames.forEach((childName) => {
+          const lastLocation = participant.childParticipants
+            .filter((c) => c.entityName === childName)
+            .pop()!.location;
+
+          errors.push({
+            type: "RELATIONSHIP_DUPLICATE_PARTICIPANT",
+            entityName: childName,
+            relationshipName: rel.name,
+            location: lastLocation,
+          });
+        });
+      }
     }
+
     for (const [participantName, freq] of participantNames) {
       if (freq > 1) {
         const lastLocation = rel.participantEntities
