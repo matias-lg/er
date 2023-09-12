@@ -1,21 +1,15 @@
 import { Node, Edge } from "reactflow";
 
 type Args = {
-  entityNodes: Node[];
-  attributeNodes: Node[];
-  relationshipNodes: Node[];
-  attributeEdges: Edge[];
-  relationshipEdges: Edge[];
+  nodes: Node[];
+  edges: Edge[];
   aggregationName: string;
   aggregatedRelationshipNodeId: string;
 };
 
 export const updateGraphElementsWithAggregation = ({
-  entityNodes,
-  attributeNodes,
-  relationshipNodes,
-  attributeEdges,
-  relationshipEdges,
+  nodes,
+  edges,
   aggregationName,
   aggregatedRelationshipNodeId,
 }: Args) => {
@@ -23,12 +17,11 @@ export const updateGraphElementsWithAggregation = ({
   // BFS to find all nodes that are connected to the aggregated relationship node
   const visited = new Set<string>();
   const queue = [aggregatedRelationshipNodeId];
-  const eds = [...attributeEdges, ...relationshipEdges];
   while (queue.length > 0) {
     const nodeId = queue.shift()!;
     if (visited.has(nodeId)) continue;
     visited.add(nodeId);
-    for (const edge of eds) {
+    for (const edge of edges) {
       if (edge.source == nodeId || edge.target == nodeId) {
         if (
           /* avoid other relationship nodes */
@@ -43,15 +36,14 @@ export const updateGraphElementsWithAggregation = ({
     }
   }
 
-  [entityNodes, attributeNodes, relationshipNodes].forEach((nodes) => {
-    nodes.forEach((node) => {
-      if (visited.has(node.id)) {
-        node.zIndex = 10;
-        node.parentNode = aggregationNodeId;
-      }
-    });
+  nodes.forEach((node) => {
+    if (visited.has(node.id)) {
+      node.zIndex = 10;
+      node.parentNode = aggregationNodeId;
+    }
   });
-  entityNodes.push({
+
+  nodes.push({
     id: aggregationNodeId,
     type: "aggregation",
     data: {

@@ -10,7 +10,7 @@ const DefaultEntity = ({
     <>
       <div
         className={`flex items-center justify-center ${
-          data.isWeak ? "border-4 border-double" : "border-2"
+          data.isWeak ? "border-[5px] border-double" : "border-2"
         } z-10 min-w-[90px] border-black bg-white p-2`}
       >
         {data.label}
