@@ -64,7 +64,7 @@ export const entityToReactflowElements = (
       target: entID,
       sourceHandle: "l",
       targetHandle: "r",
-      type: "simple",
+      type: "erEdge",
     });
 
     // if the attribute is composite, create nodes and edges for its components
@@ -83,7 +83,7 @@ export const entityToReactflowElements = (
         target: attrID,
         sourceHandle: "l",
         targetHandle: "r",
-        type: "simple",
+        type: "erEdge",
       });
     }
   }

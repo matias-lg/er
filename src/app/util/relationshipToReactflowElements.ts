@@ -64,7 +64,7 @@ export const relationshipToReactflowElements = (
       target: relationshipIDprefixed,
       sourceHandle: "l",
       targetHandle: "r",
-      type: "simple",
+      type: "erEdge",
     });
   }
 
@@ -79,7 +79,7 @@ export const relationshipToReactflowElements = (
           target: relationshipIDprefixed,
           sourceHandle: "l",
           targetHandle: "r",
-          type: "simple",
+          type: "erEdge",
         });
       });
     } else {
@@ -90,7 +90,7 @@ export const relationshipToReactflowElements = (
 
         sourceHandle: "l",
         targetHandle: "r",
-        type: "simple",
+        type: "erEdge",
       });
     }
   }

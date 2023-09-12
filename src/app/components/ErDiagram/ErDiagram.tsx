@@ -12,6 +12,7 @@ import ReactFlow, {
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
+  EdgeTypes,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
@@ -19,10 +20,10 @@ import { entityToReactflowElements } from "../../util/entityToReactflowElements"
 import { relationshipToReactflowElements } from "../../util/relationshipToReactflowElements";
 import { updateGraphElementsWithAggregation } from "../../util/updateGraphElementsWithAggregation";
 import ArrowNotation from "./notations/ArrowNotation";
-import SimpleFloatingEdge from "./notations/SimpleFloatingEdge";
 import { FaWandMagicSparkles } from "react-icons/fa6";
 import { Tooltip } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
+import { ErNotation } from "../../types/ErNotation";
 
 const elk = new ELK();
 
@@ -44,9 +45,7 @@ const useLayoutedElements = () => {
         edges: getEdges(),
       };
 
-      const { children, edges } = await elk.layout(graph as unknown as ElkNode);
-      console.log(children);
-      console.log(edges);
+      const { children } = await elk.layout(graph as unknown as ElkNode);
       // By mutating the children in-place we saves ourselves from creating a
       // needless copy of the nodes array.
       children?.forEach((node) => {
@@ -68,30 +67,31 @@ const useLayoutedElements = () => {
 
 type ErDiagramProps = {
   erDoc: ER;
-  notation: NodeTypes;
-};
-
-const edgeTypes = {
-  simple: SimpleFloatingEdge,
+  erNodeTypes: NodeTypes;
+  erEdgeTypes: EdgeTypes;
 };
 
 const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
-  const [currentNotation, _] = useState<NodeTypes>(ArrowNotation);
+  const [currentNotation, _] = useState<ErNotation>(ArrowNotation);
   return (
     <ReactFlowProvider>
-      {" "}
-      <ErDiagram erDoc={erDoc} notation={currentNotation} />{" "}
+      <ErDiagram
+        erDoc={erDoc}
+        erNodeTypes={currentNotation.nodeTypes}
+        erEdgeTypes={currentNotation.edgeTypes}
+      />
     </ReactFlowProvider>
   );
 };
 
-const ErDiagram = ({ erDoc, notation }: ErDiagramProps) => {
+const ErDiagram = ({ erDoc, erNodeTypes, erEdgeTypes }: ErDiagramProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { getLayoutedElements } = useLayoutedElements();
   const t = useTranslations("home.erDiagram");
 
-  const nodeTypes = useMemo(() => notation, []);
+  const nodeTypes = useMemo(() => erNodeTypes, []);
+  const edgeTypes = useMemo(() => erEdgeTypes, []);
 
   const relationshipsWithDependants = useMemo(() => {
     if (erDoc === null) return [];
@@ -193,7 +193,10 @@ const ErDiagram = ({ erDoc, notation }: ErDiagramProps) => {
               });
             }}
           >
-            <Tooltip label={t("layoutButtonTooltip")} aria-label="stress layout">
+            <Tooltip
+              label={t("layoutButtonTooltip")}
+              aria-label="stress layout"
+            >
               <span>
                 <FaWandMagicSparkles id="layout-button" size={"90%"} />
               </span>

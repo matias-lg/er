@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useStore, getStraightPath, EdgeProps } from "reactflow";
 import { getSimpleEdgeParams } from "../../../util/getSimpleEdgeParams";
 
-function SimpleFloatingEdge({
+function ArrowNotationEdge({
   id,
   source,
   target,
@@ -41,4 +41,4 @@ function SimpleFloatingEdge({
   );
 }
 
-export default SimpleFloatingEdge;
+export default ArrowNotationEdge;
