@@ -26,7 +26,7 @@ const ErrorTable = ({ errors }: ErrorTableProps) => {
         </div>
       </button>
       {isOpen && (
-        <div className="h-full overflow-auto rounded-b-md border-b border-l border-r border-slate-50/[0.16] bg-[#21252b] p-2 pb-10">
+        <div className="h-full overflow-auto rounded-b-md border-b border-l border-r border-slate-50/[0.16] bg-primary p-2 pb-10">
           <List overflow={"auto"} pb={"5"}>
             {errors.map((err) => (
               <ListItem>
