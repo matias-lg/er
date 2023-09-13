@@ -8,6 +8,7 @@ import { ER } from "../../../ERDoc/types/parser/ER";
 import { ErrorMessage } from "../../types/ErrorMessage";
 import getErrorMessage from "../../util/errorMessages";
 import { Spinner } from "@chakra-ui/react";
+import { colors } from "../../util/colors";
 
 type EditorProps = {
   onErDocChange: Dispatch<ER>;
@@ -22,11 +23,11 @@ const editor_themes: [themeName: string, theme: editor.IStandaloneThemeData][] =
         base: "vs-dark",
         inherit: true,
         rules: [
-          { token: "keyword", foreground: "#c678dd" },
+          { token: "keyword", foreground: colors.textEditorAccent },
           { token: "string", foreground: "#98c379" },
         ],
         colors: {
-          "editor.background": "#21252b",
+          "editor.background": colors.textEditorBackground,
         },
       },
     ],

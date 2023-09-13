@@ -27,9 +27,13 @@ function getHandleCoordsByPosition(
   handlePosition: Position,
 ): number[] {
   // all handles are from type source, that's why we use handleBounds.source here
-  const handle = node[internalsSymbol]?.handleBounds?.source?.find(
+  let handle = node[internalsSymbol]?.handleBounds?.source?.find(
     (h) => h.position === handlePosition,
   );
+  if (handle === undefined)
+    handle = node[internalsSymbol]?.handleBounds?.target?.find(
+      (h) => h.position === handlePosition,
+    );
 
   const offsetX = handle!.width / 2;
   const offsetY = handle!.height / 2;
