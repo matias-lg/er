@@ -101,7 +101,13 @@ const useLayoutedElements = () => {
             ...originalAgg,
             ...node,
           };
-          layoutedNodes.push({...node, position: {x: node.x, y: node.y}} as Node);
+          node.data.width = node.width;
+          node.data.height = node.height;
+
+          layoutedNodes.push({
+            ...node,
+            position: { x: node.x, y: node.y },
+          } as Node);
           // and bring the aggregation child nodes to the main graph
           node.children?.forEach((childNode) => {
             layoutedNodes.push({
