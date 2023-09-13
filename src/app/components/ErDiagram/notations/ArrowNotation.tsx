@@ -36,7 +36,7 @@ const ArrowNotation: ErNotation = {
       data: { label: string; isKey: boolean; entityIsWeak: boolean };
     }) => <DefaultAttribute data={{ ...data, isKey: false }} />,
 
-    aggregation: ({ data }: { data: { label: string } }) => (
+    aggregation: ({ data }: { data: { label: string, width: number, height: number } }) => (
       <DefaultAggregation data={data} />
     ),
   },
