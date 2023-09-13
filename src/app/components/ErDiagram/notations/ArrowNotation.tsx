@@ -1,4 +1,4 @@
-import { EdgeProps } from "reactflow";
+import { EdgeProps, MarkerType } from "reactflow";
 import DefaultRelationship from "./DefaultRelationship";
 import DefaultAttribute from "./DefaultAttribute";
 import DefaultEntity from "./DefaultEntity";
@@ -43,8 +43,21 @@ const ArrowNotation: ErNotation = {
     }) => <DefaultAggregation data={data} />,
   },
   edgeTypes: {
-    erEdge: (props: EdgeProps) => <ArrowNotationEdge {...props} />,
+    erEdge: (
+      props: EdgeProps<{ cardinality: string; isTotalParticipation: string }>,
+    ) => <ArrowNotationEdge {...props} />,
   },
+
+  edgeMarkers: (cardinality, isTotalParticipation) => ({
+    markerEnd: isTotalParticipation
+      ? {
+          type: MarkerType.ArrowClosed,
+          width: 40,
+          height: 40,
+          color: "black",
+        }
+      : undefined,
+  }),
 };
 
 export default ArrowNotation;
