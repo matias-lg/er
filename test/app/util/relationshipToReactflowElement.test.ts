@@ -15,7 +15,11 @@ describe("Convert a relationship to ReactFlow Nodes and Edges", () => {
       relation Owns(Human, Arrow 1!)
     `;
     const relationship = getRelationshipFromERDoc(simpleRelationship, "Owns")!;
-    const [nodes, edges] = relationshipToReactflowElements(relationship, false);
+    const [nodes, edges] = relationshipToReactflowElements(
+      relationship,
+      false,
+      jest.fn(),
+    );
     expect(nodes).toHaveLength(1);
     expect(edges).toHaveLength(2);
 
@@ -54,7 +58,11 @@ describe("Convert a relationship to ReactFlow Nodes and Edges", () => {
       "Owns",
     )!;
 
-    const [nodes, edges] = relationshipToReactflowElements(relationship, false);
+    const [nodes, edges] = relationshipToReactflowElements(
+      relationship,
+      false,
+      jest.fn(),
+    );
     expect(nodes).toHaveLength(2);
     expect(edges).toHaveLength(3);
     expect(
@@ -80,7 +88,11 @@ describe("Convert a relationship to ReactFlow Nodes and Edges", () => {
       relationshipWithWeakParticipant,
       "Owns",
     )!;
-    const [nodes, _] = relationshipToReactflowElements(relationship, true);
+    const [nodes, _] = relationshipToReactflowElements(
+      relationship,
+      true,
+      jest.fn(),
+    );
     expect(nodes).toHaveLength(1);
     expect(nodes[0].type === "relationship" && nodes[0].data.hasDependant).toBe(
       true,
@@ -95,7 +107,11 @@ describe("Convert a relationship to ReactFlow Nodes and Edges", () => {
       relationshipWithCompositeParticipant,
       "Owns",
     )!;
-    const [nodes, edges] = relationshipToReactflowElements(relationship, false);
+    const [nodes, edges] = relationshipToReactflowElements(
+      relationship,
+      false,
+      jest.fn(),
+    );
     expect(nodes).toHaveLength(1);
     expect(edges).toHaveLength(3);
     expect(

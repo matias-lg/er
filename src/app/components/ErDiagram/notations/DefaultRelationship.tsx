@@ -12,7 +12,7 @@ const DefaultRelationship = ({ data }: DefaultRelationshipProps) => {
         className={`mb-[10px] flex h-[95px] w-[95px] rotate-45 flex-col items-center justify-center
        rounded-sm ${
          data.hasDependant ? "border-[5px] border-double" : "border-2"
-       } border-black bg-white`}
+       } border-orange-700 bg-orange-200`}
       >
         <div className="-rotate-45">{data.label}</div>
 

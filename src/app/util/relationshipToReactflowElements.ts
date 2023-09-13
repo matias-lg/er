@@ -1,5 +1,6 @@
 import { Node, Edge } from "reactflow";
 import { Relationship } from "../../ERDoc/types/parser/Relationship";
+import { ErNotation } from "../types/ErNotation";
 
 type RelationshipNode = Node<
   {
@@ -21,6 +22,7 @@ type CompositeAttributeNode = Node<{ label: string }, "composite-attribute">;
 export const relationshipToReactflowElements = (
   relationship: Relationship,
   hasDependant: boolean,
+  edgeNotation: ErNotation["edgeMarkers"],
 ): [
   (RelationshipNode | RelationshipAttributeNode | CompositeAttributeNode)[],
   Edge[],
@@ -31,7 +33,6 @@ export const relationshipToReactflowElements = (
     | CompositeAttributeNode
   )[] = [];
   const relationshipEdges: Edge[] = [];
-
   // relationships are identified by their name and attributes, so we need all this info to generate a unique ID.
   const relationshipID = `${
     relationship.name
@@ -72,6 +73,10 @@ export const relationshipToReactflowElements = (
     if (entity.isComposite) {
       // Add labeled edges for the roles
       entity.childParticipants.forEach((child) => {
+        const edgeStyle = edgeNotation(
+          child.cardinality,
+          child.participation === "total",
+        );
         relationshipEdges.push({
           id: `relationship-part: ${relationshipID}->${entity.entityName}->${child.entityName}`,
           label: child.entityName,
@@ -80,19 +85,29 @@ export const relationshipToReactflowElements = (
           sourceHandle: "l",
           targetHandle: "r",
           type: "erEdge",
+          markerStart: edgeStyle?.markerStart,
+          markerEnd: edgeStyle?.markerEnd,
+          style: edgeStyle?.style,
         });
       });
     } else {
+      const edgeStyle = edgeNotation(
+        entity.cardinality,
+        entity.participation === "total",
+      );
       relationshipEdges.push({
         id: `relationship-part: ${relationshipID}->${entity.entityName}`,
         source: `entity: ${entity.entityName}`,
         target: relationshipIDprefixed,
-
         sourceHandle: "l",
         targetHandle: "r",
         type: "erEdge",
+        markerStart: edgeStyle?.markerStart,
+        markerEnd: edgeStyle?.markerEnd,
+        style: edgeStyle?.style,
       });
     }
+    console.log(relationshipEdges);
   }
   return [relationshipNodes, relationshipEdges];
 };

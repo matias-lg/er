@@ -28,6 +28,7 @@ type ErDiagramProps = {
   erDoc: ER;
   erNodeTypes: NodeTypes;
   erEdgeTypes: EdgeTypes;
+  erEdgeNotation: ErNotation["edgeMarkers"];
 };
 
 const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
@@ -38,12 +39,18 @@ const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
         erDoc={erDoc}
         erNodeTypes={currentNotation.nodeTypes}
         erEdgeTypes={currentNotation.edgeTypes}
+        erEdgeNotation={currentNotation.edgeMarkers}
       />
     </ReactFlowProvider>
   );
 };
 
-const ErDiagram = ({ erDoc, erNodeTypes, erEdgeTypes }: ErDiagramProps) => {
+const ErDiagram = ({
+  erDoc,
+  erNodeTypes,
+  erEdgeTypes,
+  erEdgeNotation,
+}: ErDiagramProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { getLayoutedElements } = useLayoutedElements();
@@ -79,6 +86,7 @@ const ErDiagram = ({ erDoc, erNodeTypes, erEdgeTypes }: ErDiagramProps) => {
       const [newRelNodes, newRelEdges] = relationshipToReactflowElements(
         rel,
         relationshipsWithDependants.some((r) => r.name === rel.name),
+        erEdgeNotation,
       );
       newNodes.push(...newRelNodes);
       newEdges.push(...newRelEdges);

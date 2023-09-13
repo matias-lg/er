@@ -17,7 +17,7 @@ const DefaultAggregation = ({
           width: `${Math.trunc(data.width) || "500"}px`,
           height: `${Math.trunc(data.height) || "500"}px`,
         }}
-        className={`z-10 flex border-2 border-black bg-transparent p-2`}
+        className={`z-10 flex border-2 border-dashed border-sky-700 bg-sky-200/[.26] p-2`}
       >
         <div>{data.label}</div>
       </div>

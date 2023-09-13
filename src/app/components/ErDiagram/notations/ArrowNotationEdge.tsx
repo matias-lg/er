@@ -1,14 +1,15 @@
 import { useCallback } from "react";
-import { useStore, getStraightPath, EdgeProps } from "reactflow";
+import { useStore, getStraightPath, EdgeProps, BaseEdge } from "reactflow";
 import { getSimpleEdgeParams } from "../../../util/getSimpleEdgeParams";
 
 function ArrowNotationEdge({
   id,
   source,
   target,
+  data,
+  markerStart,
   markerEnd,
-  style,
-}: EdgeProps) {
+}: EdgeProps<{ cardinality: string; isTotalParticipation: string }>) {
   const sourceNode = useStore(
     useCallback((store) => store.nodeInternals.get(source), [source]),
   );
@@ -30,13 +31,15 @@ function ArrowNotationEdge({
   });
 
   return (
-    <path
+    <BaseEdge
+      path={edgePath}
       id={id}
-      className="react-flow__edge-path"
-      d={edgePath}
-      strokeWidth={5}
       markerEnd={markerEnd}
-      style={style}
+      markerStart={markerStart}
+      style={{
+        strokeWidth: 1,
+        stroke: "black",
+      }}
     />
   );
 }
