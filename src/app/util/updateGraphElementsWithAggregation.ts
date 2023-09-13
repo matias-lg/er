@@ -39,6 +39,7 @@ export const updateGraphElementsWithAggregation = ({
   nodes.forEach((node) => {
     if (visited.has(node.id)) {
       node.zIndex = 10;
+      node.extent = "parent";
       node.parentNode = aggregationNodeId;
     }
   });

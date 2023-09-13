@@ -5,11 +5,14 @@ import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
 const elk = new ELK();
 const useLayoutedElements = () => {
   const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
-  const defaultOptions = {};
+  const defaultOptions = {
+    "elk.algorithm": "org.eclipse.elk.stress",
+    "elk.stress.desiredEdgeLength": "130",
+  };
 
   const getLayoutedElements = useCallback(
-    async (options: { [key: string]: string }) => {
-      const layoutOptions = { ...defaultOptions, ...options };
+    async (elkOptions: { [key: string]: string }) => {
+      const layoutOptions = { ...defaultOptions, ...elkOptions };
       const flowNodes = getNodes();
       const flowEdges = getEdges();
 
@@ -64,7 +67,7 @@ const useLayoutedElements = () => {
       const layoutedNodes: Node[] = [];
 
       children?.forEach((node) => {
-        if (node.hasOwnProperty("children")) {
+        if (Object.prototype.hasOwnProperty.call(node, "children")) {
           // mutate the aggregation subgraph back into a regular node
           const originalAgg = flowNodes.find((fn) => fn.id === node.id);
           node = {
@@ -72,7 +75,11 @@ const useLayoutedElements = () => {
             ...node,
           } as ElkNode;
           // we need to create a new instance of data to trigger a rerender
-          (node as Node).data = { label: (node as Node).data.label, width: node.width, height: node.height}
+          (node as Node).data = {
+            label: (node as Node<{ label: string }>).data.label,
+            width: node.width,
+            height: node.height,
+          };
           layoutedNodes.push({
             ...node,
             position: { x: node.x, y: node.y },
@@ -92,7 +99,7 @@ const useLayoutedElements = () => {
         }
       });
 
-      setNodes(layoutedNodes as Node[]);
+      setNodes(layoutedNodes);
       window.requestAnimationFrame(() => {
         fitView();
       });

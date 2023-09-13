@@ -14,8 +14,8 @@ const DefaultAggregation = ({
     <>
       <div
         style={{
-            width: `${Math.trunc(data.width) || "500"}px`,
-            height: `${Math.trunc(data.height) || "500"}px`,
+          width: `${Math.trunc(data.width) || "500"}px`,
+          height: `${Math.trunc(data.height) || "500"}px`,
         }}
         className={`z-10 flex border-2 border-black bg-transparent p-2`}
       >
@@ -26,4 +26,4 @@ const DefaultAggregation = ({
   );
 };
 
-export default DefaultAggregation;
+export default memo(DefaultAggregation);
