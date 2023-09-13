@@ -7,7 +7,6 @@ import ReactFlow, {
   Node,
   NodeTypes,
   Panel,
-  useReactFlow,
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
@@ -102,12 +101,20 @@ const ErDiagram = ({ erDoc, erNodeTypes, erEdgeTypes }: ErDiagramProps) => {
       }
     }
 
-    // if the node already exists, keep its position
     setNodes((nodes) => {
       for (const n of newNodes) {
-        const oldNode = nodes.find((nd) => nd.id === n.id);
+        const oldNode = nodes.find((nd) => nd.id === n.id) as Node<{
+          height: number;
+          width: number;
+        }>;
+        // if the node already exists, keep its position
         if (oldNode !== undefined) {
           n.position = oldNode.position;
+          // for aggregations, don't modify its size
+          if (oldNode.type === "aggregation") {
+            (n as Node<{ height: number }>).data.height = oldNode.data.height;
+            (n as Node<{ width: number }>).data.width = oldNode.data.width;
+          }
         }
       }
       return newNodes;

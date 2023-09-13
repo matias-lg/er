@@ -36,9 +36,11 @@ const ArrowNotation: ErNotation = {
       data: { label: string; isKey: boolean; entityIsWeak: boolean };
     }) => <DefaultAttribute data={{ ...data, isKey: false }} />,
 
-    aggregation: ({ data }: { data: { label: string, width: number, height: number } }) => (
-      <DefaultAggregation data={data} />
-    ),
+    aggregation: ({
+      data,
+    }: {
+      data: { label: string; width: number; height: number };
+    }) => <DefaultAggregation data={data} />,
   },
   edgeTypes: {
     erEdge: (props: EdgeProps) => <ArrowNotationEdge {...props} />,
