@@ -7,7 +7,8 @@
     },
 
     "erDiagram": {
-      "layoutButtonTooltip": "Auto Layout"
+      "layoutButton": "Auto Layout",
+      "fitViewButton": "Fit View"
     },
 
     "codeEditor": {
