@@ -85,7 +85,10 @@ export const relationshipToReactflowElements = (
           sourceHandle: "l",
           targetHandle: "r",
           type: "erEdge",
-          data: { cardinality: child.cardinality },
+          data: {
+            cardinality: child.cardinality,
+            isTotalParticipation: child.participation === "total",
+          },
           markerStart: edgeStyle?.markerStart,
           markerEnd: edgeStyle?.markerEnd,
           style: edgeStyle?.style,
@@ -103,7 +106,10 @@ export const relationshipToReactflowElements = (
         sourceHandle: "l",
         targetHandle: "r",
         type: "erEdge",
-        data: { cardinality: entity.cardinality },
+        data: {
+          cardinality: entity.cardinality,
+          isTotalParticipation: entity.participation === "total",
+        },
         markerStart: edgeStyle?.markerStart,
         markerEnd: edgeStyle?.markerEnd,
         style: edgeStyle?.style,
