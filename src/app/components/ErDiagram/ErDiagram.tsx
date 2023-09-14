@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
-  Background,
-  BackgroundVariant,
-  Controls,
   Edge,
   Node,
   NodeTypes,
@@ -20,8 +17,8 @@ import { entityToReactflowElements } from "../../util/entityToReactflowElements"
 import { relationshipToReactflowElements } from "../../util/relationshipToReactflowElements";
 import { updateGraphElementsWithAggregation } from "../../util/updateGraphElementsWithAggregation";
 import ArrowNotation from "./notations/ArrowNotation";
-import { FaWandMagicSparkles } from "react-icons/fa6";
-import { Tooltip } from "@chakra-ui/react";
+import { HiSparkles } from "react-icons/hi2";
+import { BsArrowsFullscreen } from "react-icons/bs";
 import { useTranslations } from "next-intl";
 import { ErNotation } from "../../types/ErNotation";
 import {
@@ -29,6 +26,7 @@ import {
   getLayoutedElements,
 } from "./useLayoutedElements";
 import CustomSVGs from "./CustomSVGs";
+import { DiagramButton } from "./DiagramButton";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -203,29 +201,8 @@ const ErDiagram = ({
       }}
       proOptions={{ hideAttribution: true }}
     >
-      <Background variant={BackgroundVariant.Cross} />
-      <Panel position="bottom-right">
-        <div className="flex h-16 w-16 justify-center rounded-full border-2 border-black bg-primary p-3 text-secondary drop-shadow-xl">
-          <button
-            onClick={() => {
-              void layoutElements({
-                "elk.algorithm": "org.eclipse.elk.stress",
-                "elk.stress.desiredEdgeLength": "130",
-                // "elk.nodeSize.constraints": "MINIMUM_SIZE",
-              }).then(() => fitView());
-            }}
-          >
-            <Tooltip
-              label={t("layoutButtonTooltip")}
-              aria-label="stress layout"
-            >
-              <span>
-                <FaWandMagicSparkles id="layout-button" size={"90%"} />
-              </span>
-            </Tooltip>
-          </button>
-        </div>
-      </Panel>
+      {/* <Background variant={BackgroundVariant.Cross} /> */}
+
       <Panel position="top-center">
         <br />
         <button
@@ -262,7 +239,28 @@ const ErDiagram = ({
         </button>
       </Panel>
 
-      <Controls />
+      <Panel position="bottom-left" className="!ml-[1px]">
+        <div className="w-32 text-center">
+          <DiagramButton
+            onClick={() => {
+              void layoutElements({
+                "elk.algorithm": "org.eclipse.elk.stress",
+                "elk.stress.desiredEdgeLength": "130",
+              }).then(() => fitView());
+            }}
+          >
+            <HiSparkles className="mr-2" />
+            {t("layoutButton")}
+          </DiagramButton>
+
+          <DiagramButton className="mt-1" onClick={() => fitView()}>
+            <BsArrowsFullscreen className="mr-2" />
+            {t("fitViewButton")}
+          </DiagramButton>
+        </div>
+      </Panel>
+
+      {/* <Controls /> */}
       <CustomSVGs />
     </ReactFlow>
   );
