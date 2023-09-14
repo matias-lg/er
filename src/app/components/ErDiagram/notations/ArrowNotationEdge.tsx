@@ -7,8 +7,9 @@ function ArrowNotationEdge({
   source,
   target,
   markerStart,
+  data,
   markerEnd,
-}: EdgeProps<{ cardinality: string; isTotalParticipation: string }>) {
+}: EdgeProps<{ cardinality: string; isTotalParticipation: boolean }>) {
   const sourceNode = useStore(
     useCallback((store) => store.nodeInternals.get(source), [source]),
   );
@@ -29,7 +30,37 @@ function ArrowNotationEdge({
     targetY: ty,
   });
 
-  return (
+  return data?.isTotalParticipation ? (
+    <>
+      {/* double line */}
+      <path
+        id={id}
+        key={1}
+        className="react-flow__edge-path"
+        d={edgePath}
+        markerStart={markerStart}
+        style={{
+          fill: "none",
+          stroke: "black",
+          strokeWidth: 3.5,
+        }}
+      />
+
+      <path
+        id={id}
+        key={2}
+        className="react-flow__edge-path"
+        markerHeight={19}
+        markerEnd={data.cardinality === "1" ? "url(#1to1-arrow)" : undefined}
+        d={edgePath}
+        style={{
+          fill: "none",
+          stroke: "white",
+          strokeWidth: 1.5,
+        }}
+      />
+    </>
+  ) : (
     <BaseEdge
       path={edgePath}
       id={id}

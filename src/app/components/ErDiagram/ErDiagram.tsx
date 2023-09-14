@@ -28,6 +28,7 @@ import {
   useLayoutedElements,
   getLayoutedElements,
 } from "./useLayoutedElements";
+import CustomSVGs from "./CustomSVGs";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -262,6 +263,7 @@ const ErDiagram = ({
       </Panel>
 
       <Controls />
+      <CustomSVGs />
     </ReactFlow>
   );
 };

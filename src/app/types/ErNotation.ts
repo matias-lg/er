@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { EdgeMarker, EdgeTypes, NodeTypes } from "reactflow";
+import { EdgeMarkerType, EdgeTypes, NodeTypes } from "reactflow";
 
 type addKeys<T, NewKeys extends keyof T> = T & { [key in NewKeys]: T[keyof T] };
 type erNodes =
@@ -21,7 +21,7 @@ export type ErNotation = {
     isTotalParticipation: boolean,
   ) => {
     style?: CSSProperties;
-    markerStart?: EdgeMarker;
-    markerEnd?: EdgeMarker;
+    markerStart?: EdgeMarkerType;
+    markerEnd?: EdgeMarkerType;
   };
 };

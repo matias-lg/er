@@ -44,19 +44,12 @@ const ArrowNotation: ErNotation = {
   },
   edgeTypes: {
     erEdge: (
-      props: EdgeProps<{ cardinality: string; isTotalParticipation: string }>,
+      props: EdgeProps<{ cardinality: string; isTotalParticipation: boolean }>,
     ) => <ArrowNotationEdge {...props} />,
   },
 
   edgeMarkers: (cardinality, isTotalParticipation) => ({
-    markerEnd: isTotalParticipation
-      ? {
-          type: MarkerType.ArrowClosed,
-          width: 40,
-          height: 40,
-          color: "black",
-        }
-      : undefined,
+    markerEnd: cardinality === "1" ? "black-arrow" : undefined,
   }),
 };
 
