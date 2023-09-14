@@ -1,12 +1,11 @@
 import { useCallback } from "react";
 import { useStore, getStraightPath, EdgeProps, BaseEdge } from "reactflow";
-import { getSimpleEdgeParams } from "../../../util/getSimpleEdgeParams";
+import { getErEdgeParams } from "../../../util/getErEdgeParams";
 
 function ArrowNotationEdge({
   id,
   source,
   target,
-  data,
   markerStart,
   markerEnd,
 }: EdgeProps<{ cardinality: string; isTotalParticipation: string }>) {
@@ -21,7 +20,7 @@ function ArrowNotationEdge({
     return null;
   }
 
-  const { sx, sy, tx, ty } = getSimpleEdgeParams(sourceNode, targetNode);
+  const { sx, sy, tx, ty } = getErEdgeParams(sourceNode, targetNode);
 
   const [edgePath] = getStraightPath({
     sourceX: sx,

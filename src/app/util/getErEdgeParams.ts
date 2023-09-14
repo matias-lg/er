@@ -1,6 +1,26 @@
 import { Position, internalsSymbol, Node } from "reactflow";
 
 // returns the position (top,right,bottom or right) passed node compared to
+
+/*
+// TODO: Get handle coords by position and ID. We will have multiple handles per Position. 
+----------------
+|              |
+|relation. node|
+|              |
+----------------
+H      H       H  
+^      ^        ^
+|      |        | rh
+|      | mh
+|lh
+
+lh and rh are the handles used when an entity has total participation in a relationship
+so every side of the nodes will have 3 handles. We will route the handles only to their
+corresponding handles, e.g: the left handle of the bottom side of a node must only be
+connected to another left handle.
+*/
+
 function getParams(nodeA: Node, nodeB: Node) {
   const centerA = getNodeCenter(nodeA);
   const centerB = getNodeCenter(nodeB);
@@ -26,7 +46,6 @@ function getHandleCoordsByPosition(
   node: Node,
   handlePosition: Position,
 ): number[] {
-  // all handles are from type source, that's why we use handleBounds.source here
   let handle = node[internalsSymbol]?.handleBounds?.source?.find(
     (h) => h.position === handlePosition,
   );
@@ -52,7 +71,7 @@ function getNodeCenter(node: Node) {
 }
 
 // returns the parameters (sx, sy, tx, ty, sourcePos, targetPos) you need to create an edge
-export function getSimpleEdgeParams(source: Node, target: Node) {
+export function getErEdgeParams(source: Node, target: Node) {
   const [sx, sy, sourcePos] = getParams(source, target);
   const [tx, ty, targetPos] = getParams(target, source);
 
