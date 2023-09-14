@@ -6,6 +6,7 @@ import { colors } from "../util/colors";
 import Header from "../components/Header";
 import { ErDiagram } from "../components/ErDiagram/ErDiagram";
 import ErrorReportingEditor from "../components/ErrorReportingEditor/ErrorReportingEditor";
+import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 
 const Page = () => {
   const [erDoc, setErDoc] = useState<ER | null>(null);
@@ -44,21 +45,28 @@ const Page = () => {
         flexDir={"row"}
         justifyContent={"space-between"}
       >
-        <Box
-          height={"full"}
-          width={"full"}
-          display={"flex"}
-          flexDir={"column"}
-          overflow={"hidden"}
-        >
-          <ErrorReportingEditor onErDocChange={setErDoc} />
-        </Box>
-
-        <Box pt={1} width={"150%"} height="full">
-          <ErDiagram erDoc={erDoc!} />
-        </Box>
+        <PanelGroup direction="horizontal">
+          <Panel defaultSize={40} minSize={25}>
+            <Box
+              height={"full"}
+              width={"full"}
+              display={"flex"}
+              flexDir={"column"}
+              overflow={"hidden"}
+            >
+              <ErrorReportingEditor onErDocChange={setErDoc} />
+            </Box>
+          </Panel>
+          <PanelResizeHandle className="w-[1px] px-[1px]" />
+          <Panel defaultSize={60}>
+            <Box pt={1} height="full">
+              <ErDiagram erDoc={erDoc!} />
+            </Box>
+          </Panel>
+        </PanelGroup>
       </GridItem>
     </Grid>
   );
 };
+
 export default Page;
