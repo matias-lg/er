@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -7,10 +7,12 @@ import ReactFlow, {
   Node,
   NodeTypes,
   Panel,
+  useReactFlow,
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
   EdgeTypes,
+  ReactFlowInstance,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
@@ -22,7 +24,10 @@ import { FaWandMagicSparkles } from "react-icons/fa6";
 import { Tooltip } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
 import { ErNotation } from "../../types/ErNotation";
-import useLayoutedElements from "./useLayoutedElements";
+import {
+  useLayoutedElements,
+  getLayoutedElements,
+} from "./useLayoutedElements";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -53,11 +58,15 @@ const ErDiagram = ({
 }: ErDiagramProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const { getLayoutedElements } = useLayoutedElements();
+  const { layoutElements } = useLayoutedElements();
   const t = useTranslations("home.erDiagram");
 
   const nodeTypes = useMemo(() => erNodeTypes, []);
   const edgeTypes = useMemo(() => erEdgeTypes, []);
+
+  const isFirstRenderRef = useRef<boolean | null>(true);
+  const reactFlowRef = useRef<ReactFlowInstance | null>(null);
+  const { fitView } = useReactFlow();
 
   const relationshipsWithDependants = useMemo(() => {
     if (erDoc === null) return [];
@@ -115,6 +124,13 @@ const ErDiagram = ({
           height: number;
           width: number;
         }>;
+        // hack: on first render, hide the nodes before they are layouted
+        if (isFirstRenderRef.current === true) {
+          n.style = {
+            ...n.style,
+            opacity: 0,
+          };
+        }
         // if the node already exists, keep its position
         if (oldNode !== undefined) {
           n.position = oldNode.position;
@@ -128,8 +144,50 @@ const ErDiagram = ({
       return newNodes;
     });
 
-    setEdges(newEdges);
+    setEdges(() => {
+      // same hack as above
+      if (isFirstRenderRef.current === true) {
+        return newEdges.map((e) => {
+          e.hidden = true;
+          return e;
+        });
+      } else return newEdges;
+    });
   }, [erDoc]);
+
+  /* auto layout on initial render */
+  useEffect(() => {
+    if (
+      isFirstRenderRef.current === true &&
+      nodes.length > 0 &&
+      nodes?.[0]?.width != null
+    ) {
+      const updateElements = async () => {
+        const layoutedElements = await getLayoutedElements(nodes, edges);
+        setNodes(
+          layoutedElements.map((n) => ({
+            ...n,
+            style: {
+              ...n.style,
+              opacity: 1,
+            },
+          })),
+        );
+        setEdges((eds) =>
+          eds.map((e) => {
+            e.hidden = false;
+            return e;
+          }),
+        );
+        fitView();
+        isFirstRenderRef.current = false;
+      };
+      void updateElements();
+    } else if (isFirstRenderRef.current === false) {
+      reactFlowRef?.current?.fitView();
+      isFirstRenderRef.current = null;
+    }
+  }, [nodes, edges]);
 
   return (
     <ReactFlow
@@ -139,6 +197,9 @@ const ErDiagram = ({
       edges={edges}
       onEdgesChange={onEdgesChange}
       edgeTypes={edgeTypes}
+      onInit={(rf) => {
+        reactFlowRef.current = rf;
+      }}
       proOptions={{ hideAttribution: true }}
     >
       <Background variant={BackgroundVariant.Cross} />
@@ -146,11 +207,11 @@ const ErDiagram = ({
         <div className="flex h-16 w-16 justify-center rounded-full border-2 border-black bg-primary p-3 text-secondary drop-shadow-xl">
           <button
             onClick={() => {
-              void getLayoutedElements({
+              void layoutElements({
                 "elk.algorithm": "org.eclipse.elk.stress",
                 "elk.stress.desiredEdgeLength": "130",
                 // "elk.nodeSize.constraints": "MINIMUM_SIZE",
-              });
+              }).then(() => fitView());
             }}
           >
             <Tooltip
@@ -168,7 +229,7 @@ const ErDiagram = ({
         <br />
         <button
           onClick={() => {
-            void getLayoutedElements({
+            void layoutElements({
               "elk.algorithm": "org.eclipse.elk.stress",
               "elk.stress.desiredEdgeLength": "110",
             });
@@ -179,7 +240,7 @@ const ErDiagram = ({
         <br />
         <button
           onClick={() => {
-            void getLayoutedElements({
+            void layoutElements({
               "elk.algorithm": "org.eclipse.elk.radial",
               "elk.portLabels.placement": "ALWAYS_SAME_SIDE",
             });
@@ -191,7 +252,7 @@ const ErDiagram = ({
         <br />
         <button
           onClick={() => {
-            void getLayoutedElements({
+            void layoutElements({
               "elk.algorithm": "org.eclipse.elk.force",
             });
           }}
