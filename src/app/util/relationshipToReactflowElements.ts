@@ -85,6 +85,7 @@ export const relationshipToReactflowElements = (
           sourceHandle: "l",
           targetHandle: "r",
           type: "erEdge",
+          data: { cardinality: child.cardinality },
           markerStart: edgeStyle?.markerStart,
           markerEnd: edgeStyle?.markerEnd,
           style: edgeStyle?.style,
@@ -102,12 +103,12 @@ export const relationshipToReactflowElements = (
         sourceHandle: "l",
         targetHandle: "r",
         type: "erEdge",
+        data: { cardinality: entity.cardinality },
         markerStart: edgeStyle?.markerStart,
         markerEnd: edgeStyle?.markerEnd,
         style: edgeStyle?.style,
       });
     }
-    console.log(relationshipEdges);
   }
   return [relationshipNodes, relationshipEdges];
 };
