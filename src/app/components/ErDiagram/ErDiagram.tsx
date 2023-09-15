@@ -27,7 +27,6 @@ import {
 } from "./useLayoutedElements";
 import CustomSVGs from "./CustomSVGs";
 import { DiagramButton } from "./DiagramButton";
-import { Tooltip } from "@chakra-ui/react";
 
 type ErDiagramProps = {
   erDoc: ER;
