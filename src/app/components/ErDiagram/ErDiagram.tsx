@@ -27,6 +27,7 @@ import {
 } from "./useLayoutedElements";
 import CustomSVGs from "./CustomSVGs";
 import { DiagramButton } from "./DiagramButton";
+import { Tooltip } from "@chakra-ui/react";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -239,9 +240,10 @@ const ErDiagram = ({
         </button>
       </Panel>
 
-      <Panel position="bottom-left" className="!ml-[1px]">
-        <div className="w-32 text-center">
+      <Panel position="bottom-left" className="">
+        <div className="w-full text-center">
           <DiagramButton
+            label={t("layoutButton")}
             onClick={() => {
               void layoutElements({
                 "elk.algorithm": "org.eclipse.elk.stress",
@@ -249,18 +251,20 @@ const ErDiagram = ({
               }).then(() => fitView());
             }}
           >
-            <HiSparkles className="mr-2" />
-            {t("layoutButton")}
+            <HiSparkles className="" />
           </DiagramButton>
 
-          <DiagramButton className="mt-1" onClick={() => fitView()}>
-            <BsArrowsFullscreen className="mr-2" />
-            {t("fitViewButton")}
+          <DiagramButton
+            className="mt-1"
+            onClick={() => fitView()}
+            label={t("fitViewButton")}
+            labelPlacement="right"
+          >
+            <BsArrowsFullscreen className="" />
           </DiagramButton>
         </div>
       </Panel>
 
-      {/* <Controls /> */}
       <CustomSVGs />
     </ReactFlow>
   );
