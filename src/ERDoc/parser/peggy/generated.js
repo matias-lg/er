@@ -357,13 +357,13 @@ function peg$parse(input, options) {
   var peg$f36 = function(pHead, p) {return p};
   var peg$f37 = function(pHead, pTail) {return [pHead, ...pTail]};
   var peg$f38 = function(participants) {return participants};
-  var peg$f39 = function(entityName, cardinalityInfo) {
+  var peg$f39 = function(entityName, constraints) {
      {
          let cardinality = "N";
          let isTotal = false;
-         if (cardinalityInfo !== null) {
-                cardinality = cardinalityInfo.cardinality;
-                isTotal = cardinalityInfo.isTotalParticipation;
+         if (constraints !== null) {
+                cardinality = constraints.cardinality;
+                isTotal = constraints.isTotalParticipation;
          }
          return {
                 entityName,
@@ -374,10 +374,10 @@ function peg$parse(input, options) {
          }
     }
 };
-  var peg$f40 = function(c, isTotal) {return { cardinality: c, isTotalParticipation: isTotal }};
+  var peg$f40 = function(c, isTotal) {return { cardinality: c, isTotalParticipation: isTotal !== null }};
   var peg$f41 = function(nums) {return nums.join('')};
-  var peg$f42 = function(cardinality) { return cardinality === null? "N" : cardinality };
-  var peg$f43 = function(isTotal) { return isTotal !== null};
+  var peg$f42 = function(cardinality) { return cardinality };
+  var peg$f43 = function(isTotal) { return true};
   var peg$f44 = function(identifier, aggregatedRelationshipName) { return {
     type: "aggregation",
     name: identifier,
@@ -1911,7 +1911,7 @@ function peg$parse(input, options) {
     s0 = peg$currPos;
     s1 = peg$parseentityIdentifier();
     if (s1 !== peg$FAILED) {
-      s2 = peg$parsedeclareCardinality();
+      s2 = peg$parsedeclareConstraints();
       if (s2 === peg$FAILED) {
         s2 = null;
       }
@@ -1925,7 +1925,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parsedeclareCardinality() {
+  function peg$parsedeclareConstraints() {
     var s0, s1, s2, s3;
 
     s0 = peg$currPos;
@@ -1953,9 +1953,17 @@ function peg$parse(input, options) {
     }
     if (s1 !== peg$FAILED) {
       s2 = peg$parsecardinality();
-      s3 = peg$parsedeclareTotalparticipation();
-      peg$savedPos = s0;
-      s0 = peg$f40(s2, s3);
+      if (s2 !== peg$FAILED) {
+        s3 = peg$parsedeclareTotalparticipation();
+        if (s3 === peg$FAILED) {
+          s3 = null;
+        }
+        peg$savedPos = s0;
+        s0 = peg$f40(s2, s3);
+      } else {
+        peg$currPos = s0;
+        s0 = peg$FAILED;
+      }
     } else {
       peg$currPos = s0;
       s0 = peg$FAILED;
@@ -2005,11 +2013,10 @@ function peg$parse(input, options) {
         if (peg$silentFails === 0) { peg$fail(peg$e6); }
       }
     }
-    if (s1 === peg$FAILED) {
-      s1 = null;
+    if (s1 !== peg$FAILED) {
+      peg$savedPos = s0;
+      s1 = peg$f42(s1);
     }
-    peg$savedPos = s0;
-    s1 = peg$f42(s1);
     s0 = s1;
 
     return s0;
@@ -2026,11 +2033,10 @@ function peg$parse(input, options) {
       s1 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e7); }
     }
-    if (s1 === peg$FAILED) {
-      s1 = null;
+    if (s1 !== peg$FAILED) {
+      peg$savedPos = s0;
+      s1 = peg$f43(s1);
     }
-    peg$savedPos = s0;
-    s1 = peg$f43(s1);
     s0 = s1;
 
     return s0;

@@ -34,6 +34,7 @@ const badRelationships = [
   `relation Attends(person N!, concert M!){
         seat_number key
     }`,
+  `relation Attends(person N!, concert !)`,
   `relation Attends(person N!, concert M!){`,
   `relation Attends(person: concert){}`,
   `relation Attends(person, concert){`,
