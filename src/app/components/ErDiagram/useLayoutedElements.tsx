@@ -9,7 +9,7 @@ const defaultOptions = {
 };
 
 const useLayoutedElements = () => {
-  const { getNodes, setNodes, getEdges } = useReactFlow();
+  const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
 
   const layoutElements = useCallback(
     async (elkOptions: { [key: string]: string }) => {
@@ -17,6 +17,7 @@ const useLayoutedElements = () => {
       const edges = getEdges();
       const layoutedNodes = await getLayoutedElements(nodes, edges, elkOptions);
       setNodes(layoutedNodes);
+      window.requestAnimationFrame(() => fitView());
     },
     [],
   );

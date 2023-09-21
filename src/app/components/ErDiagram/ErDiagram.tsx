@@ -27,6 +27,7 @@ import {
 } from "./useLayoutedElements";
 import CustomSVGs from "./CustomSVGs";
 import { DiagramButton } from "./DiagramButton";
+import { useD3LayoutedElements } from "./useD3LayoutedElements";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -57,7 +58,10 @@ const ErDiagram = ({
 }: ErDiagramProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
   const { layoutElements } = useLayoutedElements();
+  const { D3LayoutElements } = useD3LayoutedElements();
+
   const t = useTranslations("home.erDiagram");
 
   const nodeTypes = useMemo(() => erNodeTypes, []);
@@ -203,7 +207,7 @@ const ErDiagram = ({
     >
       {/* <Background variant={BackgroundVariant.Cross} /> */}
 
-      <Panel position="top-center">
+      <Panel position="top-right">
         <br />
         <button
           onClick={() => {
@@ -213,7 +217,7 @@ const ErDiagram = ({
             });
           }}
         >
-          stress layout
+          ELK stress layout
         </button>
         <br />
         <button
@@ -224,7 +228,7 @@ const ErDiagram = ({
             });
           }}
         >
-          radial layout
+          ELK radial layout
         </button>
 
         <br />
@@ -235,8 +239,11 @@ const ErDiagram = ({
             });
           }}
         >
-          force layout
+          ELK force layout
         </button>
+
+        <br />
+        <button onClick={D3LayoutElements}>d3-force Layout</button>
       </Panel>
 
       <Panel position="bottom-left" className="">
@@ -247,7 +254,7 @@ const ErDiagram = ({
               void layoutElements({
                 "elk.algorithm": "org.eclipse.elk.stress",
                 "elk.stress.desiredEdgeLength": "130",
-              }).then(() => fitView());
+              });
             }}
           >
             <HiSparkles className="" />
