@@ -254,6 +254,8 @@ const ErDiagram = ({
               void layoutElements({
                 "elk.algorithm": "org.eclipse.elk.stress",
                 "elk.stress.desiredEdgeLength": "130",
+              }).then(() => {
+                window.requestAnimationFrame(() => fitView());
               });
             }}
           >

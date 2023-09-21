@@ -39,12 +39,14 @@ export const entityToReactflowElements = (
     type: "entity",
     data: { label: entity.name, isWeak: entity.hasDependencies },
     position: {
-      x: 0,
-      y: 0,
+      x: 500,
+      y: 150,
     },
   });
 
   // create attr nodes and an edge to the entity
+  let xOffSet = -70;
+
   for (const attr of entity.attributes) {
     const attrID = `entity-attr: ${entity.name}|${attr.name}`;
     attributeNodes.push({
@@ -55,7 +57,8 @@ export const entityToReactflowElements = (
         isKey: attr.isKey,
         entityIsWeak: entity.hasDependencies,
       },
-      position: { x: 0, y: 0 },
+      parentNode: entID,
+      position: { x: xOffSet, y: 100 },
     });
 
     attributeEdges.push({
@@ -66,16 +69,19 @@ export const entityToReactflowElements = (
       targetHandle: "r",
       type: "erEdge",
     });
+    xOffSet += 70;
 
     // if the attribute is composite, create nodes and edges for its components
     if (!attr.isComposite) continue;
+    let childXOffset = 100;
     for (const childAttrName of attr.childAttributesNames!) {
       const childAttrID = `entity-attr-composite: ${entity.name}|${attr.name}|${childAttrName}`;
       compositeAttributeNodes.push({
         id: childAttrID,
         type: "composite-attribute",
         data: { label: childAttrName },
-        position: { x: 0, y: 0 },
+        parentNode: entID,
+        position: { x: childXOffset, y: 200 },
       });
       attributeEdges.push({
         id: `entity-attr-composite: ${entity.name} ${attr.name}->${childAttrName}`,
@@ -85,6 +91,7 @@ export const entityToReactflowElements = (
         targetHandle: "r",
         type: "erEdge",
       });
+      childXOffset += 100;
     }
   }
 

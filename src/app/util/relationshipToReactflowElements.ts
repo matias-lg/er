@@ -54,6 +54,7 @@ export const relationshipToReactflowElements = (
     const attrID = `relationship-attr: ${relationshipID}|${attr.name}`;
     relationshipNodes.push({
       id: attrID,
+      parentNode: relationshipIDprefixed,
       type: "relationship-attribute",
       data: { label: attr.name },
       position: { x: 0, y: 0 },
