@@ -106,6 +106,22 @@ const getLayoutedElements = async (
         } as Node);
       });
     } else {
+      if (
+        // if the node is an attribute, we need to update its position relative to its parent
+        [
+          "composite-attribute",
+          "entity-attribute",
+          "relationship-attribute",
+        ].includes((node as Node).type!)
+      ) {
+        const parentNode = children?.find(
+          (n) => n.id === (node as Node).parentNode,
+        );
+        if (parentNode && (parentNode as Node).type !== "aggregation") {
+          node.x = node.x! - parentNode.x!;
+          node.y = node.y! - parentNode.y!;
+        }
+      }
       layoutedNodes.push({
         ...node,
         position: { x: node.x!, y: node.y! },
