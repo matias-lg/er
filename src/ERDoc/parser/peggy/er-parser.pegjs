@@ -193,13 +193,13 @@ listOfChildParticipants =
 // end composite participant in relationship
 
 // begin participant entity in relationship
-participantEntity = entityName:entityIdentifier cardinalityInfo:declareCardinality?{
+participantEntity = entityName:entityIdentifier constraints:declareConstraints?{
      {
          let cardinality = "N";
          let isTotal = false;
-         if (cardinalityInfo !== null) {
-                cardinality = cardinalityInfo.cardinality;
-                isTotal = cardinalityInfo.isTotalParticipation;
+         if (constraints !== null) {
+                cardinality = constraints.cardinality;
+                isTotal = constraints.isTotalParticipation;
          }
          return {
                 entityName,
@@ -211,13 +211,13 @@ participantEntity = entityName:entityIdentifier cardinalityInfo:declareCardinali
     }
 }
 
-declareCardinality =
-    [ \t]+ c:cardinality isTotal: declareTotalparticipation 
-    {return { cardinality: c, isTotalParticipation: isTotal }}
+declareConstraints =
+    [ \t]+ c:cardinality isTotal: declareTotalparticipation? 
+    {return { cardinality: c, isTotalParticipation: isTotal !== null }}
 
-cardinality = cardinality:(nums:[0-9]+{return nums.join('')} / [A-Z])? { return cardinality === null? "N" : cardinality }
+cardinality = cardinality:(nums:[0-9]+{return nums.join('')} / [A-Z]) { return cardinality }
 // end participant entity in relationship
-declareTotalparticipation = isTotal:"!"? { return isTotal !== null}
+declareTotalparticipation = isTotal:"!" { return true}
 
 // Aggregation
 aggregation = declareAggregation _ identifier:aggregationIdentifier _0 Lparen aggregatedRelationshipName:relationshipIdentifier Rparen
