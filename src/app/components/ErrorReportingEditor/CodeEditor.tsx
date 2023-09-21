@@ -35,7 +35,20 @@ const editor_themes: [themeName: string, theme: editor.IStandaloneThemeData][] =
 
 const DEFAULT_THEME = "onedark";
 
-const editor_tokenizer: languages.IMonarchLanguage = {
+const erdocConfig: languages.LanguageConfiguration = {
+  surroundingPairs: [
+    { open: "{", close: "}" },
+    { open: "[", close: "]" },
+    { open: "(", close: ")" },
+  ],
+  autoClosingPairs: [
+    { open: "{", close: "}" },
+    { open: "[", close: "]" },
+    { open: "(", close: ")" },
+  ],
+};
+
+const erdocTokenizer: languages.IMonarchLanguage = {
   keywords: ["entity", "relation", "aggregation", "depends on", "extends"],
   keyKeywords: ["key", "pkey"],
   ignoreCase: true,
@@ -123,9 +136,10 @@ const CodeEditor = ({
   const handleEditorMount: OnMount = (editor, m) => {
     editorRef.current = editor;
     handleEditorContent(DEFAULT_ERDOC);
-    // mount erdoc tokenizer
+    // mount erdoc language
     m.languages.register({ id: "erdoc" });
-    m.languages.setMonarchTokensProvider("erdoc", editor_tokenizer);
+    m.languages.setMonarchTokensProvider("erdoc", erdocTokenizer);
+    m.languages.setLanguageConfiguration("erdoc", erdocConfig);
     // custom themes
     for (const [themeName, theme] of editor_themes) {
       m.editor.defineTheme(themeName, theme);
