@@ -1,16 +1,16 @@
 import { Box } from "@chakra-ui/react";
 import { useState } from "react";
 import { ER } from "../../../ERDoc/types/parser/ER";
-import { ErrorMessage } from "../../types/ErrorMessage";
+import { ErrorMessage } from "../../types/CodeEditor";
 import { colors } from "../../util/colors";
-import CodeEditor from "./CodeEditor";
+import MonacoWrapper from "./MonacoWrapper";
 import ErrorTable from "./ErrorTable";
 
 type ErrorReportingEditorProps = {
   onErDocChange: (er: ER) => void;
 };
 
-const ErrorReportingEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
+const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
   const [semanticErrorMessages, setSemanticErrorMessages] = useState<
     ErrorMessage[]
   >([]);
@@ -31,7 +31,7 @@ const ErrorReportingEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
         overflow="hidden"
         bg={colors.textEditorBackground}
       >
-        <CodeEditor
+        <MonacoWrapper
           onErDocChange={onErDocChange}
           onSemanticErrorMessagesChange={setSemanticErrorMessages}
         />
@@ -48,4 +48,4 @@ const ErrorReportingEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
   );
 };
 
-export default ErrorReportingEditor;
+export default CodeEditor;

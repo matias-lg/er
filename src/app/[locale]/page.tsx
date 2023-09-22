@@ -5,7 +5,7 @@ import { Grid, GridItem, Box } from "@chakra-ui/react";
 import { colors } from "../util/colors";
 import Header from "../components/Header";
 import { ErDiagram } from "../components/ErDiagram/ErDiagram";
-import ErrorReportingEditor from "../components/ErrorReportingEditor/ErrorReportingEditor";
+import CodeEditor from "../components/CodeEditor/CodeEditor";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 
 const Page = () => {
@@ -54,7 +54,7 @@ const Page = () => {
               flexDir={"column"}
               overflow={"hidden"}
             >
-              <ErrorReportingEditor onErDocChange={setErDoc} />
+              <CodeEditor onErDocChange={setErDoc} />
             </Box>
           </Panel>
           <PanelResizeHandle className="w-[1px] px-[1px]" />

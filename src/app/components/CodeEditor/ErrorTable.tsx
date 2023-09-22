@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ErrorMessage } from "../../types/ErrorMessage";
+import { ErrorMessage } from "../../types/CodeEditor";
 import { useTranslations } from "use-intl";
 import { List, ListItem } from "@chakra-ui/layout";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
