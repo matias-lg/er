@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useStore, useReactFlow } from "reactflow";
+import { useStore, useReactFlow, Edge } from "reactflow";
 import {
   forceSimulation,
   forceLink,
@@ -7,6 +7,7 @@ import {
   forceX,
   forceY,
 } from "d3-force";
+import { adjustChildNodePosition } from "../../util/common";
 
 const simulation = forceSimulation()
   .force("charge", forceManyBody().strength(-500))
@@ -39,15 +40,13 @@ export const useD3LayoutedElements = () => {
     simulation.nodes(nodes).force(
       "link",
       forceLink(edges)
-        .id((d) => d.id)
+        .id((d) => (d as Edge).id)
         .strength(0.05)
         .distance(100),
     );
 
     simulation.tick(1000);
-    setNodes(
-      nodes.map((node) => ({ ...node, position: { x: node.x, y: node.y } })),
-    );
+    setNodes(nodes.map((node) => adjustChildNodePosition(node, nodes)));
     window.requestAnimationFrame(() => fitView());
   }, [initialised]);
   return { D3LayoutElements };
