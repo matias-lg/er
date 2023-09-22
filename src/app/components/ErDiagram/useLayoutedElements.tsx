@@ -1,6 +1,8 @@
 import { useCallback } from "react";
 import { useReactFlow, Node, Edge } from "reactflow";
 import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
+import { adjustChildNodePosition } from "../../util/common";
+import { LayoutedNode } from "../../util/common";
 
 const elk = new ELK();
 const defaultOptions = {
@@ -106,26 +108,12 @@ const getLayoutedElements = async (
         } as Node);
       });
     } else {
-      if (
-        // if the node is an attribute, we need to update its position relative to its parent
-        [
-          "composite-attribute",
-          "entity-attribute",
-          "relationship-attribute",
-        ].includes((node as Node).type!)
-      ) {
-        const parentNode = children?.find(
-          (n) => n.id === (node as Node).parentNode,
-        );
-        if (parentNode && (parentNode as Node).type !== "aggregation") {
-          node.x = node.x! - parentNode.x!;
-          node.y = node.y! - parentNode.y!;
-        }
-      }
-      layoutedNodes.push({
-        ...node,
-        position: { x: node.x!, y: node.y! },
-      } as Node);
+      layoutedNodes.push(
+        adjustChildNodePosition(
+          node as LayoutedNode,
+          children as LayoutedNode[],
+        ),
+      );
     }
   });
   return layoutedNodes;
