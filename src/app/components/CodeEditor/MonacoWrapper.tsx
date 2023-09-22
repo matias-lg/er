@@ -1,11 +1,10 @@
 import Editor, { useMonaco, OnMount } from "@monaco-editor/react";
 import { languages, editor } from "monaco-types";
-import { MarkerSeverity } from "../../types/CodeEditor";
+import { MarkerSeverity, ErrorMessage } from "../../types/CodeEditor";
 import { useTranslations } from "next-intl";
 import { Dispatch, useRef } from "react";
 import { getERDoc } from "../../../ERDoc";
 import { ER } from "../../../ERDoc/types/parser/ER";
-import { ErrorMessage } from "../../types/ErrorMessage";
 import getErrorMessage from "../../util/errorMessages";
 import { Spinner } from "@chakra-ui/react";
 import { colors } from "../../util/colors";
@@ -77,7 +76,7 @@ const erdocTokenizer: languages.IMonarchLanguage = {
   },
 };
 
-const CodeEditor = ({
+const MonacoWrapper = ({
   onErDocChange,
   onSemanticErrorMessagesChange,
 }: EditorProps) => {
@@ -166,7 +165,7 @@ const CodeEditor = ({
   );
 };
 
-export default CodeEditor;
+export default MonacoWrapper;
 
 const DEFAULT_ERDOC = `
 entity bank {
