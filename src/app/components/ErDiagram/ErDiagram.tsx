@@ -17,17 +17,14 @@ import { entityToReactflowElements } from "../../util/entityToReactflowElements"
 import { relationshipToReactflowElements } from "../../util/relationshipToReactflowElements";
 import { updateGraphElementsWithAggregation } from "../../util/updateGraphElementsWithAggregation";
 import ArrowNotation from "./notations/ArrowNotation";
-import { HiSparkles } from "react-icons/hi2";
-import { BsArrowsFullscreen } from "react-icons/bs";
-import { useTranslations } from "next-intl";
 import { ErNotation } from "../../types/ErNotation";
 import {
   useLayoutedElements,
   getLayoutedElements,
 } from "./useLayoutedElements";
 import CustomSVGs from "./CustomSVGs";
-import { DiagramButton } from "./DiagramButton";
 import { useD3LayoutedElements } from "./useD3LayoutedElements";
+import { ControlPanel } from "./ControlPanel";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -61,8 +58,6 @@ const ErDiagram = ({
 
   const { layoutElements } = useLayoutedElements();
   const { D3LayoutElements } = useD3LayoutedElements();
-
-  const t = useTranslations("home.erDiagram");
 
   const nodeTypes = useMemo(() => erNodeTypes, []);
   const edgeTypes = useMemo(() => erEdgeTypes, []);
@@ -246,33 +241,7 @@ const ErDiagram = ({
         <button onClick={D3LayoutElements}>d3-force Layout</button>
       </Panel>
 
-      <Panel position="bottom-left" className="">
-        <div className="w-full text-center">
-          <DiagramButton
-            label={t("layoutButton")}
-            onClick={() => {
-              void layoutElements({
-                "elk.algorithm": "org.eclipse.elk.stress",
-                "elk.stress.desiredEdgeLength": "130",
-              }).then(() => {
-                window.requestAnimationFrame(() => fitView());
-              });
-            }}
-          >
-            <HiSparkles className="" />
-          </DiagramButton>
-
-          <DiagramButton
-            className="mt-1"
-            onClick={() => fitView()}
-            label={t("fitViewButton")}
-            labelPlacement="right"
-          >
-            <BsArrowsFullscreen className="" />
-          </DiagramButton>
-        </div>
-      </Panel>
-
+      <ControlPanel />
       <CustomSVGs />
     </ReactFlow>
   );
