@@ -42,7 +42,7 @@ function ArrowNotationEdge({
         style={{
           fill: "none",
           stroke: "black",
-          strokeWidth: 3.5,
+          strokeWidth: 5,
         }}
       />
 
@@ -50,13 +50,12 @@ function ArrowNotationEdge({
         id={id}
         key={2}
         className="react-flow__edge-path"
-        markerHeight={19}
         markerEnd={data.cardinality === "1" ? "url(#1to1-arrow)" : undefined}
         d={edgePath}
         style={{
           fill: "none",
           stroke: "white",
-          strokeWidth: 1.5,
+          strokeWidth: 3,
         }}
       />
     </>
