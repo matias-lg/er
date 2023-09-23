@@ -2,9 +2,9 @@ import { memo } from "react";
 import DefaultHandle from "./DefaultHandle";
 
 const DefaultAggregation = ({
-  data,
+  data: { label, height = 500, width = 500 },
 }: {
-  data: { label: string; height: number; width: number };
+  data: { label: string; height?: number; width?: number };
 }) => {
   // HACK: we set the width and height of the node with props because the auto layout also
   // gives us the dimensions of the subgraph, which corresponds to the dimensions of the agg. container
@@ -14,12 +14,12 @@ const DefaultAggregation = ({
     <>
       <div
         style={{
-          width: `${Math.trunc(data.width) || "500"}px`,
-          height: `${Math.trunc(data.height) || "500"}px`,
+          width: `${Math.trunc(width)}px`,
+          height: `${Math.trunc(height)}px`,
         }}
         className={`z-10 flex border-2 border-dashed border-sky-700 bg-sky-200/[.26] p-2`}
       >
-        <div>{data.label}</div>
+        <div>{label}</div>
       </div>
       <DefaultHandle />
     </>

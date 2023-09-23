@@ -17,7 +17,7 @@ import { entityToReactflowElements } from "../../util/entityToReactflowElements"
 import { relationshipToReactflowElements } from "../../util/relationshipToReactflowElements";
 import { updateGraphElementsWithAggregation } from "../../util/updateGraphElementsWithAggregation";
 import ArrowNotation from "./notations/ArrowNotation";
-import { ErNotation } from "../../types/ErNotation";
+import { ErNode, ErNotation } from "../../types/ErDiagram";
 import {
   useLayoutedElements,
   getLayoutedElements,
@@ -79,7 +79,7 @@ const ErDiagram = ({
 
   useEffect(() => {
     if (erDoc === null) return;
-    const newNodes: Node[] = [];
+    const newNodes: ErNode[] = [];
     const newEdges: Edge[] = [];
 
     for (const entity of erDoc.entities) {
@@ -133,9 +133,9 @@ const ErDiagram = ({
         if (oldNode !== undefined) {
           n.position = oldNode.position;
           // for aggregations, don't modify its size
-          if (oldNode.type === "aggregation") {
-            (n as Node<{ height: number }>).data.height = oldNode.data.height;
-            (n as Node<{ width: number }>).data.width = oldNode.data.width;
+          if (oldNode.type === "aggregation" && n.type === "aggregation") {
+            n.data.height = oldNode.data.height;
+            n.data.width = oldNode.data.width;
           }
         }
       }

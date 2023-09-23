@@ -1,23 +1,16 @@
-import { Node, Edge } from "reactflow";
+import { Edge } from "reactflow";
 import { Relationship } from "../../ERDoc/types/parser/Relationship";
-import { ErNotation } from "../types/ErNotation";
-
-type RelationshipNode = Node<
-  {
-    label: string;
-    hasDependant: boolean;
-  },
-  "relationship"
->;
-
-type RelationshipAttributeNode = Node<
-  {
-    label: string;
-  },
-  "relationship-attribute"
->;
-
-type CompositeAttributeNode = Node<{ label: string }, "composite-attribute">;
+import { ErNotation } from "../types/ErDiagram";
+import {
+  createEntityNodeId,
+  createRelationshipId,
+  createRelationshipNodeId,
+} from "./common";
+import {
+  RelationshipNode,
+  RelationshipAttributeNode,
+  CompositeAttributeNode,
+} from "../types/ErDiagram";
 
 export const relationshipToReactflowElements = (
   relationship: Relationship,
@@ -33,17 +26,11 @@ export const relationshipToReactflowElements = (
     | CompositeAttributeNode
   )[] = [];
   const relationshipEdges: Edge[] = [];
-  // relationships are identified by their name and attributes, so we need all this info to generate a unique ID.
-  const relationshipID = `${
-    relationship.name
-  }$${relationship.participantEntities
-    .map((part) => part.entityName)
-    .sort()
-    .join("$")}`;
-  const relationshipIDprefixed = `relationship: ${relationshipID}`;
+  const relationshipId = createRelationshipId(relationship);
+  const relationshipNodeId = createRelationshipNodeId(relationshipId);
 
   relationshipNodes.push({
-    id: `relationship: ${relationshipID}`,
+    id: relationshipNodeId,
     type: "relationship",
     data: { label: relationship.name, hasDependant },
     position: { x: 0, y: 0 },
@@ -51,19 +38,19 @@ export const relationshipToReactflowElements = (
 
   // create a node and add an edge to each own attribute
   for (const attr of relationship.attributes) {
-    const attrID = `relationship-attr: ${relationshipID}|${attr.name}`;
+    const attrID = `relationship-attr: ${relationshipId}|${attr.name}`;
     relationshipNodes.push({
       id: attrID,
-      parentNode: relationshipIDprefixed,
+      parentNode: relationshipNodeId,
       type: "relationship-attribute",
       data: { label: attr.name },
       position: { x: 0, y: 0 },
     });
 
     relationshipEdges.push({
-      id: `relationship-attr: ${relationshipID}->${attr.name}`,
+      id: `relationship-attr: ${relationshipId}->${attr.name}`,
       source: attrID,
-      target: relationshipIDprefixed,
+      target: relationshipNodeId,
       sourceHandle: "l",
       targetHandle: "r",
       type: "erEdge",
@@ -79,10 +66,10 @@ export const relationshipToReactflowElements = (
           child.participation === "total",
         );
         relationshipEdges.push({
-          id: `relationship-part: ${relationshipID}->${entity.entityName}->${child.entityName}`,
+          id: `relationship-part: ${relationshipId}->${entity.entityName}->${child.entityName}`,
           label: child.entityName,
-          source: `entity: ${entity.entityName}`,
-          target: relationshipIDprefixed,
+          source: createEntityNodeId(entity.entityName),
+          target: relationshipNodeId,
           sourceHandle: "l",
           targetHandle: "r",
           type: "erEdge",
@@ -101,9 +88,9 @@ export const relationshipToReactflowElements = (
         entity.participation === "total",
       );
       relationshipEdges.push({
-        id: `relationship-part: ${relationshipID}->${entity.entityName}`,
-        source: `entity: ${entity.entityName}`,
-        target: relationshipIDprefixed,
+        id: `relationship-part: ${relationshipId}->${entity.entityName}`,
+        source: createEntityNodeId(entity.entityName),
+        target: relationshipNodeId,
         sourceHandle: "l",
         targetHandle: "r",
         type: "erEdge",
