@@ -1,20 +1,5 @@
 import { memo } from "react";
-import { Fragment } from "react";
-import { Handle, Position } from "reactflow";
-
-const handleTypes = ["source", "target"] as const;
-const IsAHandles = () =>
-  // prettier-ignore
-  <>
-    {handleTypes.map((type) => (
-    <Fragment key={type}>
-        <Handle type={type} style={{ opacity: 0,}} position={Position.Top} id="t"/>
-        <Handle type={type} style={{ opacity: 0, position: "absolute", right: "25%"}}  position={Position.Right} id="r" />
-        <Handle type={type} style={{ opacity: 0, position: "absolute", left: "25%"}} position={Position.Left} id="l" />
-        <Handle type={type} style={{ opacity: 0, position: "absolute", top: "106%"}} position={Position.Bottom} id="b"/>
-    </Fragment>
-    ))}
-  </>;
+import NodeHandles from "./NodeHandles";
 
 const DefaultIsA = () => {
   return (
@@ -32,7 +17,11 @@ const DefaultIsA = () => {
         <div className="mb-2">IsA</div>
       </div>
 
-      <IsAHandles />
+      <NodeHandles
+        RightHandleStyle={{ right: "25%" }}
+        LeftHandleStyle={{ left: "25%" }}
+        BottomHandleStyle={{ top: "106%" }}
+      />
     </>
   );
 };

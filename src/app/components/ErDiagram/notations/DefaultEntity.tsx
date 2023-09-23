@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { DefaultHandle } from "./DefaultHandle";
+import NodeHandles from "./NodeHandles";
 
 const DefaultEntity = ({
   data,
@@ -15,7 +15,7 @@ const DefaultEntity = ({
       >
         {data.label}
       </div>
-      <DefaultHandle />
+      <NodeHandles />
     </>
   );
 };
