@@ -1,4 +1,21 @@
 import { Node } from "reactflow";
+import { Relationship } from "../../ERDoc/types/parser/Relationship";
+
+export const createRelationshipId = (relationship: Relationship): string => {
+  // relationships are identified by their name and attributes, so we need all this info to generate a unique ID.
+  return `${relationship.name}$${relationship.participantEntities
+    .map((part) => part.entityName)
+    .sort()
+    .join("$")}`;
+};
+
+export const createEntityNodeId = (entityName: string): string => {
+  return `entity: ${entityName}`;
+};
+
+export const createRelationshipNodeId = (relationshipId: string): string => {
+  return `relationship: ${relationshipId}`;
+};
 
 export type LayoutedNode = Node & { x: number; y: number };
 

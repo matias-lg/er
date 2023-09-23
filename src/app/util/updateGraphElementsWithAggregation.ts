@@ -1,7 +1,9 @@
-import { Node, Edge } from "reactflow";
+import { Edge } from "reactflow";
+import { createEntityNodeId } from "./common";
+import { ErNode } from "../types/ErDiagram";
 
 type Args = {
-  nodes: Node[];
+  nodes: ErNode[];
   edges: Edge[];
   aggregationName: string;
   aggregatedRelationshipNodeId: string;
@@ -13,7 +15,7 @@ export const updateGraphElementsWithAggregation = ({
   aggregationName,
   aggregatedRelationshipNodeId,
 }: Args) => {
-  const aggregationNodeId = `entity: ${aggregationName}`;
+  const aggregationNodeId = createEntityNodeId(aggregationName);
   // BFS to find all nodes that are connected to the aggregated relationship node
   const visited = new Set<string>();
   const queue = [aggregatedRelationshipNodeId];
