@@ -5,6 +5,7 @@ import DefaultAggregation from "./DefaultAggregation";
 import DefaultAttribute from "./DefaultAttribute";
 import DefaultEntity from "./DefaultEntity";
 import DefaultRelationship from "./DefaultRelationship";
+import DefaultIsA from "./DefaultIsA";
 
 const ArrowNotation: ErNotation = {
   nodeTypes: {
@@ -32,7 +33,7 @@ const ArrowNotation: ErNotation = {
 
     aggregation: ({ data }) => <DefaultAggregation data={data} />,
 
-    isA: (_) => <DefaultEntity data={{ label: "isA", isWeak: false }} />,
+    isA: (_) => <DefaultIsA />,
   },
 
   edgeTypes: {
