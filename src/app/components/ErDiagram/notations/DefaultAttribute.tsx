@@ -17,7 +17,12 @@ const DefaultAttribute = ({
       </p>
       <p className={data.isKey ? "underline underline-offset-auto" : ""}></p>
     </div>
-    <NodeHandles />
+    <NodeHandles
+      TopHandleStyle={{ top: "1%" }}
+      BottomHandleStyle={{ bottom: "1%" }}
+      RightHandleStyle={{ right: "1%" }}
+      LeftHandleStyle={{ left: "1%" }}
+    />
   </>
 );
 

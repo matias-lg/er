@@ -15,7 +15,12 @@ const DefaultEntity = ({
       >
         {data.label}
       </div>
-      <NodeHandles />
+      <NodeHandles
+        TopHandleStyle={{ top: "1%" }}
+        BottomHandleStyle={{ bottom: "1%" }}
+        LeftHandleStyle={{ left: "0" }}
+        RightHandleStyle={{ right: "0" }}
+      />
     </>
   );
 };
