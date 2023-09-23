@@ -1,5 +1,5 @@
 import { memo } from "react";
-import DefaultHandle from "./DefaultHandle";
+import NodeHandles from "./NodeHandles";
 
 const DefaultAggregation = ({
   data: { label, height = 500, width = 500 },
@@ -21,7 +21,7 @@ const DefaultAggregation = ({
       >
         <div>{label}</div>
       </div>
-      <DefaultHandle />
+      <NodeHandles />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { memo } from "react";
-import DefaultHandle from "./DefaultHandle";
+import NodeHandles from "./NodeHandles";
 
 const DefaultAttribute = ({
   data,
@@ -17,7 +17,7 @@ const DefaultAttribute = ({
       </p>
       <p className={data.isKey ? "underline underline-offset-auto" : ""}></p>
     </div>
-    <DefaultHandle />
+    <NodeHandles />
   </>
 );
 
