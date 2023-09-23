@@ -1,5 +1,5 @@
-import { CSSProperties } from "react";
-import { EdgeMarkerType, EdgeTypes, NodeTypes } from "reactflow";
+import { CSSProperties, ComponentType } from "react";
+import { EdgeMarkerType, EdgeTypes, NodeProps } from "reactflow";
 import { Node, Edge } from "reactflow";
 
 export type EntityNode = Node<
@@ -61,19 +61,40 @@ export type ErNode =
   | CompositeAttributeNode
   | RelationshipNode
   | RelationshipAttributeNode
-  | AggregationNode;
+  | AggregationNode
+  | IsANode;
 
-type addKeys<T, NewKeys extends keyof T> = T & { [key in NewKeys]: T[keyof T] };
-type erTypes =
-  | "entity"
-  | "entity-attribute"
-  | "composite-attribute"
-  | "relationship"
-  | "relationship-attribute"
-  | "aggregation";
+type erNodeType<T extends NonNullable<N["type"]>, N extends ErNode> = {
+  [key in T]: ComponentType<NodeProps<N["data"]>>;
+};
 
-type ErNodeTypes = addKeys<NodeTypes, erTypes>;
-type ErEdgeTypes = addKeys<EdgeTypes, "erEdge">;
+type erEntityType = erNodeType<"entity", EntityNode>;
+type erEntityAttributeType = erNodeType<
+  "entity-attribute",
+  EntityAttributeNode
+>;
+type erCompositeAttributeType = erNodeType<
+  "composite-attribute",
+  CompositeAttributeNode
+>;
+type erRelationshipType = erNodeType<"relationship", RelationshipNode>;
+type erRelationshipAttributeType = erNodeType<
+  "relationship-attribute",
+  RelationshipAttributeNode
+>;
+type erAggregationType = erNodeType<"aggregation", AggregationNode>;
+type erIsAType = erNodeType<"isA", IsANode>;
+
+type ErNodeTypes = erEntityType &
+  erEntityAttributeType &
+  erCompositeAttributeType &
+  erRelationshipType &
+  erRelationshipAttributeType &
+  erAggregationType &
+  erIsAType;
+
+type AddKeys<T, NewKeys extends keyof T> = T & { [key in NewKeys]: T[keyof T] };
+type ErEdgeTypes = AddKeys<EdgeTypes, "erEdge">;
 
 export type ErNotation = {
   nodeTypes: ErNodeTypes;
