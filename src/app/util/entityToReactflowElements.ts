@@ -1,55 +1,89 @@
-import { Node, Edge } from "reactflow";
+import { Edge } from "reactflow";
 import { Entity } from "../../ERDoc/types/parser/Entity";
+import {
+  CompositeAttributeNode,
+  EntityAttributeNode,
+  EntityNode,
+  EntityEdge,
+  IsANode,
+} from "../types/ErDiagram";
+import { createEntityNodeId } from "./common";
 
-type EntityNode = Node<
-  {
-    label: string;
-    isWeak: boolean;
-  },
-  "entity"
->;
+const inheritanceToReactflowElements = (
+  childEntityNodeId: string,
+  parentEntityNodeId: string,
+): [IsANode, Edge[]] => {
+  const isANodeId = `isA: ${childEntityNodeId}|${parentEntityNodeId}`;
 
-type EntityAttributeNode = Node<
-  {
-    label: string;
-    isKey: boolean;
-    entityIsWeak: boolean;
-  },
-  "entity-attribute"
->;
+  const isANode: IsANode = {
+    id: isANodeId,
+    type: "isA",
+    data: {},
+    position: { x: 0, y: 0 },
+  };
 
-type CompositeAttributeNode = Node<{ label: string }, "composite-attribute">;
+  const edges = [
+    {
+      id: `isA: ${childEntityNodeId}|${parentEntityNodeId}`,
+      source: childEntityNodeId,
+      target: isANodeId,
+      sourceHandle: "l",
+      targetHandle: "r",
+      type: "erEdge",
+    },
+    {
+      id: `isA: ${parentEntityNodeId}|${childEntityNodeId}`,
+      source: parentEntityNodeId,
+      target: isANodeId,
+      sourceHandle: "l",
+      targetHandle: "r",
+      type: "erEdge",
+    },
+  ];
 
-type EntityEdge = Edge<{ cardinality: string; isTotalParticipation: boolean }>;
+  return [isANode, edges];
+};
 
 export const entityToReactflowElements = (
   entity: Entity,
 ): [
-  (EntityNode | EntityAttributeNode | CompositeAttributeNode)[],
+  (EntityNode | EntityAttributeNode | CompositeAttributeNode | IsANode)[],
   EntityEdge[],
 ] => {
-  const entityNodes: EntityNode[] = [];
-  const attributeNodes: EntityAttributeNode[] = [];
-  const compositeAttributeNodes: CompositeAttributeNode[] = [];
-  const attributeEdges: Edge[] = [];
+  const nodes: (
+    | EntityNode
+    | EntityAttributeNode
+    | CompositeAttributeNode
+    | IsANode
+  )[] = [];
+  const edges: Edge[] = [];
+  const entityId = createEntityNodeId(entity.name);
 
-  const entID = `entity: ${entity.name}`;
-  entityNodes.push({
-    id: entID,
+  const entityNode: EntityNode = {
+    id: entityId,
     type: "entity",
     data: { label: entity.name, isWeak: entity.hasDependencies },
     position: {
       x: 500,
       y: 150,
     },
-  });
+  };
+  nodes.push(entityNode);
 
-  // create attr nodes and an edge to the entity
-  let xOffSet = -70;
+  if (entity.hasParent) {
+    const [isANode, inheritanceEdges] = inheritanceToReactflowElements(
+      entityId,
+      createEntityNodeId(entity.parentName!),
+    );
+    nodes.push(isANode);
+    edges.push(...inheritanceEdges);
+  }
 
+  // create attributes nodes and edges to the entity
+  let attrNodeXoffset = -70;
   for (const attr of entity.attributes) {
     const attrID = `entity-attr: ${entity.name}|${attr.name}`;
-    attributeNodes.push({
+    nodes.push({
       id: attrID,
       type: "entity-attribute",
       data: {
@@ -57,33 +91,35 @@ export const entityToReactflowElements = (
         isKey: attr.isKey,
         entityIsWeak: entity.hasDependencies,
       },
-      parentNode: entID,
-      position: { x: xOffSet, y: 100 },
+      parentNode: entityId,
+      position: { x: attrNodeXoffset, y: 100 },
     });
 
-    attributeEdges.push({
+    edges.push({
       id: `entity-attr: ${entity.name}->${attr.name}`,
       source: attrID,
-      target: entID,
+      target: entityId,
       sourceHandle: "l",
       targetHandle: "r",
       type: "erEdge",
     });
-    xOffSet += 70;
+    attrNodeXoffset += 70;
 
     // if the attribute is composite, create nodes and edges for its components
     if (!attr.isComposite) continue;
-    let childXOffset = 100;
+    let childAttrXOffset = 100;
     for (const childAttrName of attr.childAttributesNames!) {
       const childAttrID = `entity-attr-composite: ${entity.name}|${attr.name}|${childAttrName}`;
-      compositeAttributeNodes.push({
+
+      nodes.push({
         id: childAttrID,
         type: "composite-attribute",
         data: { label: childAttrName },
-        parentNode: entID,
-        position: { x: childXOffset, y: 200 },
+        parentNode: entityId,
+        position: { x: childAttrXOffset, y: 200 },
       });
-      attributeEdges.push({
+
+      edges.push({
         id: `entity-attr-composite: ${entity.name} ${attr.name}->${childAttrName}`,
         source: childAttrID,
         target: attrID,
@@ -91,12 +127,9 @@ export const entityToReactflowElements = (
         targetHandle: "r",
         type: "erEdge",
       });
-      childXOffset += 100;
+      childAttrXOffset += 100;
     }
   }
 
-  return [
-    [...entityNodes, ...attributeNodes, ...compositeAttributeNodes],
-    attributeEdges,
-  ];
+  return [nodes, edges];
 };
