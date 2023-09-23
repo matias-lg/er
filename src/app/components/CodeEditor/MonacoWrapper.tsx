@@ -203,6 +203,10 @@ entity customer {
     phone
 }
 
+entity premium_customer extends customer {
+    discount
+}
+
 relation a_c(customer N, account M!)
 relation l_c(customer N, loan M!)
 

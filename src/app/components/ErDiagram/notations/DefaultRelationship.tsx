@@ -2,14 +2,14 @@ import { Fragment, memo } from "react";
 import { Handle, Position } from "reactflow";
 
 type DefaultRelationshipProps = {
-  data: {label: string; hasDependant: boolean}; 
+  data: { label: string; hasDependant: boolean };
 };
 
 const handleTypes = ["source", "target"] as const;
 
-const RelationshipHandles = ({ data }: DefaultRelationshipProps ) => 
-        // prettier-ignore
-        <>
+const RelationshipHandles = ({ data }: DefaultRelationshipProps) =>
+  // prettier-ignore
+  <>
         {handleTypes.map((type) => (
         <Fragment key={type}>
             <Handle type={type} style={{ opacity: 0, transform: data.hasDependant ? "translate(-47px)" : "translate(-49px)",}} position={Position.Top} id="t"/>
@@ -19,7 +19,6 @@ const RelationshipHandles = ({ data }: DefaultRelationshipProps ) =>
         </Fragment>
         ))}
         </>;
-
 
 const DefaultRelationship = ({ data }: DefaultRelationshipProps) => {
   {
