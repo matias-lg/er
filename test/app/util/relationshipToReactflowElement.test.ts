@@ -1,5 +1,5 @@
 import { getERDoc } from "../../../src/ERDoc";
-import { relationshipToReactflowElements } from "../../../src/app/util/relationshipToReactflowElements";
+import { relationshipToReactflowElements } from "../../../src/app/util/erToReactflowElements";
 
 const getRelationshipFromERDoc = (erDoc: string, relationshipName: string) => {
   const [er, _] = getERDoc(erDoc);
