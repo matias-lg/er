@@ -1,30 +1,27 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
-  Edge,
+  EdgeTypes,
   Node,
   NodeTypes,
   Panel,
-  useReactFlow,
   ReactFlowProvider,
   useEdgesState,
+  useNodesInitialized,
   useNodesState,
-  EdgeTypes,
-  ReactFlowInstance,
+  useReactFlow,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
-import { entityToReactflowElements } from "../../util/entityToReactflowElements";
-import { relationshipToReactflowElements } from "../../util/relationshipToReactflowElements";
-import { updateGraphElementsWithAggregation } from "../../util/updateGraphElementsWithAggregation";
-import ArrowNotation from "./notations/ArrowNotation";
-import { ErNode, ErNotation } from "../../types/ErDiagram";
-import {
-  useLayoutedElements,
-  getLayoutedElements,
-} from "./useLayoutedElements";
-import CustomSVGs from "./CustomSVGs";
-import { useD3LayoutedElements } from "./useD3LayoutedElements";
+import { ErNotation } from "../../types/ErDiagram";
+import { erToReactflowElements } from "../../util/erToReactflowElements";
 import { ControlPanel } from "./ControlPanel";
+import CustomSVGs from "./CustomSVGs";
+import ArrowNotation from "./notations/ArrowNotation";
+import { useD3LayoutedElements } from "./useD3LayoutedElements";
+import {
+  getLayoutedElements,
+  useLayoutedElements,
+} from "./useLayoutedElements";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -63,58 +60,12 @@ const ErDiagram = ({
   const edgeTypes = useMemo(() => erEdgeTypes, []);
 
   const isFirstRenderRef = useRef<boolean | null>(true);
-  const reactFlowRef = useRef<ReactFlowInstance | null>(null);
+  const nodesInitialized = useNodesInitialized();
   const { fitView } = useReactFlow();
-
-  const relationshipsWithDependants = useMemo(() => {
-    if (erDoc === null) return [];
-    return erDoc.relationships.filter((rel) =>
-      rel.participantEntities.some(
-        (part) =>
-          erDoc.entities.find((e) => e.name === part.entityName)?.dependsOn
-            ?.relationshipName === rel.name,
-      ),
-    );
-  }, [erDoc]);
 
   useEffect(() => {
     if (erDoc === null) return;
-    const newNodes: ErNode[] = [];
-    const newEdges: Edge[] = [];
-
-    for (const entity of erDoc.entities) {
-      const [newEntityNodes, newEntityEdges] =
-        entityToReactflowElements(entity);
-      newNodes.push(...newEntityNodes);
-      newEdges.push(...newEntityEdges);
-    }
-
-    for (const rel of erDoc.relationships) {
-      const [newRelNodes, newRelEdges] = relationshipToReactflowElements(
-        rel,
-        relationshipsWithDependants.some((r) => r.name === rel.name),
-        erEdgeNotation,
-      );
-      newNodes.push(...newRelNodes);
-      newEdges.push(...newRelEdges);
-
-      // Aggregations
-      const foundAgg = erDoc.aggregations.find(
-        (agg) => agg.aggregatedRelationshipName === rel.name,
-      );
-      const aggregatedRelationshipNodeId = newRelNodes.find(
-        (n) => n.type === "relationship",
-      )?.id;
-
-      if (foundAgg !== undefined) {
-        updateGraphElementsWithAggregation({
-          nodes: newNodes,
-          edges: newEdges,
-          aggregationName: foundAgg.name,
-          aggregatedRelationshipNodeId: aggregatedRelationshipNodeId!,
-        });
-      }
-    }
+    const [newNodes, newEdges] = erToReactflowElements(erDoc, erEdgeNotation);
 
     setNodes((nodes) => {
       for (const n of newNodes) {
@@ -155,11 +106,7 @@ const ErDiagram = ({
 
   /* auto layout on initial render */
   useEffect(() => {
-    if (
-      isFirstRenderRef.current === true &&
-      nodes.length > 0 &&
-      nodes?.[0]?.width != null
-    ) {
+    if (isFirstRenderRef.current === true && nodesInitialized) {
       const updateElements = async () => {
         const layoutedElements = await getLayoutedElements(nodes, edges);
         setNodes(
@@ -177,15 +124,30 @@ const ErDiagram = ({
             return e;
           }),
         );
-        fitView();
+        window.requestAnimationFrame(() => fitView());
         isFirstRenderRef.current = false;
       };
       void updateElements();
     } else if (isFirstRenderRef.current === false) {
-      reactFlowRef?.current?.fitView();
+      window.requestAnimationFrame(() => fitView());
       isFirstRenderRef.current = null;
     }
   }, [nodes, edges]);
+
+  // auto layout
+  useEffect(() => {
+    if (nodesInitialized) {
+      console.log("using effect");
+      void layoutElements({
+        "elk.algorithm": "org.eclipse.elk.force",
+        "elk.force.temperature": "0.05",
+        "elk.spacing.nodeNode": "4",
+        "elk.force.iterations": "700",
+      })
+        .then(() => window.requestAnimationFrame(() => fitView()))
+        .catch(() => {});
+    }
+  }, [nodes.length, nodesInitialized, fitView]);
 
   return (
     <ReactFlow
@@ -195,9 +157,6 @@ const ErDiagram = ({
       edges={edges}
       onEdgesChange={onEdgesChange}
       edgeTypes={edgeTypes}
-      onInit={(rf) => {
-        reactFlowRef.current = rf;
-      }}
       proOptions={{ hideAttribution: true }}
     >
       {/* <Background variant={BackgroundVariant.Cross} /> */}
@@ -231,6 +190,11 @@ const ErDiagram = ({
           onClick={() => {
             void layoutElements({
               "elk.algorithm": "org.eclipse.elk.force",
+              // "elk.force.model": "EADES",
+              // "elk.force.repulsion": "20",
+              "elk.force.temperature": "0.05",
+              "elk.spacing.nodeNode": "4",
+              "elk.force.iterations": "1500",
             });
           }}
         >

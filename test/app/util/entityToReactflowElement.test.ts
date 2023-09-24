@@ -1,5 +1,5 @@
 import { getERDoc } from "../../../src/ERDoc";
-import { entityToReactflowElements } from "../../../src/app/util/entityToReactflowElements";
+import { entityToReactflowElements } from "../../../src/app/util/erToReactflowElements";
 
 const getEntityFromERDoc = (erDoc: string, entityName: string) => {
   const [er, _] = getERDoc(erDoc);
