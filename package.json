@@ -54,7 +54,6 @@
     "d3-force": "^3.0.0",
     "elkjs": "^0.8.2",
     "framer-motion": "^10.16.1",
-    "monaco-editor": "^0.41.0",
     "next": "^13.4.18",
     "next-intl": "^2.20.0",
     "react": "^18.2.0",
