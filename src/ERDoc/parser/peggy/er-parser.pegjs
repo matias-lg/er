@@ -31,7 +31,7 @@ start
 
 // BEGIN WEAK ENTITY
 weakEntity = 
-	declareEntity _ identifier:entityIdentifier dependsOn:(_ deps:declareWeak{return deps}) parentIdentifier:(_ parent:entityExtends{return parent})? _0
+	declareEntity _ identifier:entityIdentifier dependsOn:(_ deps:declareWeak{return deps}) _0
     Lcurly _0
         attributes:(
              head:(_0 e:WeakEntityAttribute {return e})
@@ -44,8 +44,8 @@ weakEntity =
             type: "entity",
             name: identifier,
             attributes: attributes.length == 0? [] : attributes[0],
-            hasParent: parentIdentifier !== null,
-            parentName: parentIdentifier,
+            hasParent: false,
+            parentName: null,
             hasDependencies: true,
             dependsOn,
             location: getLocation(location)
