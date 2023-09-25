@@ -93,6 +93,12 @@ const badEntities = [
         filename key
    }
     `,
+  // weak entity extends another
+  `
+   entity Program depends on Compiles extends File {
+        language
+   }
+    `,
 ];
 
 const emptyEntity = `entity Void {}`;
