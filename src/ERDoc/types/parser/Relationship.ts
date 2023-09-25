@@ -1,39 +1,34 @@
-import { z } from "zod";
-import { TokenLocationSchema } from "./TokenLocation";
+import { TokenLocation } from "./TokenLocation";
 
-const RelationshipAttributeSchema = z.object({
-  name: z.string(),
-  isComposite: z.boolean(),
-  childAttributesNames: z.array(z.string()).nullable(),
-  location: TokenLocationSchema,
-});
+type RelationshipAttribute = {
+  name: string;
+  isComposite: boolean;
+  childAttributesNames: string[] | null;
+  location: TokenLocation;
+};
 
-const simpleRelationParticipantSchema = z.object({
-  entityName: z.string(),
-  isComposite: z.literal(false),
-  cardinality: z.string(), // Permitir solo numeros y caracteres como "N" o "M"?
-  participation: z.union([z.literal("total"), z.literal("partial")]),
-  location: TokenLocationSchema,
-});
+type simpleRelationParticipant = {
+  entityName: string;
+  isComposite: false;
+  cardinality: string;
+  participation: "total" | "partial";
+  location: TokenLocation;
+};
 
-const CompositeRelationParticipantSchema = z.object({
-  entityName: z.string(),
-  isComposite: z.literal(true),
-  childParticipants: z.array(simpleRelationParticipantSchema),
-  location: TokenLocationSchema,
-});
+type CompositeRelationParticipant = {
+  entityName: string;
+  isComposite: true;
+  childParticipants: simpleRelationParticipant[];
+  location: TokenLocation;
+};
 
-export const RelationshipSchema = z.object({
-  type: z.literal("relationship"),
-  name: z.string(),
-  attributes: z.array(RelationshipAttributeSchema),
-  participantEntities: z.array(
-    z.union([
-      simpleRelationParticipantSchema,
-      CompositeRelationParticipantSchema,
-    ]),
-  ),
-  location: TokenLocationSchema,
-});
-
-export type Relationship = z.infer<typeof RelationshipSchema>;
+export type Relationship = {
+  type: "relationship";
+  name: string;
+  attributes: RelationshipAttribute[];
+  participantEntities: (
+    | simpleRelationParticipant
+    | CompositeRelationParticipant
+  )[];
+  location: TokenLocation;
+};

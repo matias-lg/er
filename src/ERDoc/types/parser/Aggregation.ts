@@ -1,11 +1,8 @@
-import { z } from "zod";
-import { TokenLocationSchema } from "./TokenLocation";
+import { TokenLocation } from "./TokenLocation";
 
-export const AggregationSchema = z.object({
-  type: z.literal("aggregation"),
-  name: z.string(),
-  aggregatedRelationshipName: z.string(),
-  location: TokenLocationSchema,
-});
-
-export type Aggregation = z.infer<typeof AggregationSchema>;
+export type Aggregation = {
+  type: "aggregation";
+  name: string;
+  aggregatedRelationshipName: string;
+  location: TokenLocation;
+};

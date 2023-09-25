@@ -1,27 +1,22 @@
-import { z } from "zod";
-import { TokenLocationSchema } from "./TokenLocation";
+import { TokenLocation } from "./TokenLocation";
 
-const EntityAttributeSchema = z.object({
-  name: z.string(),
-  isKey: z.boolean(),
-  isComposite: z.boolean(),
-  childAttributesNames: z.array(z.string()).nullable(),
-  location: TokenLocationSchema,
-});
+type EntityAttribute = {
+  name: string;
+  isKey: boolean;
+  isComposite: boolean;
+  childAttributesNames: string[] | null;
+  location: TokenLocation;
+};
 
-export const EntitySchema = z.object({
-  type: z.literal("entity"),
-  name: z.string(),
-  attributes: z.array(EntityAttributeSchema),
-  hasParent: z.boolean(),
-  parentName: z.string().nullable(),
-  hasDependencies: z.boolean(),
-  dependsOn: z
-    .object({
-      relationshipName: z.string(),
-    })
-    .nullable(),
-  location: TokenLocationSchema,
-});
-
-export type Entity = z.infer<typeof EntitySchema>;
+export type Entity = {
+  type: "entity";
+  name: string;
+  attributes: EntityAttribute[];
+  hasParent: boolean;
+  parentName: string | null;
+  hasDependencies: boolean;
+  dependsOn: {
+    relationshipName: string;
+  } | null;
+  location: TokenLocation;
+};

@@ -1,12 +1,9 @@
-import { EntitySchema } from "./Entity";
-import { RelationshipSchema } from "./Relationship";
-import { AggregationSchema } from "./Aggregation";
-import { z } from "zod";
+import { Entity } from "./Entity";
+import { Relationship } from "./Relationship";
+import { Aggregation } from "./Aggregation";
 
-export const ERSchema = z.object({
-  entities: z.array(EntitySchema),
-  relationships: z.array(RelationshipSchema),
-  aggregations: z.array(AggregationSchema),
-});
-
-export type ER = z.infer<typeof ERSchema>;
+export type ER = {
+  entities: Entity[];
+  relationships: Relationship[];
+  aggregations: Aggregation[];
+};
