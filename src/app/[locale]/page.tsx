@@ -1,16 +1,10 @@
 "use client";
-import { useState } from "react";
-import { ER } from "../../ERDoc/types/parser/ER";
-import { Grid, GridItem, Box } from "@chakra-ui/react";
-import { colors } from "../util/colors";
+import { Grid, GridItem } from "@chakra-ui/react";
+import Body from "../components/Body";
 import Header from "../components/Header";
-import { ErDiagram } from "../components/ErDiagram/ErDiagram";
-import CodeEditor from "../components/CodeEditor/CodeEditor";
-import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
+import { colors } from "../util/colors";
 
 const Page = () => {
-  const [erDoc, setErDoc] = useState<ER | null>(null);
-
   return (
     <Grid
       templateAreas={`
@@ -45,25 +39,7 @@ const Page = () => {
         flexDir={"row"}
         justifyContent={"space-between"}
       >
-        <PanelGroup direction="horizontal">
-          <Panel defaultSize={40} minSize={25}>
-            <Box
-              height={"full"}
-              width={"full"}
-              display={"flex"}
-              flexDir={"column"}
-              overflow={"hidden"}
-            >
-              <CodeEditor onErDocChange={setErDoc} />
-            </Box>
-          </Panel>
-          <PanelResizeHandle className="w-[1px] px-[1px]" />
-          <Panel defaultSize={60}>
-            <Box pt={1} height="full">
-              <ErDiagram erDoc={erDoc!} />
-            </Box>
-          </Panel>
-        </PanelGroup>
+        <Body />
       </GridItem>
     </Grid>
   );
