@@ -7,9 +7,7 @@ const DefaultIsA = () => {
       <svg className="block h-16 w-24 overflow-visible">
         <path
           d="M8,0 L88,0 L48,70 z"
-          fill="#bbf7d0"
-          stroke-width="2"
-          stroke="#15803d"
+          className="fill-green-200 stroke-green-700 stroke-2"
         ></path>
       </svg>
 

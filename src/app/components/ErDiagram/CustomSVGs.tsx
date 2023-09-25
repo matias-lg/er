@@ -5,7 +5,7 @@ const CustomSVGs = () => (
         id="black-arrow"
         markerWidth="10"
         markerHeight="7"
-        refX="9"
+        refX="10"
         refY="3.5"
         fill="black"
         color="black"
@@ -19,13 +19,13 @@ const CustomSVGs = () => (
         id="1to1-arrow"
         markerWidth="10"
         markerHeight="7"
-        refX="9"
-        refY="3.5"
+        refX={3}
+        refY={2.5}
         fill="black"
         color="black"
         orient="auto-start-reverse"
       >
-        <polygon points="0 0, 12 3.5, 0 7" />
+        <polygon points="0 0, 5 2.5, 0 5" />
       </marker>
     </defs>
   </svg>
