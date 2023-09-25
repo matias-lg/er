@@ -1,27 +1,6 @@
 import { Position, internalsSymbol, Node } from "reactflow";
 
-// returns the position (top,right,bottom or right) passed node compared to
-
-/*
-// TODO: Get handle coords by position and ID. We will have multiple handles per Position. 
-----------------
-|              |
-|relation. node|
-|              |
-----------------
-H      H       H  
-^      ^        ^
-|      |        | rh
-|      | mh
-|lh
-
-lh and rh are the handles used when an entity has total participation in a relationship
-so every side of the nodes will have 3 handles. We will route the handles only to their
-corresponding handles, e.g: the left handle of the bottom side of a node must only be
-connected to another left handle.
-*/
-
-function getParams(nodeA: Node, nodeB: Node) {
+const getParams = (nodeA: Node, nodeB: Node): [number, number, Position] => {
   const centerA = getNodeCenter(nodeA);
   const centerB = getNodeCenter(nodeB);
 
@@ -40,12 +19,12 @@ function getParams(nodeA: Node, nodeB: Node) {
 
   const [x, y] = getHandleCoordsByPosition(nodeA, position);
   return [x, y, position];
-}
+};
 
-function getHandleCoordsByPosition(
+const getHandleCoordsByPosition = (
   node: Node,
   handlePosition: Position,
-): number[] {
+): number[] => {
   let handle = node[internalsSymbol]?.handleBounds?.source?.find(
     (h) => h.position === handlePosition,
   );
@@ -61,17 +40,27 @@ function getHandleCoordsByPosition(
   const y = node.positionAbsolute!.y + handle!.y + offsetY;
 
   return [x, y];
-}
+};
 
-function getNodeCenter(node: Node) {
+const getNodeCenter = (node: Node) => {
   return {
     x: node.positionAbsolute!.x + node.width! / 2,
     y: node.positionAbsolute!.y + node.height! / 2,
   };
-}
+};
 
 // returns the parameters (sx, sy, tx, ty, sourcePos, targetPos) you need to create an edge
-export function getErEdgeParams(source: Node, target: Node) {
+export const getErEdgeParams = (
+  source: Node,
+  target: Node,
+): {
+  sx: number;
+  sy: number;
+  tx: number;
+  ty: number;
+  sourcePos: Position;
+  targetPos: Position;
+} => {
   const [sx, sy, sourcePos] = getParams(source, target);
   const [tx, ty, targetPos] = getParams(target, source);
 
@@ -82,12 +71,5 @@ export function getErEdgeParams(source: Node, target: Node) {
     ty,
     sourcePos,
     targetPos,
-  } as {
-    sx: number;
-    sy: number;
-    tx: number;
-    ty: number;
-    sourcePos: Position;
-    targetPos: Position;
   };
-}
+};
