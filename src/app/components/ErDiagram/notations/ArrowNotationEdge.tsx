@@ -21,7 +21,17 @@ function ArrowNotationEdge({
     return null;
   }
 
-  const { sx, sy, tx, ty } = getErEdgeParams(sourceNode, targetNode);
+  // we mix const and let assigments, eslint will complain in both cases
+  // eslint-disable-next-line prefer-const
+  let { sx, sy, tx, ty } = getErEdgeParams(sourceNode, targetNode);
+  if (data?.isTotalParticipation && data.cardinality === "1") {
+    // we need to shorten the path so the arrowhead looks good
+    const ARROW_LENGTH = 7;
+    const angle = Math.atan2(ty - sy, tx - sx);
+    const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
+    tx = sx + (dist - ARROW_LENGTH) * Math.cos(angle);
+    ty = sy + (dist - ARROW_LENGTH) * Math.sin(angle);
+  }
 
   const [edgePath] = getStraightPath({
     sourceX: sx,

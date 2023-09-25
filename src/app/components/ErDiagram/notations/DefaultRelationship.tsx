@@ -17,9 +17,10 @@ const DefaultRelationship = ({ data }: DefaultRelationshipProps) => {
         <div className="-rotate-45">{data.label}</div>
         <NodeHandles
           TopHandleStyle={{
+            opacity: 0,
             transform: data.hasDependant
-              ? "translate(-47px)"
-              : "translate(-49px)",
+              ? "translate(-48px, -2px)"
+              : "translate(-48px, 2px)",
           }}
           RightHandleStyle={{
             transform: data.hasDependant

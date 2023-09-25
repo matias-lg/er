@@ -134,21 +134,6 @@ const ErDiagram = ({
     }
   }, [nodes, edges]);
 
-  // auto layout
-  useEffect(() => {
-    if (nodesInitialized) {
-      console.log("using effect");
-      void layoutElements({
-        "elk.algorithm": "org.eclipse.elk.force",
-        "elk.force.temperature": "0.05",
-        "elk.spacing.nodeNode": "4",
-        "elk.force.iterations": "700",
-      })
-        .then(() => window.requestAnimationFrame(() => fitView()))
-        .catch(() => {});
-    }
-  }, [nodes.length, nodesInitialized, fitView]);
-
   return (
     <ReactFlow
       nodes={nodes}
