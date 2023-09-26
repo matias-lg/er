@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ErrorMessage } from "../../types/CodeEditor";
-import { useTranslations } from "use-intl";
+import { useTranslations } from "next-intl";
 import { List, ListItem } from "@chakra-ui/layout";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 

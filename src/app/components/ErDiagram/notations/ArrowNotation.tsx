@@ -1,50 +1,28 @@
 import { EdgeProps } from "reactflow";
 import { ErNotation } from "../../../types/ErDiagram";
 import ArrowNotationEdge from "./ArrowNotationEdge";
-import DefaultAggregation from "./DefaultAggregation";
-import DefaultAttribute from "./DefaultAttribute";
-import DefaultEntity from "./DefaultEntity";
-import DefaultRelationship from "./DefaultRelationship";
-import DefaultIsA from "./DefaultIsA";
+import DefaultNotation from "./DefaultNotation";
 
-const ArrowNotation: ErNotation = {
-  nodeTypes: {
-    entity: ({ data }) => <DefaultEntity data={data} />,
+class ArrowNotation extends DefaultNotation {
+  edgeTypes: ErNotation["edgeTypes"];
+  edgeMarkers: ErNotation["edgeMarkers"];
 
-    "entity-attribute": ({ data }) => <DefaultAttribute data={data} />,
+  constructor() {
+    super();
 
-    "composite-attribute": ({ data }) => (
-      <DefaultAttribute
-        data={{
-          label: data.label,
-          isKey: false,
-          entityIsWeak: false,
-        }}
-      />
-    ),
+    this.edgeTypes = {
+      erEdge: (
+        props: EdgeProps<{
+          cardinality: string;
+          isTotalParticipation: boolean;
+        }>,
+      ) => <ArrowNotationEdge {...props} />,
+    };
 
-    relationship: ({ data }) => <DefaultRelationship data={data} />,
-
-    "relationship-attribute": ({ data }) => (
-      <DefaultAttribute
-        data={{ label: data.label, isKey: false, entityIsWeak: false }}
-      />
-    ),
-
-    aggregation: ({ data }) => <DefaultAggregation data={data} />,
-
-    isA: (_) => <DefaultIsA />,
-  },
-
-  edgeTypes: {
-    erEdge: (
-      props: EdgeProps<{ cardinality: string; isTotalParticipation: boolean }>,
-    ) => <ArrowNotationEdge {...props} />,
-  },
-
-  edgeMarkers: (cardinality, _) => ({
-    markerEnd: cardinality === "1" ? "black-arrow" : undefined,
-  }),
-};
+    this.edgeMarkers = (cardinality, _) => ({
+      markerEnd: cardinality === "1" ? "black-arrow" : undefined,
+    });
+  }
+}
 
 export default ArrowNotation;

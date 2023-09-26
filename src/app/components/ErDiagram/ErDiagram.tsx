@@ -31,7 +31,7 @@ type ErDiagramProps = {
 };
 
 const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
-  const [currentNotation, _] = useState<ErNotation>(ArrowNotation);
+  const [currentNotation, _] = useState<ErNotation>(new ArrowNotation());
   return (
     <ReactFlowProvider>
       <ErDiagram
