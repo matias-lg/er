@@ -9,6 +9,7 @@ const DefaultRelationship = ({ data }: DefaultRelationshipProps) => {
   {
     return (
       <div
+        data-testid="relationship"
         className={`mb-[10px] flex h-[95px] w-[95px] rotate-45 flex-col items-center justify-center
        rounded-sm ${
          data.hasDependant ? "border-[5px] border-double" : "border-2"
