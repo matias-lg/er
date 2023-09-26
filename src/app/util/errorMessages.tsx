@@ -3,7 +3,6 @@ import { useTranslations } from "next-intl";
 
 type translation = ReturnType<typeof useTranslations<string>>;
 
-// TODO: refactor, test
 const getErrorMessage = (t: translation, err: SemanticError): string => {
   switch (err.type) {
     // Entity errors
