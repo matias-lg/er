@@ -1,7 +1,7 @@
 import { EdgeProps } from "reactflow";
-import { ErNotation } from "../../../types/ErDiagram";
+import { ErNotation } from "../../../../types/ErDiagram";
 import ArrowNotationEdge from "./ArrowNotationEdge";
-import DefaultNotation from "./DefaultNotation";
+import DefaultNotation from "../DefaultNotation";
 
 class ArrowNotation extends DefaultNotation {
   edgeTypes: ErNotation["edgeTypes"];

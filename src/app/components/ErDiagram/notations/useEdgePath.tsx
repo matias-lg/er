@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+import { useStore, getStraightPath } from "reactflow";
 import { Position, internalsSymbol, Node } from "reactflow";
 
 const getParams = (nodeA: Node, nodeB: Node): [number, number, Position] => {
@@ -50,7 +52,7 @@ const getNodeCenter = (node: Node) => {
 };
 
 // returns the parameters (sx, sy, tx, ty, sourcePos, targetPos) you need to create an edge
-export const getErEdgeParams = (
+const getErEdgeParams = (
   source: Node,
   target: Node,
 ): {
@@ -72,4 +74,47 @@ export const getErEdgeParams = (
     sourcePos,
     targetPos,
   };
+};
+
+export const useEdgePath = (
+  sourceNodeId: string,
+  targetNodeId: string,
+  shortenPathBy: number = 0,
+): [string, number, number] | [null, null, null] => {
+  const sourceNode = useStore(
+    useCallback(
+      (store) => store.nodeInternals.get(sourceNodeId),
+      [sourceNodeId],
+    ),
+  );
+  const targetNode = useStore(
+    useCallback(
+      (store) => store.nodeInternals.get(targetNodeId),
+      [targetNodeId],
+    ),
+  );
+
+  if (!sourceNode || !targetNode) {
+    return [null, null, null];
+  }
+
+  // we mix const and let assigments, eslint will complain in both cases
+  // eslint-disable-next-line prefer-const
+  let { sx, sy, tx, ty } = getErEdgeParams(sourceNode, targetNode);
+  if (shortenPathBy !== 0) {
+    // we need to shorten the path so the arrowhead looks good
+    const angle = Math.atan2(ty - sy, tx - sx);
+    const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
+    tx = sx + (dist - shortenPathBy) * Math.cos(angle);
+    ty = sy + (dist - shortenPathBy) * Math.sin(angle);
+  }
+
+  const [edgePath, labelX, labelY] = getStraightPath({
+    sourceX: sx,
+    sourceY: sy,
+    targetX: tx,
+    targetY: ty,
+  });
+
+  return [edgePath, labelX, labelY];
 };
