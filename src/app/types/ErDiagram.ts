@@ -96,7 +96,7 @@ type ErNodeTypes = erEntityType &
 type AddKeys<T, NewKeys extends keyof T> = T & { [key in NewKeys]: T[keyof T] };
 type ErEdgeTypes = AddKeys<EdgeTypes, "erEdge">;
 
-export interface ErNotation {
+export interface IErNotation {
   nodeTypes: ErNodeTypes;
   edgeTypes: ErEdgeTypes;
   edgeMarkers: (

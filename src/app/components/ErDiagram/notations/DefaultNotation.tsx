@@ -1,44 +1,42 @@
-import { ErNotation } from "../../../types/ErDiagram";
+import { IErNotation } from "../../../types/ErDiagram";
 import DefaultAggregation from "./DefaultAggregation";
 import DefaultAttribute from "./DefaultAttribute";
 import DefaultEntity from "./DefaultEntity";
 import DefaultRelationship from "./DefaultRelationship";
 import DefaultIsA from "./DefaultIsA";
 
-abstract class DefaultNotation implements ErNotation {
-  nodeTypes: ErNotation["nodeTypes"];
-  abstract edgeTypes: ErNotation["edgeTypes"];
-  abstract edgeMarkers: ErNotation["edgeMarkers"];
+abstract class ErNotation implements IErNotation {
+  nodeTypes: IErNotation["nodeTypes"] = {
+    entity: ({ data }) => <DefaultEntity data={data} />,
 
-  constructor() {
-    this.nodeTypes = {
-      entity: ({ data }) => <DefaultEntity data={data} />,
+    "entity-attribute": ({ data }) => <DefaultAttribute data={data} />,
 
-      "entity-attribute": ({ data }) => <DefaultAttribute data={data} />,
+    "composite-attribute": ({ data }) => (
+      <DefaultAttribute
+        data={{
+          label: data.label,
+          isKey: false,
+          entityIsWeak: false,
+        }}
+      />
+    ),
 
-      "composite-attribute": ({ data }) => (
-        <DefaultAttribute
-          data={{
-            label: data.label,
-            isKey: false,
-            entityIsWeak: false,
-          }}
-        />
-      ),
+    relationship: ({ data }) => <DefaultRelationship data={data} />,
 
-      relationship: ({ data }) => <DefaultRelationship data={data} />,
+    "relationship-attribute": ({ data }) => (
+      <DefaultAttribute
+        data={{ label: data.label, isKey: false, entityIsWeak: false }}
+      />
+    ),
 
-      "relationship-attribute": ({ data }) => (
-        <DefaultAttribute
-          data={{ label: data.label, isKey: false, entityIsWeak: false }}
-        />
-      ),
+    aggregation: ({ data }) => <DefaultAggregation data={data} />,
 
-      aggregation: ({ data }) => <DefaultAggregation data={data} />,
+    isA: (_) => <DefaultIsA />,
+  };
 
-      isA: (_) => <DefaultIsA />,
-    };
-  }
+  abstract readonly edgeTypes: IErNotation["edgeTypes"];
+  abstract readonly edgeMarkers: IErNotation["edgeMarkers"];
+  abstract readonly type: string;
 }
 
-export default DefaultNotation;
+export default ErNotation;

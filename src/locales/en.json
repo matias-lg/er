@@ -7,6 +7,9 @@
     },
 
     "erDiagram": {
+      "notationButton": "Notation",
+      "arrowNotation": "Arrow notation",
+      "minMaxNotation": "(Min, max) notation",
       "layoutButton": "Layout",
       "fitViewButton": "Fit View"
     },

@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
-  EdgeTypes,
   Node,
-  NodeTypes,
   Panel,
   ReactFlowProvider,
   useEdgesState,
@@ -12,11 +10,12 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
-import { ErNotation } from "../../types/ErDiagram";
 import { erToReactflowElements } from "../../util/erToReactflowElements";
 import { ControlPanel } from "./ControlPanel";
 import CustomSVGs from "./CustomSVGs";
-import ArrowNotation from "./notations/ArrowNotation";
+import { NotationPicker } from "./NotationPicker";
+import ArrowNotation from "./notations/ArrowNotation/ArrowNotation";
+import ErNotation from "./notations/DefaultNotation";
 import { useD3LayoutedElements } from "./useD3LayoutedElements";
 import {
   getLayoutedElements,
@@ -25,20 +24,24 @@ import {
 
 type ErDiagramProps = {
   erDoc: ER;
-  erNodeTypes: NodeTypes;
-  erEdgeTypes: EdgeTypes;
+  notation: ErNotation;
+  onErEdgeNotationChange: (newNotation: ErNotation) => void;
   erEdgeNotation: ErNotation["edgeMarkers"];
 };
 
+const initialNotation = new ArrowNotation();
+
 const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
-  const [currentNotation, _] = useState<ErNotation>(new ArrowNotation());
+  const [notation, setNotation] = useState<ErNotation>(initialNotation);
   return (
     <ReactFlowProvider>
       <ErDiagram
         erDoc={erDoc}
-        erNodeTypes={currentNotation.nodeTypes}
-        erEdgeTypes={currentNotation.edgeTypes}
-        erEdgeNotation={currentNotation.edgeMarkers}
+        notation={notation}
+        erEdgeNotation={notation.edgeMarkers}
+        onErEdgeNotationChange={(newNotation) => {
+          setNotation(newNotation);
+        }}
       />
     </ReactFlowProvider>
   );
@@ -46,9 +49,8 @@ const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
 
 const ErDiagram = ({
   erDoc,
-  erNodeTypes,
-  erEdgeTypes,
-  erEdgeNotation,
+  notation,
+  onErEdgeNotationChange,
 }: ErDiagramProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -56,12 +58,13 @@ const ErDiagram = ({
   const { layoutElements } = useLayoutedElements();
   const { D3LayoutElements } = useD3LayoutedElements();
 
-  const nodeTypes = useMemo(() => erNodeTypes, []);
-  const edgeTypes = useMemo(() => erEdgeTypes, []);
-
   const isFirstRenderRef = useRef<boolean | null>(true);
   const nodesInitialized = useNodesInitialized();
   const { fitView } = useReactFlow();
+
+  const erNodeTypes = useMemo(() => notation.nodeTypes, [notation]);
+  const erEdgeTypes = useMemo(() => notation.edgeTypes, [notation]);
+  const erEdgeNotation = useMemo(() => notation.edgeMarkers, [notation]);
 
   useEffect(() => {
     if (erDoc === null) return;
@@ -138,10 +141,10 @@ const ErDiagram = ({
     <ReactFlow
       nodes={nodes}
       onNodesChange={onNodesChange}
-      nodeTypes={nodeTypes}
+      nodeTypes={erNodeTypes}
       edges={edges}
       onEdgesChange={onEdgesChange}
-      edgeTypes={edgeTypes}
+      edgeTypes={erEdgeTypes}
       proOptions={{ hideAttribution: true }}
     >
       {/* <Background variant={BackgroundVariant.Cross} /> */}
@@ -190,8 +193,17 @@ const ErDiagram = ({
         <button onClick={D3LayoutElements}>d3-force Layout</button>
       </Panel>
 
-      <ControlPanel />
+      <Panel position="top-left">
+        <NotationPicker
+          initialNotation={notation}
+          className=""
+          onNotationChange={(newNotation) =>
+            onErEdgeNotationChange(newNotation)
+          }
+        />
+      </Panel>
       <CustomSVGs />
+      <ControlPanel />
     </ReactFlow>
   );
 };
