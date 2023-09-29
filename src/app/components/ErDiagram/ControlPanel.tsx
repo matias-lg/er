@@ -7,19 +7,9 @@ import { HiSparkles } from "react-icons/hi2";
 export const ControlPanel = () => {
   const { layoutElements } = useLayoutedElements();
   const { fitView } = useReactFlow();
-  // const store = useStoreApi();
   const t = useTranslations("home.erDiagram");
-  // const [isAutoLayoutEnabled, setIsAutoLayoutEnabled] =
-  //   useState<boolean>(false);
 
   const handleLayoutClick = () => {
-    // setIsAutoLayoutEnabled((is) => !is);
-    // store.setState({
-    //   nodesDraggable: !isAutoLayoutEnabled,
-    //   nodesConnectable: !isAutoLayoutEnabled,
-    //   elementsSelectable: !isAutoLayoutEnabled,
-    // });
-
     void layoutElements({
       "elk.algorithm": "org.eclipse.elk.force",
       "elk.force.temperature": "0.05",
@@ -34,7 +24,6 @@ export const ControlPanel = () => {
     <Controls showInteractive={false}>
       <ControlButton
         style={{
-          // backgroundColor: isAutoLayoutEnabled ? colors.textEditorBackground,
           backgroundColor: "#fff",
         }}
         title={t("layoutButton")}
@@ -43,7 +32,6 @@ export const ControlPanel = () => {
         <HiSparkles
           style={{
             color: colors.textEditorBackground,
-            // color: isAutoLayoutEnabled ? "#fff" : colors.textEditorBackground,
           }}
         />
       </ControlButton>
