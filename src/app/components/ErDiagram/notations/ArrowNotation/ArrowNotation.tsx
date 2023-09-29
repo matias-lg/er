@@ -1,27 +1,24 @@
 import { EdgeProps } from "reactflow";
-import { ErNotation } from "../../../../types/ErDiagram";
+import ErNotation from "../DefaultNotation";
 import ArrowNotationEdge from "./ArrowNotationEdge";
-import DefaultNotation from "../DefaultNotation";
 
-class ArrowNotation extends DefaultNotation {
-  edgeTypes: ErNotation["edgeTypes"];
-  edgeMarkers: ErNotation["edgeMarkers"];
+class ArrowNotation extends ErNotation {
+  type = "arrow";
+  edgeTypes = {
+    erEdge: (
+      props: EdgeProps<{
+        cardinality: string;
+        isTotalParticipation: boolean;
+      }>,
+    ) => <ArrowNotationEdge {...props} />,
+  };
+
+  edgeMarkers = (cardinality: string, _isTotalParticipation: boolean) => ({
+    markerEnd: cardinality === "1" ? "black-arrow" : undefined,
+  });
 
   constructor() {
     super();
-
-    this.edgeTypes = {
-      erEdge: (
-        props: EdgeProps<{
-          cardinality: string;
-          isTotalParticipation: boolean;
-        }>,
-      ) => <ArrowNotationEdge {...props} />,
-    };
-
-    this.edgeMarkers = (cardinality, _) => ({
-      markerEnd: cardinality === "1" ? "black-arrow" : undefined,
-    });
   }
 }
 

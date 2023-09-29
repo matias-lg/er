@@ -6,8 +6,10 @@ import { LayoutedNode } from "../../util/common";
 
 const elk = new ELK();
 const defaultOptions = {
-  "elk.algorithm": "org.eclipse.elk.stress",
-  "elk.stress.desiredEdgeLength": "130",
+  "elk.algorithm": "org.eclipse.elk.force",
+  "elk.force.temperature": "0.05",
+  "elk.spacing.nodeNode": "4",
+  "elk.force.iterations": "1500",
 };
 
 const useLayoutedElements = () => {

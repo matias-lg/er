@@ -2,13 +2,13 @@ import { Edge } from "reactflow";
 import { ER } from "../../ERDoc/types/parser/ER";
 import { Entity } from "../../ERDoc/types/parser/Entity";
 import { Relationship } from "../../ERDoc/types/parser/Relationship";
+import ErNotation from "../components/ErDiagram/notations/DefaultNotation";
 import {
   CompositeAttributeNode,
   EntityAttributeNode,
   EntityEdge,
   EntityNode,
   ErNode,
-  ErNotation,
   IsANode,
   RelationshipAttributeNode,
   RelationshipNode,
