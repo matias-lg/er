@@ -8,7 +8,7 @@ const elk = new ELK();
 const defaultOptions = {
   "elk.algorithm": "org.eclipse.elk.force",
   "elk.force.temperature": "0.05",
-  "elk.spacing.nodeNode": "4",
+  "elk.spacing.nodeNode": "4.5",
   "elk.force.iterations": "1500",
 };
 
@@ -16,7 +16,7 @@ const useLayoutedElements = () => {
   const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
 
   const layoutElements = useCallback(
-    async (elkOptions: { [key: string]: string }) => {
+    async (elkOptions: { [key: string]: string } = {}) => {
       const nodes = getNodes();
       const edges = getEdges();
       const layoutedNodes = await getLayoutedElements(nodes, edges, elkOptions);
