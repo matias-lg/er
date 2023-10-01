@@ -10,12 +10,7 @@ export const ControlPanel = () => {
   const t = useTranslations("home.erDiagram");
 
   const handleLayoutClick = () => {
-    void layoutElements({
-      "elk.algorithm": "org.eclipse.elk.force",
-      "elk.force.temperature": "0.05",
-      "elk.spacing.nodeNode": "4",
-      "elk.force.iterations": "1500",
-    }).then(() => {
+    void layoutElements().then(() => {
       window.requestAnimationFrame(() => fitView());
     });
   };

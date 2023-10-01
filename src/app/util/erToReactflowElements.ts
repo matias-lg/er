@@ -281,6 +281,10 @@ export const updateGraphElementsWithAggregation = ({
             edge.target != aggregatedRelationshipNodeId)
         )
           continue;
+        if (edge.data) {
+          (edge as Edge<{ isInAggregation: boolean }>).data!.isInAggregation =
+            true;
+        }
         queue.push(edge.target == nodeId ? edge.source : edge.target);
       }
     }

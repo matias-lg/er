@@ -101,15 +101,20 @@ export const useEdgePath = (
   // we mix const and let assigments, eslint will complain in both cases
   // eslint-disable-next-line prefer-const
   let { sx, sy, tx, ty } = getErEdgeParams(sourceNode, targetNode);
+
+  const angle = Math.atan2(ty - sy, tx - sx);
+  const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
+  const labelDist = Math.min(55, dist / 2);
+  const labelX = sx + labelDist * Math.cos(angle);
+  const labelY = sy + labelDist * Math.sin(angle);
+
   if (shortenPathBy !== 0) {
     // we need to shorten the path so the arrowhead looks good
-    const angle = Math.atan2(ty - sy, tx - sx);
-    const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
     tx = sx + (dist - shortenPathBy) * Math.cos(angle);
     ty = sy + (dist - shortenPathBy) * Math.sin(angle);
   }
 
-  const [edgePath, labelX, labelY] = getStraightPath({
+  const [edgePath] = getStraightPath({
     sourceX: sx,
     sourceY: sy,
     targetX: tx,
