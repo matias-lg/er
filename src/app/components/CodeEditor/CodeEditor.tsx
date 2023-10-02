@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { getERDoc } from "../../../ERDoc";
 import { ER } from "../../../ERDoc/types/parser/ER";
 import { ErrorMessage, MarkerSeverity } from "../../types/CodeEditor";
-import { EXAMPLES } from "../../util/ErdocExamples";
 import { colors } from "../../util/colors";
 import getErrorMessage from "../../util/errorMessages";
 import ErrorTable from "./ErrorTable";
@@ -78,8 +77,6 @@ const erdocTokenizer: languages.IMonarchLanguage = {
   },
 };
 
-const INITIAL_CONTENT = EXAMPLES["bank"];
-
 const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
   const [selectedExample, setSelectedExample] = useState<string | null>(null);
 
@@ -141,7 +138,7 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
 
   const handleEditorMount: OnMount = (editor, m) => {
     editorRef.current = editor;
-    handleEditorContent(INITIAL_CONTENT);
+    handleEditorContent(DEFAULT_CONTENT);
     // mount erdoc language
     m.languages.register({ id: "erdoc" });
     m.languages.setMonarchTokensProvider("erdoc", erdocTokenizer);
@@ -151,7 +148,7 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
       m.editor.defineTheme(themeName, theme);
     }
     m.editor.setTheme(DEFAULT_THEME);
-    editor.setValue(INITIAL_CONTENT);
+    editor.setValue(DEFAULT_CONTENT);
   };
 
   useEffect(() => {
@@ -224,3 +221,47 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
 };
 
 export default CodeEditor;
+
+const DEFAULT_CONTENT = `entity bank {
+    code key
+    name
+    addr
+}
+
+entity bank_branch depends on has_branches {
+    addr
+    branch_no pkey
+}
+
+relation has_branches(bank 1!, bank_branch N!)
+
+entity account {
+    acct_no key
+    balance
+    type
+}
+
+entity loan {
+    loan_no key
+    amount
+    type
+}
+
+relation accts(Bank_With_Branches 1, account N!)
+relation loans(Bank_With_Branches 1, loan N!)
+
+entity customer {
+    ssn key
+    name
+    addr
+    phone
+}
+
+entity premium_customer extends customer {
+    discount
+}
+
+relation a_c(customer N, account M!)
+relation l_c(customer N, loan M!)
+
+aggregation Bank_With_Branches(has_branches)`;

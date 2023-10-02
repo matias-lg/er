@@ -9,7 +9,8 @@
     "examples": {
       "_title": "Examples",
       "bank": "Bank",
-      "company": "Company"
+      "company": "Company",
+      "large": "Very big example"
     },
 
     "erDiagram": {
