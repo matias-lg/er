@@ -10,6 +10,7 @@ class MinMaxNotation extends ErNotation {
       props: EdgeProps<{
         cardinality: string;
         isTotalParticipation: boolean;
+        isInAggregation: boolean;
       }>,
     ) => <MinMaxEdge {...props} />,
   };
