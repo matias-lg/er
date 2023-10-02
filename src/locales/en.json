@@ -6,6 +6,12 @@
       "errors": "Errors"
     },
 
+    "examples": {
+      "_title": "Examples",
+      "bank": "Bank",
+      "company": "Company"
+    },
+
     "erDiagram": {
       "notationButton": "Notation",
       "arrowNotation": "Arrow notation",
