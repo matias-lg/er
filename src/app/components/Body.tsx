@@ -24,14 +24,12 @@ const Body = () => {
         </Box>
       </Panel>
       <PanelResizeHandle
-        className={`relative w-1 ${
-          dragging ? "bg-secondary" : "bg-primary"
-        }`}
+        className={`relative w-1 ${dragging ? "bg-secondary" : "bg-primary"}`}
         onDragging={(isDragging) => {
           setDragging(isDragging);
         }}
       >
-        <div className="h-full w-1 hover:bg-secondary bg-primary"></div>
+        <div className="h-full w-1 bg-primary hover:bg-secondary"></div>
       </PanelResizeHandle>
       <Panel defaultSize={60}>
         <Box pt={1} height="full">
