@@ -28,7 +28,19 @@ const inheritanceToReactflowElements = (
   const isANode: IsANode = {
     id: isANodeId,
     type: "isA",
-    data: {},
+    data: {
+      constraints: [
+        {
+          type: "alignment",
+          axis: "x",
+          offsets: [
+            { node: parentEntityNodeId, offset: "0" },
+            { node: isANodeId, offset: "0" },
+            { node: childEntityNodeId, offset: "0" },
+          ],
+        },
+      ],
+    },
     position: { x: 0, y: 0 },
   };
 

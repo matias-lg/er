@@ -85,8 +85,8 @@ const getLayoutedElements = async (
   const layoutedNodes: Node[] = [];
 
   children?.forEach((node) => {
+    // if it is an aggregation, mutate the subgraph back into a regular node
     if (Object.prototype.hasOwnProperty.call(node, "children")) {
-      // mutate the aggregation subgraph back into a regular node
       const originalAgg = flowNodes.find((fn) => fn.id === node.id);
       node = {
         ...originalAgg,

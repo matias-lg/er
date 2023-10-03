@@ -18,7 +18,7 @@ export const useD3LayoutedElements = () => {
     ),
   );
 
-  const D3LayoutElements = useCallback((): void => {
+  const d3LayoutElements = useCallback((): void => {
     const nodes = getNodes().map((node) => ({
       ...node,
       x: 0,
@@ -48,5 +48,5 @@ export const useD3LayoutedElements = () => {
     setNodes(nodes.map((node) => adjustChildNodePosition(node, nodes)));
     window.requestAnimationFrame(() => fitView());
   }, [initialised]);
-  return { D3LayoutElements };
+  return { d3LayoutElements };
 };

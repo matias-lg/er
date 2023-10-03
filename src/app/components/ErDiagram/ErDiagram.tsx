@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
+  Background,
+  BackgroundVariant,
   Node,
   Panel,
   ReactFlowProvider,
@@ -17,6 +19,7 @@ import { NotationPicker } from "./NotationPicker";
 import ArrowNotation from "./notations/ArrowNotation/ArrowNotation";
 import ErNotation from "./notations/DefaultNotation";
 import { useD3LayoutedElements } from "./useD3LayoutedElements";
+import { useColaLayoutedElements } from "./useColaLayoutedElements";
 import {
   getLayoutedElements,
   useLayoutedElements,
@@ -56,7 +59,8 @@ const ErDiagram = ({
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const { layoutElements } = useLayoutedElements();
-  const { D3LayoutElements } = useD3LayoutedElements();
+  const { d3LayoutElements } = useD3LayoutedElements();
+  const { ColaLayoutElements } = useColaLayoutedElements();
 
   const isFirstRenderRef = useRef<boolean | null>(true);
   const nodesInitialized = useNodesInitialized();
@@ -147,7 +151,19 @@ const ErDiagram = ({
       edgeTypes={erEdgeTypes}
       proOptions={{ hideAttribution: true }}
     >
-      {/* <Background variant={BackgroundVariant.Cross} /> */}
+      <Background
+        id="1"
+        gap={10}
+        color="#f1f1f1"
+        variant={BackgroundVariant.Lines}
+      />
+      <Background
+        id="2"
+        gap={100}
+        offset={1}
+        color="#e3e1e1"
+        variant={BackgroundVariant.Lines}
+      />
 
       <Panel position="top-right">
         <br />
@@ -161,8 +177,7 @@ const ErDiagram = ({
         >
           ELK stress layout
         </button>
-        <br />
-        <button
+        {/* <button
           onClick={() => {
             void layoutElements({
               "elk.algorithm": "org.eclipse.elk.radial",
@@ -171,7 +186,7 @@ const ErDiagram = ({
           }}
         >
           ELK radial layout
-        </button>
+        </button> */}
 
         <br />
         <button
@@ -186,11 +201,14 @@ const ErDiagram = ({
             });
           }}
         >
-          ELK force layout
+          ELK 5K force layout
         </button>
 
         <br />
-        <button onClick={D3LayoutElements}>d3-force Layout</button>
+        <button onClick={d3LayoutElements}>d3-force Layout</button>
+
+        <br />
+        <button onClick={ColaLayoutElements}>Cola Layout</button>
       </Panel>
 
       <Panel position="top-left">
