@@ -24,6 +24,7 @@ import {
   getLayoutedElements,
   useLayoutedElements,
 } from "./useLayoutedElements";
+import { Spinner } from "@chakra-ui/react";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -61,6 +62,7 @@ const ErDiagram = ({
   const { layoutElements } = useLayoutedElements();
   const { d3LayoutElements } = useD3LayoutedElements();
   const { ColaLayoutElements } = useColaLayoutedElements();
+  const [isLayouting, setIsLayouting] = useState(false);
 
   const isFirstRenderRef = useRef<boolean | null>(true);
   const nodesInitialized = useNodesInitialized();
@@ -141,6 +143,10 @@ const ErDiagram = ({
     }
   }, [nodes, edges]);
 
+  useEffect(() => {
+    console.log("isLayouting", isLayouting);
+  }, [isLayouting]);
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -169,10 +175,11 @@ const ErDiagram = ({
         <br />
         <button
           onClick={() => {
+            setIsLayouting(true);
             void layoutElements({
               "elk.algorithm": "org.eclipse.elk.stress",
               "elk.stress.desiredEdgeLength": "110",
-            });
+            }).then(() => setIsLayouting(false));
           }}
         >
           ELK stress layout
@@ -191,6 +198,7 @@ const ErDiagram = ({
         <br />
         <button
           onClick={() => {
+            setIsLayouting(true);
             void layoutElements({
               "elk.algorithm": "org.eclipse.elk.force",
               // "elk.force.model": "EADES",
@@ -198,20 +206,44 @@ const ErDiagram = ({
               "elk.force.temperature": "0.05",
               "elk.spacing.nodeNode": "4",
               "elk.force.iterations": "1500",
-            });
+            }).then(() => setIsLayouting(false));
           }}
         >
           ELK 5K force layout
         </button>
 
         <br />
-        <button onClick={d3LayoutElements}>d3-force Layout</button>
+        <button
+          onClick={() => {
+            setIsLayouting(true);
+            d3LayoutElements();
+            setIsLayouting(false);
+          }}
+        >
+          d3-force Layout
+        </button>
 
         <br />
-        <button onClick={ColaLayoutElements}>Cola Layout</button>
+        <button
+          onClick={() => {
+            setIsLayouting(true);
+            // HACK: wrap in promise to allow state to update
+            void new Promise((resolve) => setTimeout(resolve, 1))
+              .then(() => {
+                ColaLayoutElements();
+              })
+              .then(() => setIsLayouting(false));
+          }}
+        >
+          Cola Layout
+        </button>
       </Panel>
 
       <Panel position="top-left">
+        {isLayouting && <Spinner color="black" />}
+      </Panel>
+
+      <Panel position="bottom-right">
         <NotationPicker
           initialNotation={notation}
           className=""

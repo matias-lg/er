@@ -2,17 +2,26 @@ import { CSSProperties, ComponentType } from "react";
 import { EdgeMarkerType, EdgeTypes, NodeProps } from "reactflow";
 import { Node, Edge } from "reactflow";
 
-type constraints = {
-  type: string;
-  axis: "x" | "y";
-  offsets: { node: string; offset: string }[];
-}[];
+export type NodeConstraints = (
+  | {
+      type: "alignment";
+      axis: "x" | "y";
+      offsets: { node: string; offset: string }[];
+    }
+  | {
+      type: "inequality";
+      axis: "x" | "y";
+      left: string;
+      right: string;
+      gap: number;
+    }
+)[];
 
 export type EntityNode = Node<
   {
     label: string;
     isWeak: boolean;
-    constraints?: constraints;
+    constraints?: NodeConstraints;
   },
   "entity"
 >;
@@ -22,7 +31,7 @@ export type EntityAttributeNode = Node<
     label: string;
     isKey: boolean;
     entityIsWeak: boolean;
-    constraints?: constraints;
+    constraints?: NodeConstraints;
   },
   "entity-attribute"
 >;
@@ -30,7 +39,7 @@ export type EntityAttributeNode = Node<
 export type CompositeAttributeNode = Node<
   {
     label: string;
-    constraints?: constraints;
+    constraints?: NodeConstraints;
   },
   "composite-attribute"
 >;
@@ -39,7 +48,7 @@ export type RelationshipNode = Node<
   {
     label: string;
     hasDependant: boolean;
-    constraints?: constraints;
+    constraints?: NodeConstraints;
   },
   "relationship"
 >;
@@ -47,7 +56,7 @@ export type RelationshipNode = Node<
 export type RelationshipAttributeNode = Node<
   {
     label: string;
-    constraints?: constraints;
+    constraints?: NodeConstraints;
   },
   "relationship-attribute"
 >;
@@ -57,14 +66,14 @@ export type AggregationNode = Node<
     label: string;
     width?: number;
     height?: number;
-    constraints?: constraints;
+    constraints?: NodeConstraints;
   },
   "aggregation"
 >;
 
 export type IsANode = Node<
   {
-    constraints?: constraints;
+    constraints?: NodeConstraints;
   },
   "isA"
 >;
@@ -72,7 +81,7 @@ export type IsANode = Node<
 export type EntityEdge = Edge<{
   cardinality: string;
   isTotalParticipation: boolean;
-  constraints?: constraints;
+  constraints?: NodeConstraints;
 }>;
 
 export type ErNode =

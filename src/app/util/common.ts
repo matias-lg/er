@@ -19,7 +19,7 @@ export const createRelationshipNodeId = (relationshipId: string): string => {
 
 export type LayoutedNode = Node & { x: number; y: number };
 
-export const adjustChildNodePosition = (
+export const updateNodePosition = (
   node: LayoutedNode,
   nodes: LayoutedNode[],
 ): LayoutedNode => {

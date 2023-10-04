@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useReactFlow, Node, Edge } from "reactflow";
 import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
-import { adjustChildNodePosition } from "../../util/common";
+import { updateNodePosition } from "../../util/common";
 import { LayoutedNode } from "../../util/common";
 
 const elk = new ELK();
@@ -111,10 +111,7 @@ const getLayoutedElements = async (
       });
     } else {
       layoutedNodes.push(
-        adjustChildNodePosition(
-          node as LayoutedNode,
-          children as LayoutedNode[],
-        ),
+        updateNodePosition(node as LayoutedNode, children as LayoutedNode[]),
       );
     }
   });
