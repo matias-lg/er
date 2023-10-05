@@ -1,8 +1,8 @@
+import { Spinner } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
-  Node,
   Panel,
   ReactFlowProvider,
   useEdgesState,
@@ -12,19 +12,19 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
+import { AggregationNode } from "../../types/ErDiagram";
 import { erToReactflowElements } from "../../util/erToReactflowElements";
 import { ControlPanel } from "./ControlPanel";
 import CustomSVGs from "./CustomSVGs";
 import { NotationPicker } from "./NotationPicker";
 import ArrowNotation from "./notations/ArrowNotation/ArrowNotation";
 import ErNotation from "./notations/DefaultNotation";
-import { useD3LayoutedElements } from "./useD3LayoutedElements";
 import { useColaLayoutedElements } from "./useColaLayoutedElements";
+import { useD3LayoutedElements } from "./useD3LayoutedElements";
 import {
   getLayoutedElements,
   useLayoutedElements,
 } from "./useLayoutedElements";
-import { Spinner } from "@chakra-ui/react";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -77,28 +77,36 @@ const ErDiagram = ({
     const [newNodes, newEdges] = erToReactflowElements(erDoc, erEdgeNotation);
 
     setNodes((nodes) => {
-      for (const n of newNodes) {
-        const oldNode = nodes.find((nd) => nd.id === n.id) as Node<{
-          height: number;
-          width: number;
-        }>;
+      for (const newNode of newNodes) {
         // hack: on first render, hide the nodes before they are layouted
         if (isFirstRenderRef.current === true) {
-          n.style = {
-            ...n.style,
+          newNode.style = {
+            ...newNode.style,
             opacity: 0,
           };
         }
+
         // if the node already exists, keep its position
+        let oldNode;
+        // old node by data.erId
+        oldNode = nodes.find(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          (oldNode) => oldNode.data.erId === newNode.data.erId,
+        );
+        // old node by index id
+        if (oldNode === undefined)
+          oldNode = nodes.find((oldNode) => oldNode.id === newNode.id);
+
         if (oldNode !== undefined) {
-          n.position = oldNode.position;
+          newNode.position = oldNode.position;
           // for aggregations, don't modify its size
-          if (oldNode.type === "aggregation" && n.type === "aggregation") {
-            n.data.height = oldNode.data.height;
-            n.data.width = oldNode.data.width;
+          if (newNode.type === "aggregation") {
+            newNode.data.height = (oldNode as AggregationNode).data.height;
+            newNode.data.width = (oldNode as AggregationNode).data.width;
           }
         }
       }
+
       return newNodes;
     });
 

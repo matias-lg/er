@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useReactFlow, useStore } from "reactflow";
+import { Node, useReactFlow, useStore } from "reactflow";
 import * as cola from "webcola";
 import { updateNodePosition } from "../../util/common";
 import { NodeConstraints } from "../../types/ErDiagram";
@@ -19,13 +19,44 @@ type ColaConstraints = (
     }
 )[];
 
-export const useColaLayoutedElements = () => {
-  const { getNodes, setNodes, getEdges, fitView } = useReactFlow<{
-    constraints?: NodeConstraints;
-    label: string;
+type ErGroup = cola.Group & { id: string };
+type LayoutNodeData = {
+  constraints?: NodeConstraints;
+  label: string;
+  width: number;
+  height: number;
+};
+
+const getAggregationGroups = (
+  nodes: (Node<LayoutNodeData> & {
     width: number;
     height: number;
-  }>();
+    x: number;
+    y: number;
+  })[],
+  childGroups: ErGroup[],
+) => {
+  const aggregationNodes = nodes.filter((n) => n.type === "aggregation");
+  const aggregationNodeIds = aggregationNodes.map((n) => n.id);
+  const groups = [];
+  for (const id of aggregationNodeIds) {
+    const children = nodes.filter((n) => n.parentNode === id);
+    groups.push({
+      id,
+      leaves: children,
+      groups: childGroups.filter((group) =>
+        children.some((c) => c.id === group.id),
+      ),
+      padding: 10,
+    });
+  }
+
+  return groups;
+};
+
+export const useColaLayoutedElements = () => {
+  const { getNodes, setNodes, getEdges, fitView } =
+    useReactFlow<LayoutNodeData>();
 
   const initialised = useStore((store) =>
     [...store.nodeInternals.values()].every(
@@ -79,21 +110,8 @@ export const useColaLayoutedElements = () => {
           padding: 10,
         }));
 
-    const aggregationGroups: (cola.Group & { id: string })[] = layoutNodes
-      .filter((n) => n.type === "aggregation")
-      .map((aggregation) => aggregation.id)
-      .map((aggId) => {
-        const children = layoutNodes.filter((n) => n.parentNode === aggId);
-        return {
-          id: aggId,
-          leaves: children,
-          groups: entityGroups.filter((group) =>
-            children.some((c) => c.id === group.id),
-          ),
-          // .map((g) => g.idx),
-          padding: 10,
-        };
-      });
+    const aggregationGroups = getAggregationGroups(layoutNodes, entityGroups);
+
     console.log(constraints);
     new cola.Layout()
       .linkDistance(100)
@@ -109,15 +127,15 @@ export const useColaLayoutedElements = () => {
 
     // manually move the aggregation nodes
     for (const aggGroup of aggregationGroups) {
-      if (aggGroup.leaves!.length < 2) continue;
+      if (aggGroup.leaves.length < 2) continue;
       const PADDING = 50;
       const agg = layoutNodes.find((n) => n.id === aggGroup.id)!;
       let [minX, minY, maxX, maxY] = [Infinity, Infinity, -Infinity, -Infinity];
-      for (const leaf of aggGroup.leaves!) {
+      for (const leaf of aggGroup.leaves) {
         minX = Math.min(minX, leaf.x);
         minY = Math.min(minY, leaf.y);
-        maxX = Math.max(maxX, leaf.x + leaf.width!);
-        maxY = Math.max(maxY, leaf.y + leaf.height!);
+        maxX = Math.max(maxX, leaf.x + leaf.width);
+        maxY = Math.max(maxY, leaf.y + leaf.height);
       }
 
       agg.data = {

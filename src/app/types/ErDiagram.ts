@@ -22,6 +22,7 @@ export type EntityNode = Node<
     label: string;
     isWeak: boolean;
     constraints?: NodeConstraints;
+    erId?: string;
   },
   "entity"
 >;
@@ -32,6 +33,7 @@ export type EntityAttributeNode = Node<
     isKey: boolean;
     entityIsWeak: boolean;
     constraints?: NodeConstraints;
+    erId?: string;
   },
   "entity-attribute"
 >;
@@ -40,6 +42,7 @@ export type CompositeAttributeNode = Node<
   {
     label: string;
     constraints?: NodeConstraints;
+    erId?: string;
   },
   "composite-attribute"
 >;
@@ -49,6 +52,7 @@ export type RelationshipNode = Node<
     label: string;
     hasDependant: boolean;
     constraints?: NodeConstraints;
+    erId?: string;
   },
   "relationship"
 >;
@@ -57,6 +61,7 @@ export type RelationshipAttributeNode = Node<
   {
     label: string;
     constraints?: NodeConstraints;
+    erId?: string;
   },
   "relationship-attribute"
 >;
@@ -67,6 +72,7 @@ export type AggregationNode = Node<
     width?: number;
     height?: number;
     constraints?: NodeConstraints;
+    erId?: string;
   },
   "aggregation"
 >;
@@ -74,6 +80,7 @@ export type AggregationNode = Node<
 export type IsANode = Node<
   {
     constraints?: NodeConstraints;
+    erId?: string;
   },
   "isA"
 >;
@@ -82,6 +89,7 @@ export type EntityEdge = Edge<{
   cardinality: string;
   isTotalParticipation: boolean;
   constraints?: NodeConstraints;
+  erId?: string;
 }>;
 
 export type ErNode =
