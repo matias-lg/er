@@ -1,6 +1,8 @@
+import { Spinner } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
-  Node,
+  Background,
+  BackgroundVariant,
   Panel,
   ReactFlowProvider,
   useEdgesState,
@@ -10,17 +12,20 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
+import { AggregationNode } from "../../types/ErDiagram";
 import { erToReactflowElements } from "../../util/erToReactflowElements";
 import { ControlPanel } from "./ControlPanel";
 import CustomSVGs from "./CustomSVGs";
 import { NotationPicker } from "./NotationPicker";
 import ArrowNotation from "./notations/ArrowNotation/ArrowNotation";
 import ErNotation from "./notations/DefaultNotation";
+import { useColaLayoutedElements } from "./useColaLayoutedElements";
 import { useD3LayoutedElements } from "./useD3LayoutedElements";
 import {
   getLayoutedElements,
   useLayoutedElements,
 } from "./useLayoutedElements";
+import { useAlignmentGuide } from "./useAlignmentGuide";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -56,7 +61,9 @@ const ErDiagram = ({
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const { layoutElements } = useLayoutedElements();
-  const { D3LayoutElements } = useD3LayoutedElements();
+  const { d3LayoutElements } = useD3LayoutedElements();
+  const { ColaLayoutElements } = useColaLayoutedElements();
+  const [isLayouting, setIsLayouting] = useState(false);
 
   const isFirstRenderRef = useRef<boolean | null>(true);
   const nodesInitialized = useNodesInitialized();
@@ -65,34 +72,43 @@ const ErDiagram = ({
   const erNodeTypes = useMemo(() => notation.nodeTypes, [notation]);
   const erEdgeTypes = useMemo(() => notation.edgeTypes, [notation]);
   const erEdgeNotation = useMemo(() => notation.edgeMarkers, [notation]);
+  const { onNodeDrag, onNodeDragStart, onNodeDragStop } = useAlignmentGuide();
 
   useEffect(() => {
     if (erDoc === null) return;
     const [newNodes, newEdges] = erToReactflowElements(erDoc, erEdgeNotation);
 
     setNodes((nodes) => {
-      for (const n of newNodes) {
-        const oldNode = nodes.find((nd) => nd.id === n.id) as Node<{
-          height: number;
-          width: number;
-        }>;
+      for (const newNode of newNodes) {
         // hack: on first render, hide the nodes before they are layouted
         if (isFirstRenderRef.current === true) {
-          n.style = {
-            ...n.style,
+          newNode.style = {
+            ...newNode.style,
             opacity: 0,
           };
         }
+
         // if the node already exists, keep its position
+        let oldNode;
+        // old node by data.erId
+        oldNode = nodes.find(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          (oldNode) => oldNode.data.erId === newNode.data.erId,
+        );
+        // old node by index id
+        if (oldNode === undefined)
+          oldNode = nodes.find((oldNode) => oldNode.id === newNode.id);
+
         if (oldNode !== undefined) {
-          n.position = oldNode.position;
+          newNode.position = oldNode.position;
           // for aggregations, don't modify its size
-          if (oldNode.type === "aggregation" && n.type === "aggregation") {
-            n.data.height = oldNode.data.height;
-            n.data.width = oldNode.data.width;
+          if (newNode.type === "aggregation") {
+            newNode.data.height = (oldNode as AggregationNode).data.height;
+            newNode.data.width = (oldNode as AggregationNode).data.width;
           }
         }
       }
+
       return newNodes;
     });
 
@@ -137,6 +153,10 @@ const ErDiagram = ({
     }
   }, [nodes, edges]);
 
+  useEffect(() => {
+    console.log("isLayouting", isLayouting);
+  }, [isLayouting]);
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -145,24 +165,39 @@ const ErDiagram = ({
       edges={edges}
       onEdgesChange={onEdgesChange}
       edgeTypes={erEdgeTypes}
+      onNodeDrag={onNodeDrag}
+      onNodeDragStart={onNodeDragStart}
+      onNodeDragStop={onNodeDragStop}
       proOptions={{ hideAttribution: true }}
     >
-      {/* <Background variant={BackgroundVariant.Cross} /> */}
+      <Background
+        id="1"
+        gap={10}
+        color="#f1f1f1"
+        variant={BackgroundVariant.Lines}
+      />
+      <Background
+        id="2"
+        gap={100}
+        offset={1}
+        color="#e3e1e1"
+        variant={BackgroundVariant.Lines}
+      />
 
       <Panel position="top-right">
         <br />
         <button
           onClick={() => {
+            setIsLayouting(true);
             void layoutElements({
               "elk.algorithm": "org.eclipse.elk.stress",
               "elk.stress.desiredEdgeLength": "110",
-            });
+            }).then(() => setIsLayouting(false));
           }}
         >
           ELK stress layout
         </button>
-        <br />
-        <button
+        {/* <button
           onClick={() => {
             void layoutElements({
               "elk.algorithm": "org.eclipse.elk.radial",
@@ -171,11 +206,12 @@ const ErDiagram = ({
           }}
         >
           ELK radial layout
-        </button>
+        </button> */}
 
         <br />
         <button
           onClick={() => {
+            setIsLayouting(true);
             void layoutElements({
               "elk.algorithm": "org.eclipse.elk.force",
               // "elk.force.model": "EADES",
@@ -183,17 +219,44 @@ const ErDiagram = ({
               "elk.force.temperature": "0.05",
               "elk.spacing.nodeNode": "4",
               "elk.force.iterations": "1500",
-            });
+            }).then(() => setIsLayouting(false));
           }}
         >
-          ELK force layout
+          ELK 5K force layout
         </button>
 
         <br />
-        <button onClick={D3LayoutElements}>d3-force Layout</button>
+        <button
+          onClick={() => {
+            setIsLayouting(true);
+            d3LayoutElements();
+            setIsLayouting(false);
+          }}
+        >
+          d3-force Layout
+        </button>
+
+        <br />
+        <button
+          onClick={() => {
+            setIsLayouting(true);
+            // HACK: wrap in promise to allow state to update
+            void new Promise((resolve) => setTimeout(resolve, 1))
+              .then(() => {
+                ColaLayoutElements();
+              })
+              .then(() => setIsLayouting(false));
+          }}
+        >
+          Cola Layout
+        </button>
       </Panel>
 
       <Panel position="top-left">
+        {isLayouting && <Spinner color="black" />}
+      </Panel>
+
+      <Panel position="bottom-right">
         <NotationPicker
           initialNotation={notation}
           className=""

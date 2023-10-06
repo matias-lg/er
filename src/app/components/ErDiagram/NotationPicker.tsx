@@ -38,6 +38,7 @@ export const NotationPicker = ({
         as={Button}
         rightIcon={<ChevronDownIcon />}
         border={"1px solid #eee"}
+        className="bg-[#fff]"
         shadow={"sm"}
       >
         {t("notationButton")}

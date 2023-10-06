@@ -28,7 +28,19 @@ const inheritanceToReactflowElements = (
   const isANode: IsANode = {
     id: isANodeId,
     type: "isA",
-    data: {},
+    data: {
+      constraints: [
+        {
+          type: "alignment",
+          axis: "x",
+          offsets: [
+            { node: parentEntityNodeId, offset: "0" },
+            { node: isANodeId, offset: "0" },
+            { node: childEntityNodeId, offset: "0" },
+          ],
+        },
+      ],
+    },
     position: { x: 0, y: 0 },
   };
 
@@ -349,5 +361,42 @@ export const erToReactflowElements = (
     }
   }
 
+  // now that we've processed all the ER logic, we convert the ids to just the index in the array.
+  // this way, if  we rename an entity in the text editor the id will stay the same
+  renameIdsToNumeric(newNodes, newEdges);
+
   return [newNodes, newEdges];
+};
+
+const renameIdsToNumeric = (nodes: ErNode[], edges: Edge[]) => {
+  const id2index = new Map<string, string>();
+  for (const [index, node] of nodes.entries()) {
+    id2index.set(node.id, index.toString());
+    node.data.erId = node.id;
+    node.id = index.toString();
+  }
+
+  for (const node of nodes) {
+    if (node.parentNode) {
+      node.parentNode = id2index.get(node.parentNode)!;
+    }
+    if (node.data.constraints) {
+      for (const con of node.data.constraints) {
+        if (con.type === "alignment") {
+          for (const offset of con.offsets) {
+            offset.node = id2index.get(offset.node)!;
+          }
+        }
+        if (con.type === "inequality") {
+          con.left = id2index.get(con.left)!;
+          con.right = id2index.get(con.right)!;
+        }
+      }
+    }
+  }
+
+  for (const edge of edges) {
+    edge.source = id2index.get(edge.source)!;
+    edge.target = id2index.get(edge.target)!;
+  }
 };
