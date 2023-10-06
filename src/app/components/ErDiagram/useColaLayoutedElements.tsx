@@ -121,9 +121,9 @@ export const useColaLayoutedElements = () => {
       .groups([...entityGroups, ...aggregationGroups])
       .constraints(constraints)
       // .groups(aggregationGroups)
-      .jaccardLinkLengths(100)
-      .flowLayout("x", 500)
-      .start(3, 0, 100);
+      .jaccardLinkLengths(90)
+      // .flowLayout("x", 500)
+      .start(100, 1009, 1009);
 
     // manually move the aggregation nodes
     for (const aggGroup of aggregationGroups) {

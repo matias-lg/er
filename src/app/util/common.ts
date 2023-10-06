@@ -22,7 +22,12 @@ export type LayoutedNode = Node & { x: number; y: number };
 export const updateNodePosition = (
   node: LayoutedNode,
   nodes: LayoutedNode[],
+  adjustAnchor: boolean = false,
 ): LayoutedNode => {
+  if (adjustAnchor) {
+    node.x -= node.width! / 2;
+    node.y -= node.height! / 2;
+  }
   const parentNode = nodes.find((n) => n.id === node.parentNode);
   if (parentNode) {
     node.x = node.x - parentNode.x;

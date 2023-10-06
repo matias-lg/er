@@ -111,7 +111,11 @@ const getLayoutedElements = async (
       });
     } else {
       layoutedNodes.push(
-        updateNodePosition(node as LayoutedNode, children as LayoutedNode[]),
+        updateNodePosition(
+          node as LayoutedNode,
+          children as LayoutedNode[],
+          true,
+        ),
       );
     }
   });
