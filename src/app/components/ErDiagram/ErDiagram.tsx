@@ -25,6 +25,7 @@ import {
   getLayoutedElements,
   useLayoutedElements,
 } from "./useLayoutedElements";
+import { useAlignmentGuide } from "./useAlignmentGuide";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -71,6 +72,7 @@ const ErDiagram = ({
   const erNodeTypes = useMemo(() => notation.nodeTypes, [notation]);
   const erEdgeTypes = useMemo(() => notation.edgeTypes, [notation]);
   const erEdgeNotation = useMemo(() => notation.edgeMarkers, [notation]);
+  const { onNodeDrag, onNodeDragStart, onNodeDragStop } = useAlignmentGuide();
 
   useEffect(() => {
     if (erDoc === null) return;
@@ -163,6 +165,9 @@ const ErDiagram = ({
       edges={edges}
       onEdgesChange={onEdgesChange}
       edgeTypes={erEdgeTypes}
+      onNodeDrag={onNodeDrag}
+      onNodeDragStart={onNodeDragStart}
+      onNodeDragStop={onNodeDragStop}
       proOptions={{ hideAttribution: true }}
     >
       <Background
