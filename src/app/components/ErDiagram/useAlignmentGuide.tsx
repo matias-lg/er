@@ -1,13 +1,15 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { Edge, Node, NodeDragHandler, useReactFlow } from "reactflow";
 
 const EPSILON = 0.4;
 
 // calculates the center point of the node from position and dimensions
-const nodeCenter = (node: Node) => ({
-  centerX: node.position.x + node.width! / 2,
-  centerY: node.position.y + node.height! / 2,
-});
+const nodeCenter = (node: Node) => {
+  return {
+    centerX: node.position.x + node.width! / 2,
+    centerY: node.position.y + node.height! / 2,
+  };
+};
 
 // removes all alignment-guide edges from the list of edges
 const removeGuideEdges = (edges: Edge[]) =>
@@ -37,13 +39,11 @@ export const useAlignmentGuide = () => {
   // this ref stores the current dragged node
   const dragRef = useRef<Node | null>(null);
 
-  const [alignedNodes, setAlignedNodes] = useState<Node[]>([]);
-
-  const onNodeDragStart: NodeDragHandler = (_evt, node) => {
+  const onNodeDragStart: NodeDragHandler = (evt, node) => {
     dragRef.current = node;
   };
 
-  const onNodeDrag: NodeDragHandler = (_evt, node) => {
+  const onNodeDrag: NodeDragHandler = (evt, node) => {
     let { centerX, centerY } = nodeCenter(node);
 
     if (node.parentNode) {
@@ -97,43 +97,24 @@ export const useAlignmentGuide = () => {
         target: n.id,
         sourceHandle,
         targetHandle,
-        style: { stroke: "red", zIndex: 1000 },
+        style: { stroke: "red" },
         type: "straight",
+        animated: true,
       } as Edge;
     });
 
     setEdges((edges) => {
       // remove old alignment guides
       const noGuidesEdges = removeGuideEdges(edges);
+      // add the new alignment guides
       return [...noGuidesEdges, ...alignmentGuideEdges];
     });
-
-    setAlignedNodes(alignedNodes.map(([_alignDir, n]) => n));
   };
 
   const onNodeDragStop: NodeDragHandler = (_evt, _node) => {
     setEdges((edges) => removeGuideEdges(edges));
     dragRef.current = null;
-    setAlignedNodes([]);
   };
-
-  useEffect(() => {
-    // console.log(alignedNodes);
-    // whenever the target changes, we swap the colors temporarily
-    // this is just a placeholder, implement your own logic here
-    // if (target) {
-    //   console.log("#############");
-    //   console.log("target:", target.data.erId);
-    //   console.log("target pos:", target?.position);
-    //   console.log("being dragged pos:", dragRef.current?.position);
-    // }
-    // if (alignedNodes.length > 0) {
-    //   for (const node of alignedNodes) {
-    //     console.log(node.data.erId);
-    //   }
-    //   console.log("##########");
-    // }
-  }, [alignedNodes]);
 
   return { onNodeDragStart, onNodeDrag, onNodeDragStop };
 };

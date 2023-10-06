@@ -8,8 +8,9 @@ import { ER } from "../../../ERDoc/types/parser/ER";
 import { ErrorMessage, MarkerSeverity } from "../../types/CodeEditor";
 import { colors } from "../../util/colors";
 import getErrorMessage from "../../util/errorMessages";
-import ErrorTable from "./ErrorTable";
+import { EditorHeader } from "./EditorHeader";
 import ExamplesTable from "./ExamplesTable";
+import ErrorTable from "./ErrorTable";
 
 type ErrorReportingEditorProps = {
   onErDocChange: (er: ER) => void;
@@ -174,6 +175,7 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
       flexDir={"column"}
       overflow={"hidden"}
     >
+      <EditorHeader editorRef={editorRef} />
       <Box
         resize="none"
         pt={1}
@@ -183,23 +185,20 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
         overflow="hidden"
         bg={colors.textEditorBackground}
       >
-        {
-          <Editor
-            height={"100%"}
-            // value={initialContent}
-            onChange={(content, _) => handleEditorContent(content!)}
-            onMount={handleEditorMount}
-            loading={<Spinner color="white" />}
-            language="erdoc"
-            options={{
-              autoClosingBrackets: "always",
-              scrollBeyondLastLine: false,
-              minimap: {
-                enabled: false,
-              },
-            }}
-          />
-        }
+        <Editor
+          height={"100%"}
+          onChange={(content, _evt) => handleEditorContent(content!)}
+          onMount={handleEditorMount}
+          loading={<Spinner color="white" />}
+          language="erdoc"
+          options={{
+            autoClosingBrackets: "always",
+            scrollBeyondLastLine: false,
+            minimap: {
+              enabled: false,
+            },
+          }}
+        />
       </Box>
 
       <Box
