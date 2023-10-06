@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Edge, Node, NodeDragHandler, useReactFlow } from "reactflow";
 
 const EPSILON = 0.4;
@@ -27,14 +27,6 @@ const findAlignedNodes = (
     else if (Math.abs(y - centerY) < EPSILON) alignedNodes.push(["y", node]);
   }
 
-  alignedNodes.forEach(([alignDir, n]) => {
-    if (alignDir === "x") {
-      console.log(Math.abs(x - nodeCenter(n).centerX));
-    } else {
-      console.log(Math.abs(y - nodeCenter(n).centerY));
-    }
-  });
-
   return alignedNodes;
 };
 
@@ -47,11 +39,11 @@ export const useAlignmentGuide = () => {
 
   const [alignedNodes, setAlignedNodes] = useState<Node[]>([]);
 
-  const onNodeDragStart: NodeDragHandler = useCallback((_evt, node) => {
+  const onNodeDragStart: NodeDragHandler = (_evt, node) => {
     dragRef.current = node;
-  }, []);
+  };
 
-  const onNodeDrag: NodeDragHandler = useCallback((_evt, node) => {
+  const onNodeDrag: NodeDragHandler = (_evt, node) => {
     let { centerX, centerY } = nodeCenter(node);
 
     if (node.parentNode) {
@@ -117,13 +109,13 @@ export const useAlignmentGuide = () => {
     });
 
     setAlignedNodes(alignedNodes.map(([_alignDir, n]) => n));
-  }, []);
+  };
 
-  const onNodeDragStop: NodeDragHandler = useCallback((_evt, _node) => {
+  const onNodeDragStop: NodeDragHandler = (_evt, _node) => {
     setEdges((edges) => removeGuideEdges(edges));
     dragRef.current = null;
     setAlignedNodes([]);
-  }, []);
+  };
 
   useEffect(() => {
     // console.log(alignedNodes);
