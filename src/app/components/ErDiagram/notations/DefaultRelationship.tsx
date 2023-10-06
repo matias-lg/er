@@ -10,7 +10,7 @@ const DefaultRelationship = ({ data }: DefaultRelationshipProps) => {
     return (
       <div
         data-testid="relationship"
-        className={`mb-[10px] flex h-[95px] w-[95px] rotate-45 flex-col items-center justify-center
+        className={`flex h-[95px] w-[95px] rotate-45 flex-col items-center justify-center
        rounded-sm ${
          data.hasDependant ? "border-[5px] border-double" : "border-2"
        } border-orange-700 bg-orange-200`}
@@ -19,19 +19,23 @@ const DefaultRelationship = ({ data }: DefaultRelationshipProps) => {
         <NodeHandles
           TopHandleStyle={{
             opacity: 0,
+            // left: "0%",
             transform: data.hasDependant
               ? "translate(-48px, -2px)"
               : "translate(-48px, 2px)",
           }}
           RightHandleStyle={{
-            transform: data.hasDependant
-              ? "translate(2px,-49px)"
-              : "translate(0,-49px)",
+            opacity: 0,
+            top: "0%",
           }}
           LeftHandleStyle={{
-            transform: data.hasDependant
-              ? "translate(-2px,42px)"
-              : "translate(0px,42px)",
+            opacity: 0,
+            // right: "10%",
+            top: "98%",
+            left: "-1%",
+            // transform: data.hasDependant
+            //   ? "translate(-2px,42px)"
+            //   : "translate(0px,42px)",
           }}
           BottomHandleStyle={{
             transform: data.hasDependant
