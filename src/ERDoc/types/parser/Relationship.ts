@@ -7,7 +7,7 @@ type RelationshipAttribute = {
   location: TokenLocation;
 };
 
-type simpleRelationParticipant = {
+export type simpleRelationParticipant = {
   entityName: string;
   isComposite: false;
   cardinality: string;
@@ -15,7 +15,7 @@ type simpleRelationParticipant = {
   location: TokenLocation;
 };
 
-type CompositeRelationParticipant = {
+export type CompositeRelationParticipant = {
   entityName: string;
   isComposite: true;
   childParticipants: simpleRelationParticipant[];

@@ -1,7 +1,11 @@
 import { Edge } from "reactflow";
 import { ER } from "../../ERDoc/types/parser/ER";
 import { Entity } from "../../ERDoc/types/parser/Entity";
-import { Relationship } from "../../ERDoc/types/parser/Relationship";
+import {
+  CompositeRelationParticipant,
+  Relationship,
+  simpleRelationParticipant,
+} from "../../ERDoc/types/parser/Relationship";
 import ErNotation from "../components/ErDiagram/notations/DefaultNotation";
 import {
   CompositeAttributeNode,
@@ -156,6 +160,84 @@ export const entityToReactflowElements = (
   return [nodes, edges];
 };
 
+const createChildParticipantEdge = (
+  child: simpleRelationParticipant,
+  entity: CompositeRelationParticipant,
+  relationshipId: string,
+  relationshipNodeId: string,
+  edgeStyle: ReturnType<ErNotation["edgeMarkers"]>,
+  handleNumber: number = 0,
+) => ({
+  id: `${
+    handleNumber === 0 ? "" : handleNumber
+  }relationship-part: ${relationshipId}->${entity.entityName}->${
+    child.entityName
+  }`,
+  label: child.entityName,
+  source: createEntityNodeId(entity.entityName),
+  target: relationshipNodeId,
+  sourceHandle: "l",
+  targetHandle: "r",
+  type: "erEdge",
+  data: {
+    cardinality: child.cardinality,
+    isTotalParticipation: child.participation === "total",
+  },
+  markerStart: edgeStyle?.markerStart,
+  markerEnd: edgeStyle?.markerEnd,
+  style: edgeStyle?.style,
+});
+
+// Add labeled edges for the roles
+// We only support up to 5 roles.
+// TODO: Set the handle ids
+const childParticipantToEdge = (
+  entity: CompositeRelationParticipant,
+  edgeNotation: ErNotation["edgeMarkers"],
+  relationshipId: string,
+  relationshipNodeId: string,
+): Edge[] => {
+  const edges: Edge[] = [];
+
+  let childHandleNumbers: number[] = [];
+  switch (entity.childParticipants.length) {
+    case 1:
+      childHandleNumbers = [0];
+      break;
+    case 2:
+      childHandleNumbers = [2, 3];
+      break;
+    case 3:
+      childHandleNumbers = [2, 0, 3];
+      break;
+    case 4:
+      childHandleNumbers = [1, 2, 3, 4];
+      break;
+    default:
+      childHandleNumbers = [1, 2, 0, 3, 4];
+      break;
+  }
+
+  for (const [index, handleNo] of childHandleNumbers.entries()) {
+    const child = entity.childParticipants[index];
+    const edgeStyle = edgeNotation(
+      child.cardinality,
+      child.participation === "total",
+    );
+    edges.push(
+      createChildParticipantEdge(
+        child,
+        entity,
+        relationshipId,
+        relationshipNodeId,
+        edgeStyle,
+        handleNo,
+      ),
+    );
+  }
+  return edges;
+};
+
 export const relationshipToReactflowElements = (
   relationship: Relationship,
   hasDependant: boolean,
@@ -203,29 +285,14 @@ export const relationshipToReactflowElements = (
 
   for (const entity of relationship.participantEntities) {
     if (entity.isComposite) {
-      // Add labeled edges for the roles
-      entity.childParticipants.forEach((child) => {
-        const edgeStyle = edgeNotation(
-          child.cardinality,
-          child.participation === "total",
-        );
-        relationshipEdges.push({
-          id: `relationship-part: ${relationshipId}->${entity.entityName}->${child.entityName}`,
-          label: child.entityName,
-          source: createEntityNodeId(entity.entityName),
-          target: relationshipNodeId,
-          sourceHandle: "l",
-          targetHandle: "r",
-          type: "erEdge",
-          data: {
-            cardinality: child.cardinality,
-            isTotalParticipation: child.participation === "total",
-          },
-          markerStart: edgeStyle?.markerStart,
-          markerEnd: edgeStyle?.markerEnd,
-          style: edgeStyle?.style,
-        });
-      });
+      relationshipEdges.push(
+        ...childParticipantToEdge(
+          entity,
+          edgeNotation,
+          relationshipId,
+          relationshipNodeId,
+        ),
+      );
     } else {
       const edgeStyle = edgeNotation(
         entity.cardinality,
