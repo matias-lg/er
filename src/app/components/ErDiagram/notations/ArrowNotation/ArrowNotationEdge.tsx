@@ -77,7 +77,7 @@ function ArrowNotationEdge({
               padding: 3,
               borderRadius: 5,
               fontSize: 11,
-              fontWeight: 700,
+              fontWeight: 500,
             }}
             className="nodrag nopan"
           >
