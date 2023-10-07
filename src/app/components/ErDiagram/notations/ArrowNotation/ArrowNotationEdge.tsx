@@ -1,4 +1,4 @@
-import { BaseEdge, EdgeProps } from "reactflow";
+import { BaseEdge, EdgeLabelRenderer, EdgeProps } from "reactflow";
 import { useEdgePath } from "../useEdgePath";
 import { getHandlePrefix } from "../../../../util/common";
 
@@ -11,8 +11,9 @@ function ArrowNotationEdge({
   markerStart,
   data,
   markerEnd,
+  label,
 }: EdgeProps<{ cardinality: string; isTotalParticipation: boolean }>) {
-  const [edgePath, ,] = useEdgePath(
+  const [edgePath, _labelX, _labelY, roleLabelX, roleLabelY] = useEdgePath(
     source,
     target,
     data?.isTotalParticipation && data.cardinality === "1" ? ARROW_LENGTH : 0,
@@ -21,46 +22,70 @@ function ArrowNotationEdge({
 
   if (edgePath === null) return null;
 
-  return data?.isTotalParticipation ? (
+  return (
     <>
-      {/* double line */}
-      <path
-        id={id}
-        key={1}
-        className="react-flow__edge-path"
-        d={edgePath}
-        markerStart={markerStart}
-        style={{
-          fill: "none",
-          stroke: "black",
-          strokeWidth: 5,
-        }}
-      />
+      {data?.isTotalParticipation ? (
+        <>
+          {/* double line */}
+          <path
+            id={id}
+            key={1}
+            className="react-flow__edge-path"
+            d={edgePath}
+            markerStart={markerStart}
+            style={{
+              fill: "none",
+              stroke: "black",
+              strokeWidth: 5,
+            }}
+          />
 
-      <path
-        id={id}
-        key={2}
-        className="react-flow__edge-path"
-        markerEnd={data.cardinality === "1" ? "url(#1to1-arrow)" : undefined}
-        d={edgePath}
-        style={{
-          fill: "none",
-          stroke: "white",
-          strokeWidth: 3,
-        }}
-      />
+          <path
+            id={id}
+            key={2}
+            className="react-flow__edge-path"
+            markerEnd={
+              data.cardinality === "1" ? "url(#1to1-arrow)" : undefined
+            }
+            d={edgePath}
+            style={{
+              fill: "none",
+              stroke: "white",
+              strokeWidth: 3,
+            }}
+          />
+        </>
+      ) : (
+        <BaseEdge
+          path={edgePath}
+          id={id}
+          markerEnd={markerEnd}
+          markerStart={markerStart}
+          style={{
+            strokeWidth: 1,
+            stroke: "black",
+          }}
+        />
+      )}
+      {label !== undefined && (
+        <EdgeLabelRenderer>
+          <div
+            style={{
+              position: "absolute",
+              transform: `translate(-50%, -50%) translate(${roleLabelX}px,${roleLabelY}px)`,
+              background: "#F8FAFC",
+              padding: 3,
+              borderRadius: 5,
+              fontSize: 11,
+              fontWeight: 700,
+            }}
+            className="nodrag nopan"
+          >
+            {label}
+          </div>
+        </EdgeLabelRenderer>
+      )}
     </>
-  ) : (
-    <BaseEdge
-      path={edgePath}
-      id={id}
-      markerEnd={markerEnd}
-      markerStart={markerStart}
-      style={{
-        strokeWidth: 1,
-        stroke: "black",
-      }}
-    />
   );
 }
 

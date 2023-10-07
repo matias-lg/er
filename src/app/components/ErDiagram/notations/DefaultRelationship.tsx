@@ -22,31 +22,31 @@ const DefaultRelationship = ({ data }: DefaultRelationshipProps) => {
           use5PerSide={true}
           TopHandleStyle={[
             { left: "50%", top: "-21.5%" },
-            { left: "3%", top: "25%" },
+            { left: "-21%", top: "46%" },
             { left: "25%", top: "2%" },
             { left: "75%", top: "2%" },
-            { left: "97%", top: "25%" },
+            { left: "121%", top: "46%" },
           ]}
           RightHandleStyle={[
-            { top: "50%", right: "-21.5%" },
-            { top: "3%", right: "25%" },
+            { top: "50%", right: "-21%" },
+            { top: "-21%", right: "46%" },
             { top: "25%", right: "2%" },
             { top: "75%", right: "2%" },
-            { top: "97%", right: "25%" },
+            { top: "121%", right: "46%" },
           ]}
           LeftHandleStyle={[
             { top: "50%", left: "-21.5%" },
-            { top: "3%", left: "25%" },
+            { top: "-21%", left: "46%" },
             { top: "25%", left: "2%" },
             { top: "75%", left: "2%" },
-            { top: "97%", left: "25%" },
+            { top: "121%", left: "46%" },
           ]}
           BottomHandleStyle={[
             { left: "50%", bottom: "-21.5%" },
-            { left: "3%", bottom: "25%" },
+            { left: "-21%", bottom: "46%" },
             { left: "25%", bottom: "2%" },
             { left: "75%", bottom: "2%" },
-            { left: "97%", bottom: "25%" },
+            { left: "121%", bottom: "46%" },
           ]}
         />
       </>

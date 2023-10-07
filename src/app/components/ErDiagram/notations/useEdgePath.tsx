@@ -100,7 +100,9 @@ export const useEdgePath = (
   targetNodeId: string,
   shortenPathBy: number = 0,
   handlePrefix: string = "",
-): [string, number, number] | [null, null, null] => {
+):
+  | [string, number, number, number, number]
+  | [null, null, null, null, null] => {
   const sourceNode = useStore(
     useCallback(
       (store) => store.nodeInternals.get(sourceNodeId),
@@ -115,7 +117,7 @@ export const useEdgePath = (
   );
 
   if (!sourceNode || !targetNode) {
-    return [null, null, null];
+    return [null, null, null, null, null];
   }
 
   // we mix const and let assigments, eslint will complain in both cases
@@ -128,9 +130,13 @@ export const useEdgePath = (
 
   const angle = Math.atan2(ty - sy, tx - sx);
   const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
-  const labelDist = Math.min(55, dist / 2);
+  const labelDist = dist / 2;
   const labelX = sx + labelDist * Math.cos(angle);
   const labelY = sy + labelDist * Math.sin(angle);
+
+  const roleDist = dist / 5;
+  const roleLabelX = sx + roleDist * Math.cos(angle);
+  const roleLabelY = sy + roleDist * Math.sin(angle);
 
   if (shortenPathBy !== 0) {
     // we need to shorten the path so the arrowhead looks good
@@ -145,5 +151,5 @@ export const useEdgePath = (
     targetY: ty,
   });
 
-  return [edgePath, labelX, labelY];
+  return [edgePath, labelX, labelY, roleLabelX, roleLabelY];
 };
