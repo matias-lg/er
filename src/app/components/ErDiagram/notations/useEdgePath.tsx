@@ -1,8 +1,18 @@
 import { useCallback } from "react";
-import { useStore, getStraightPath } from "reactflow";
-import { Position, internalsSymbol, Node } from "reactflow";
+import {
+  HandleElement,
+  Node,
+  Position,
+  getStraightPath,
+  internalsSymbol,
+  useStore,
+} from "reactflow";
 
-const getParams = (nodeA: Node, nodeB: Node): [number, number, Position] => {
+const getParams = (
+  nodeA: Node,
+  nodeB: Node,
+  handlePrefix: string,
+): [number, number, Position] => {
   const centerA = getNodeCenter(nodeA);
   const centerB = getNodeCenter(nodeB);
 
@@ -19,20 +29,28 @@ const getParams = (nodeA: Node, nodeB: Node): [number, number, Position] => {
     position = centerA.y > centerB.y ? Position.Top : Position.Bottom;
   }
 
-  const [x, y] = getHandleCoordsByPosition(nodeA, position);
+  const [x, y] = getHandleCoordsByPosition(nodeA, position, handlePrefix);
   return [x, y, position];
 };
 
 const getHandleCoordsByPosition = (
   node: Node,
   handlePosition: Position,
+  handlePrefix: string,
 ): number[] => {
-  let handle = node[internalsSymbol]?.handleBounds?.source?.find(
-    (h) => h.position === handlePosition,
+  let handleMatchCondition = (h: HandleElement) =>
+    h.position === handlePosition;
+  if (handlePrefix !== "") {
+    handleMatchCondition = (h: HandleElement) =>
+      h.position === handlePosition && h.id![0] === handlePrefix;
+  }
+
+  let handle = node[internalsSymbol]?.handleBounds?.source?.find((h) =>
+    handleMatchCondition(h),
   );
   if (handle === undefined)
-    handle = node[internalsSymbol]?.handleBounds?.target?.find(
-      (h) => h.position === handlePosition,
+    handle = node[internalsSymbol]?.handleBounds?.target?.find((h) =>
+      handleMatchCondition(h),
     );
 
   const offsetX = handle!.width / 2;
@@ -55,6 +73,7 @@ const getNodeCenter = (node: Node) => {
 const getErEdgeParams = (
   source: Node,
   target: Node,
+  handlePrefix: string,
 ): {
   sx: number;
   sy: number;
@@ -63,8 +82,8 @@ const getErEdgeParams = (
   sourcePos: Position;
   targetPos: Position;
 } => {
-  const [sx, sy, sourcePos] = getParams(source, target);
-  const [tx, ty, targetPos] = getParams(target, source);
+  const [sx, sy, sourcePos] = getParams(source, target, handlePrefix);
+  const [tx, ty, targetPos] = getParams(target, source, handlePrefix);
 
   return {
     sx,
@@ -80,7 +99,10 @@ export const useEdgePath = (
   sourceNodeId: string,
   targetNodeId: string,
   shortenPathBy: number = 0,
-): [string, number, number] | [null, null, null] => {
+  handlePrefix: string = "",
+):
+  | [string, number, number, number, number]
+  | [null, null, null, null, null] => {
   const sourceNode = useStore(
     useCallback(
       (store) => store.nodeInternals.get(sourceNodeId),
@@ -95,18 +117,26 @@ export const useEdgePath = (
   );
 
   if (!sourceNode || !targetNode) {
-    return [null, null, null];
+    return [null, null, null, null, null];
   }
 
   // we mix const and let assigments, eslint will complain in both cases
   // eslint-disable-next-line prefer-const
-  let { sx, sy, tx, ty } = getErEdgeParams(sourceNode, targetNode);
+  let { sx, sy, tx, ty } = getErEdgeParams(
+    sourceNode,
+    targetNode,
+    handlePrefix,
+  );
 
   const angle = Math.atan2(ty - sy, tx - sx);
   const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
-  const labelDist = Math.min(55, dist / 2);
+  const labelDist = dist / 2;
   const labelX = sx + labelDist * Math.cos(angle);
   const labelY = sy + labelDist * Math.sin(angle);
+
+  const roleDist = dist / 5;
+  const roleLabelX = sx + roleDist * Math.cos(angle);
+  const roleLabelY = sy + roleDist * Math.sin(angle);
 
   if (shortenPathBy !== 0) {
     // we need to shorten the path so the arrowhead looks good
@@ -121,5 +151,5 @@ export const useEdgePath = (
     targetY: ty,
   });
 
-  return [edgePath, labelX, labelY];
+  return [edgePath, labelX, labelY, roleLabelX, roleLabelY];
 };

@@ -22,11 +22,25 @@ export type LayoutedNode = Node & { x: number; y: number };
 export const updateNodePosition = (
   node: LayoutedNode,
   nodes: LayoutedNode[],
+  adjustAnchor: boolean = false,
 ): LayoutedNode => {
+  if (adjustAnchor) {
+    node.x -= node.width! / 2;
+    node.y -= node.height! / 2;
+  }
   const parentNode = nodes.find((n) => n.id === node.parentNode);
   if (parentNode) {
     node.x = node.x - parentNode.x;
     node.y = node.y - parentNode.y;
   }
   return { ...node, position: { x: node.x, y: node.y } };
+};
+
+const HANDLE_PREFIXES = ["1", "2", "3", "4"] as const;
+export const getHandlePrefix = (edgeId: string) => {
+  let handlePrefix = "";
+  if (HANDLE_PREFIXES.find((prefix) => prefix === edgeId[0])) {
+    handlePrefix = edgeId[0];
+  }
+  return handlePrefix;
 };

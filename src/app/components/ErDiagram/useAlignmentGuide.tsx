@@ -39,11 +39,11 @@ export const useAlignmentGuide = () => {
   // this ref stores the current dragged node
   const dragRef = useRef<Node | null>(null);
 
-  const onNodeDragStart: NodeDragHandler = (evt, node) => {
+  const onNodeDragStart: NodeDragHandler = (_evt, node) => {
     dragRef.current = node;
   };
 
-  const onNodeDrag: NodeDragHandler = (evt, node) => {
+  const onNodeDrag: NodeDragHandler = (_evt, node) => {
     let { centerX, centerY } = nodeCenter(node);
 
     if (node.parentNode) {
@@ -92,6 +92,7 @@ export const useAlignmentGuide = () => {
       }
 
       return {
+        // TODO: Remove Math.random() in prod. Hooks run twice in strict mode.
         id: `ALIGN: ${node.id}-${n.id} ${Math.random()}`,
         source: node.id,
         target: n.id,

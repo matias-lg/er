@@ -16,10 +16,35 @@ const DefaultEntity = ({
         {data.label}
       </div>
       <NodeHandles
-        TopHandleStyle={{ top: "1%" }}
-        BottomHandleStyle={{ bottom: "1%" }}
-        LeftHandleStyle={{ left: "0" }}
-        RightHandleStyle={{ right: "0" }}
+        TopHandleStyle={[
+          { top: "1%" },
+          { top: "1%", left: "2%" },
+          { top: "1%", left: "25%" },
+          { top: "1%", left: "75%" },
+          { top: "1%", left: "98%" },
+        ]}
+        BottomHandleStyle={[
+          { bottom: "1%" },
+          { bottom: "1%", left: "2%" },
+          { bottom: "1%", left: "25%" },
+          { bottom: "1%", left: "75%" },
+          { bottom: "1%", left: "98%" },
+        ]}
+        LeftHandleStyle={[
+          { left: "0" },
+          { left: "0", top: "2%" },
+          { left: "0", top: "25%" },
+          { left: "0", top: "75%" },
+          { left: "0", top: "98%" },
+        ]}
+        RightHandleStyle={[
+          { right: "0" },
+          { right: "0", top: "2%" },
+          { right: "0", top: "25%" },
+          { right: "0", top: "75%" },
+          { right: "0", top: "98%" },
+        ]}
+        use5PerSide={true}
       />
     </>
   );
