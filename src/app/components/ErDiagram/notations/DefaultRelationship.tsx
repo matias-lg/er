@@ -7,6 +7,7 @@ type DefaultRelationshipProps = {
 
 const DefaultRelationship = ({ data }: DefaultRelationshipProps) => {
   {
+    // prettier-ignore
     return (
       <div
         data-testid="relationship"
@@ -17,31 +18,38 @@ const DefaultRelationship = ({ data }: DefaultRelationshipProps) => {
       >
         <div className="-rotate-45">{data.label}</div>
         <NodeHandles
-          TopHandleStyle={{
-            opacity: 0,
-            // left: "0%",
-            transform: data.hasDependant
-              ? "translate(-48px, -2px)"
-              : "translate(-48px, 2px)",
-          }}
-          RightHandleStyle={{
-            opacity: 0,
-            top: "0%",
-          }}
-          LeftHandleStyle={{
-            opacity: 0,
-            // right: "10%",
-            top: "98%",
-            left: "-1%",
-            // transform: data.hasDependant
-            //   ? "translate(-2px,42px)"
-            //   : "translate(0px,42px)",
-          }}
-          BottomHandleStyle={{
-            transform: data.hasDependant
-              ? "translate(42px, 2px)"
-              : "translate(43px)",
-          }}
+          use5PerSide={true}
+
+          TopHandleStyle={[
+            { opacity: 0, transform: data.hasDependant ? "translate(-48px, -2px)" : "translate(-48px, 2px)",},
+            { opacity: 0, transform: data.hasDependant ? "translate(-48px, -2px)" : "translate(-48px, 2px)",},
+            { opacity: 0, transform: data.hasDependant ? "translate(-48px, -2px)" : "translate(-48px, 2px)",},
+            { opacity: 0, transform: data.hasDependant ? "translate(-48px, -2px)" : "translate(-48px, 2px)",},
+            { opacity: 0, transform: data.hasDependant ? "translate(-48px, -2px)" : "translate(-48px, 2px)",},
+          ]}
+
+          RightHandleStyle={[
+            { opacity: 0, top: "0%", },
+            { opacity: 0, top: "0%", },
+            { opacity: 0, top: "0%", },
+            { opacity: 0, top: "0%", },
+            { opacity: 0, top: "0%", },
+          ]}
+
+          LeftHandleStyle={[
+            { opacity: 0, top: "98%", left: "-1%", },
+            { opacity: 0, top: "98%", left: "-1%", },
+            { opacity: 0, top: "98%", left: "-1%", },
+            { opacity: 0, top: "98%", left: "-1%", },
+            { opacity: 0, top: "98%", left: "-1%", },
+          ]}
+          BottomHandleStyle={[
+            { transform: data.hasDependant ? "translate(42px, 2px)" : "translate(43px)", },
+            { transform: data.hasDependant ? "translate(42px, 2px)" : "translate(43px)", },
+            { transform: data.hasDependant ? "translate(42px, 2px)" : "translate(43px)", },
+            { transform: data.hasDependant ? "translate(42px, 2px)" : "translate(43px)", },
+            { transform: data.hasDependant ? "translate(42px, 2px)" : "translate(43px)", },
+          ]}
         />
       </div>
     );

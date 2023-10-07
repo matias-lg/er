@@ -16,9 +16,9 @@ const DefaultIsA = () => {
       </div>
 
       <NodeHandles
-        RightHandleStyle={{ right: "25%" }}
-        LeftHandleStyle={{ left: "25%" }}
-        BottomHandleStyle={{ top: "106%" }}
+        RightHandleStyle={[{ right: "25%" }]}
+        LeftHandleStyle={[{ left: "25%" }]}
+        BottomHandleStyle={[{ top: "106%" }]}
       />
     </>
   );

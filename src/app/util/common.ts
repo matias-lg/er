@@ -35,3 +35,12 @@ export const updateNodePosition = (
   }
   return { ...node, position: { x: node.x, y: node.y } };
 };
+
+const HANDLE_PREFIXES = ["1", "2", "3", "4"] as const;
+export const getHandlePrefix = (edgeId: string) => {
+  let handlePrefix = "";
+  if (HANDLE_PREFIXES.find((prefix) => prefix === edgeId[0])) {
+    handlePrefix = edgeId[0];
+  }
+  return handlePrefix;
+};

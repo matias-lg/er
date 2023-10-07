@@ -1,5 +1,6 @@
 import { BaseEdge, EdgeProps } from "reactflow";
 import { useEdgePath } from "../useEdgePath";
+import { getHandlePrefix } from "../../../../util/common";
 
 const ARROW_LENGTH = 7;
 
@@ -15,7 +16,9 @@ function ArrowNotationEdge({
     source,
     target,
     data?.isTotalParticipation && data.cardinality === "1" ? ARROW_LENGTH : 0,
+    getHandlePrefix(id),
   );
+
   if (edgePath === null) return null;
 
   return data?.isTotalParticipation ? (
