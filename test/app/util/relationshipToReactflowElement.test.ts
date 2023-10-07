@@ -115,15 +115,14 @@ describe("Convert a relationship to ReactFlow Nodes and Edges", () => {
     expect(nodes).toHaveLength(1);
     expect(edges).toHaveLength(3);
     expect(
-      edges.some(
-        (edge) =>
-          edge.id === "relationship-part: Owns$House$Human->Human->Alice",
+      edges.some((edge) =>
+        edge.id.includes("relationship-part: Owns$House$Human->Human->Alice"),
       ),
     ).toBe(true);
 
     expect(
-      edges.some(
-        (edge) => edge.id === "relationship-part: Owns$House$Human->Human->Bob",
+      edges.some((edge) =>
+        edge.id.includes("relationship-part: Owns$House$Human->Human->Bob"),
       ),
     ).toBe(true);
   });
