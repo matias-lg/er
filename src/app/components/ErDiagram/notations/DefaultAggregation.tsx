@@ -21,7 +21,37 @@ const DefaultAggregation = ({
       >
         <div>{label}</div>
       </div>
-      <NodeHandles />
+      <NodeHandles
+        TopHandleStyle={[
+          { top: "-1%" },
+          { top: "-1%", left: "2%" },
+          { top: "-1%", left: "25%" },
+          { top: "-1%", left: "75%" },
+          { top: "-1%", left: "98%" },
+        ]}
+        BottomHandleStyle={[
+          { bottom: "-1%" },
+          { bottom: "-1%", left: "2%" },
+          { bottom: "-1%", left: "25%" },
+          { bottom: "-1%", left: "75%" },
+          { bottom: "-1%", left: "98%" },
+        ]}
+        LeftHandleStyle={[
+          { left: "-1%" },
+          { left: "-1%", top: "2%" },
+          { left: "-1%", top: "25%" },
+          { left: "-1%", top: "75%" },
+          { left: "-1%", top: "98%" },
+        ]}
+        RightHandleStyle={[
+          { right: "-1%" },
+          { right: "-1%", top: "2%" },
+          { right: "-1%", top: "25%" },
+          { right: "-1%", top: "75%" },
+          { right: "-1%", top: "98%" },
+        ]}
+        use5PerSide={true}
+      />
     </>
   );
 };
