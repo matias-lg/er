@@ -5,7 +5,7 @@ npm install
 ```
 build the parser:
 ```bash
-npm run build-parser
+npm run build:parser
 ```
 run the test suite:
 ```bash
