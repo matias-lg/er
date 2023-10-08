@@ -96,9 +96,9 @@ describe("Parses ER Models with multiple elements", () => {
               column: 9,
             },
             end: {
-              offset: 118,
-              line: 6,
-              column: 10,
+              offset: 23,
+              line: 2,
+              column: 23,
             },
           },
         },
@@ -190,9 +190,9 @@ describe("Parses ER Models with multiple elements", () => {
               column: 9,
             },
             end: {
-              offset: 252,
-              line: 13,
-              column: 10,
+              offset: 145,
+              line: 8,
+              column: 26,
             },
           },
         },
@@ -265,9 +265,9 @@ describe("Parses ER Models with multiple elements", () => {
               column: 9,
             },
             end: {
-              offset: 344,
-              line: 17,
-              column: 10,
+              offset: 278,
+              line: 15,
+              column: 25,
             },
           },
         },
@@ -276,6 +276,7 @@ describe("Parses ER Models with multiple elements", () => {
         {
           type: "aggregation",
           name: "Student_attends_university",
+          aggregatedRelationshipName: "Attends",
           location: {
             start: {
               offset: 354,
@@ -288,7 +289,6 @@ describe("Parses ER Models with multiple elements", () => {
               column: 56,
             },
           },
-          aggregatedRelationshipName: "Attends",
         },
       ],
     });
@@ -366,9 +366,9 @@ describe("Parses ER Models with multiple elements", () => {
               column: 9,
             },
             end: {
-              offset: 100,
-              line: 5,
-              column: 10,
+              offset: 24,
+              line: 2,
+              column: 24,
             },
           },
         },
@@ -426,9 +426,9 @@ describe("Parses ER Models with multiple elements", () => {
               column: 9,
             },
             end: {
-              offset: 204,
-              line: 10,
-              column: 10,
+              offset: 124,
+              line: 7,
+              column: 23,
             },
           },
         },
@@ -484,9 +484,9 @@ describe("Parses ER Models with multiple elements", () => {
               column: 9,
             },
             end: {
-              offset: 307,
-              line: 15,
-              column: 10,
+              offset: 226,
+              line: 12,
+              column: 21,
             },
           },
         },

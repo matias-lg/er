@@ -31,7 +31,8 @@ start
 
 // BEGIN WEAK ENTITY
 weakEntity = 
-	declareEntity _ identifier:entityIdentifier dependsOn:(_ deps:declareWeak{return deps}) _0
+	declaration:(declareEntity _ identifier:entityIdentifier { return { identifier, location: getLocation(location)}})
+    dependsOn:(_ deps:declareWeak{return deps}) _0
     Lcurly _0
         attributes:(
              head:(_0 e:WeakEntityAttribute {return e})
@@ -42,13 +43,13 @@ weakEntity =
 	Rcurly {
         return {
             type: "entity",
-            name: identifier,
+            name: declaration.identifier,
             attributes: attributes.length == 0? [] : attributes[0],
             hasParent: false,
             parentName: null,
             hasDependencies: true,
             dependsOn,
-            location: getLocation(location)
+            location: declaration.location
         }
     } 
     
@@ -71,7 +72,9 @@ declareWeak = dependsOn [ \t]+ relationshipName:relationshipDependencyIdentifier
 
 //BEGIN ENTITY
 entity = 
-	declareEntity _ identifier:entityIdentifier parentIdentifier:(_ parent:entityExtends{return parent})? _0
+	declaration:(declareEntity _ identifier:entityIdentifier {
+        return { identifier, location: getLocation(location) }
+    }) parentIdentifier:(_ parent:entityExtends{return parent})? _0
     Lcurly _0
         attributes:(
              head:(_0 e:entityAttribute {return e})
@@ -82,13 +85,13 @@ entity =
 	Rcurly {
         return {
             type: "entity",
-            name: identifier,
+            name: declaration.identifier,
             attributes: attributes.length == 0? [] : attributes[0],
             hasParent: parentIdentifier !== null,
             parentName: parentIdentifier,
             hasDependencies: false,
             dependsOn: null,
-            location: getLocation(location)
+            location: declaration.location 
         }
     } 
     
@@ -128,7 +131,7 @@ entityExtends
 
 // RELATIONSHIP 
 relationship
-	= declareRelationship _ identifier:relationshipIdentifier _0 participants:listOfParticipants attributes:(_0 Lcurly _0
+	= declaration:(declareRelationship _ identifier:relationshipIdentifier { return { identifier, location: getLocation(location)}}) _0 participants:listOfParticipants attributes:(_0 Lcurly _0
         attribList:(
              head:(_0 e:relationShipAttribute{return e})
 		     tail:( '\n' _0 e:relationShipAttribute{return e})*
@@ -140,10 +143,10 @@ relationship
     {
         return {
     		 type: "relationship",
-    		 name: identifier,
+    		 name: declaration.identifier,
              participantEntities: participants,
     		 attributes: attributes === null? [] : attributes,
-             location: getLocation(location)
+             location: declaration.location
              }
     }
 
