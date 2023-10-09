@@ -17,7 +17,6 @@ const RootLayout = async ({
 }) => {
   let messages: AbstractIntlMessages;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
     messages = (await import(`../../locales/${locale}.json`)).default;
   } catch (error) {
     notFound();
