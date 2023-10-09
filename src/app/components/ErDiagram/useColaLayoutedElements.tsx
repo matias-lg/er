@@ -112,7 +112,6 @@ export const useColaLayoutedElements = () => {
 
     const aggregationGroups = getAggregationGroups(layoutNodes, entityGroups);
 
-    console.log(constraints);
     new cola.Layout()
       .linkDistance(100)
       .size([2000, 2000])

@@ -1,6 +1,5 @@
 import { EXAMPLES } from "../../../util/ErdocExamples";
 
-//eslint-disable-next-line  @typescript-eslint/require-await
 export async function GET(
   _request: Request,
   { params }: { params: { example: string } },

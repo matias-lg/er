@@ -17,9 +17,7 @@ const checkErrorLocation = (
     return false;
   } catch (error) {
     return (
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       error.location.start.line === expectedLine &&
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       error.location.start.column === expectedColumn
     );
   }

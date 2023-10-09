@@ -92,7 +92,6 @@ const ErDiagram = ({
         let oldNode;
         // old node by data.erId
         oldNode = nodes.find(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           (oldNode) => oldNode.data.erId === newNode.data.erId,
         );
         // old node by index id
@@ -121,7 +120,7 @@ const ErDiagram = ({
         });
       } else return newEdges;
     });
-  }, [erDoc]);
+  }, [erDoc, erEdgeNotation, setEdges, setNodes]);
 
   /* auto layout on initial render */
   useEffect(() => {
@@ -151,11 +150,7 @@ const ErDiagram = ({
       window.requestAnimationFrame(() => fitView());
       isFirstRenderRef.current = null;
     }
-  }, [nodes, edges]);
-
-  useEffect(() => {
-    console.log("isLayouting", isLayouting);
-  }, [isLayouting]);
+  }, [nodes, edges, fitView, nodesInitialized, setEdges, setNodes]);
 
   return (
     <ReactFlow

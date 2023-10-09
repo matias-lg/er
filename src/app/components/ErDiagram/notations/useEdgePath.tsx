@@ -121,7 +121,6 @@ export const useEdgePath = (
   }
 
   // we mix const and let assigments, eslint will complain in both cases
-  // eslint-disable-next-line prefer-const
   let { sx, sy, tx, ty } = getErEdgeParams(
     sourceNode,
     targetNode,

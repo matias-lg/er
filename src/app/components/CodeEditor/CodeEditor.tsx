@@ -126,9 +126,7 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
       setEditorErrors(
         [
           {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
             errorMessage: e.message,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
             location: e.location,
           },
         ],
