@@ -47,6 +47,6 @@ export const useD3LayoutedElements = () => {
 
     setNodes(nodes.map((node) => updateNodePosition(node, nodes)));
     window.requestAnimationFrame(() => fitView());
-  }, [initialised]);
+  }, [initialised, fitView, getEdges, getNodes, setNodes]);
   return { d3LayoutElements };
 };

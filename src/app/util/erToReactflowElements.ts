@@ -379,6 +379,7 @@ export const updateGraphElementsWithAggregation = ({
 
   nodes.push({
     id: aggregationNodeId,
+    focusable: false,
     type: "aggregation",
     data: {
       label: aggregationName,

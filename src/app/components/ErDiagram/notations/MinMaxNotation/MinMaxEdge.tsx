@@ -9,6 +9,7 @@ function MinMaxEdge({
   target,
   data,
 }: EdgeProps<{
+  isOrthogonal: boolean;
   cardinality: string;
   isTotalParticipation: boolean;
   isInAggregation: boolean;
@@ -16,6 +17,7 @@ function MinMaxEdge({
   const [edgePath, labelX, labelY, roleLabelX, roleLabelY] = useEdgePath(
     source,
     target,
+    data?.isOrthogonal!,
     0,
     getHandlePrefix(id),
   );

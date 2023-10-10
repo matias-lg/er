@@ -3,6 +3,7 @@ import {
   HandleElement,
   Node,
   Position,
+  getSmoothStepPath,
   getStraightPath,
   internalsSymbol,
   useStore,
@@ -98,6 +99,7 @@ const getErEdgeParams = (
 export const useEdgePath = (
   sourceNodeId: string,
   targetNodeId: string,
+  isOrthogonal: boolean,
   shortenPathBy: number = 0,
   handlePrefix: string = "",
 ):
@@ -121,7 +123,7 @@ export const useEdgePath = (
   }
 
   // we mix const and let assigments, eslint will complain in both cases
-  let { sx, sy, tx, ty } = getErEdgeParams(
+  let { sx, sy, tx, ty, sourcePos, targetPos } = getErEdgeParams(
     sourceNode,
     targetNode,
     handlePrefix,
@@ -143,12 +145,22 @@ export const useEdgePath = (
     ty = sy + (dist - shortenPathBy) * Math.sin(angle);
   }
 
-  const [edgePath] = getStraightPath({
-    sourceX: sx,
-    sourceY: sy,
-    targetX: tx,
-    targetY: ty,
-  });
+  const [edgePath] = isOrthogonal
+    ? getSmoothStepPath({
+        sourceX: sx,
+        sourceY: sy,
+        targetX: tx,
+        targetY: ty,
+        borderRadius: 0,
+        sourcePosition: sourcePos,
+        targetPosition: targetPos,
+      })
+    : getStraightPath({
+        sourceX: sx,
+        sourceY: sy,
+        targetX: tx,
+        targetY: ty,
+      });
 
   return [edgePath, labelX, labelY, roleLabelX, roleLabelY];
 };

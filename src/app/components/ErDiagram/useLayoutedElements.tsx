@@ -23,7 +23,7 @@ const useLayoutedElements = () => {
       setNodes(layoutedNodes);
       window.requestAnimationFrame(() => fitView());
     },
-    [],
+    [fitView, getEdges, getNodes, setNodes],
   );
 
   return { layoutElements };
