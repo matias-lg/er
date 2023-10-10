@@ -75,7 +75,7 @@ function ArrowNotationEdge({
               position: "absolute",
               transform: `translate(-50%, -50%) translate(${roleLabelX}px,${roleLabelY}px)`,
               background: "#F8FAFC",
-              padding: 3,
+              padding: 1,
               borderRadius: 5,
               fontSize: 11,
               fontWeight: 500,

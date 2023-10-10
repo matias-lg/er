@@ -148,7 +148,7 @@ export const useColaLayoutedElements = () => {
 
     setNodes(layoutNodes.map((node) => updateNodePosition(node, layoutNodes)));
     window.requestAnimationFrame(() => fitView());
-  }, [initialised]);
+  }, [initialised, fitView, getEdges, getNodes, setNodes]);
   return { ColaLayoutElements };
 };
 

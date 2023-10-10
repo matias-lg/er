@@ -54,6 +54,10 @@ const getHandleCoordsByPosition = (
       handleMatchCondition(h),
     );
 
+  if(handle === undefined) {
+    console.log("COULD NOT FIND MATCHING", node.data.erId, handlePrefix)
+  }
+
   const offsetX = handle!.width / 2;
   const offsetY = handle!.height / 2;
 
@@ -131,11 +135,11 @@ export const useEdgePath = (
 
   const angle = Math.atan2(ty - sy, tx - sx);
   const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
-  const labelDist = dist / 2;
+  const labelDist = isOrthogonal? dist /2 : dist / 3;
   const labelX = sx + labelDist * Math.cos(angle);
   const labelY = sy + labelDist * Math.sin(angle);
 
-  const roleDist = dist / 5;
+  const roleDist = dist * 0.7;
   const roleLabelX = sx + roleDist * Math.cos(angle);
   const roleLabelY = sy + roleDist * Math.sin(angle);
 
