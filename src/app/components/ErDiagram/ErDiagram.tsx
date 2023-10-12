@@ -45,8 +45,7 @@ type ErDiagramProps = {
 
 const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
   const [edgesOrthogonal, setEdgesOrthogonal] = useState<boolean>(false);
-  const [notationType, setNotationType] =
-    useState<NotationTypes>("arrow");
+  const [notationType, setNotationType] = useState<NotationTypes>("arrow");
   const notation = useMemo(
     () => new notations[notationType](edgesOrthogonal),
     [notationType, edgesOrthogonal],
