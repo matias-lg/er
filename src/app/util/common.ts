@@ -1,5 +1,7 @@
 import { Node } from "reactflow";
 import { Relationship } from "../../ERDoc/types/parser/Relationship";
+import ArrowNotation from "../components/ErDiagram/notations/ArrowNotation/ArrowNotation";
+import MinMaxNotation from "../components/ErDiagram/notations/MinMaxNotation/MinMaxNotation";
 
 export const createRelationshipId = (relationship: Relationship): string => {
   // relationships are identified by their name and attributes, so we need all this info to generate a unique ID.
@@ -44,3 +46,11 @@ export const getHandlePrefix = (edgeId: string) => {
   }
   return handlePrefix;
 };
+
+
+
+export const notations = {
+  arrow: ArrowNotation,
+  minmax: MinMaxNotation,
+};
+export type NotationTypes = keyof typeof notations;

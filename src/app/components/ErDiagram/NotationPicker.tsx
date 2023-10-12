@@ -1,50 +1,42 @@
-import { ChevronDownIcon, CheckIcon } from "@chakra-ui/icons";
-import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Radio,
+  RadioGroup,
+  Stack
+} from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-
-type Notations = "minmax" | "arrow";
+import { NotationTypes } from "../../util/common";
 
 type NotationPickerProps = {
-  onNotationChange: (newNotation: Notations) => void;
-  initialNotation: Notations;
+  onNotationChange: (newNotation: NotationTypes) => void;
+  initialNotation: NotationTypes;
   className?: string;
 };
 
 export const NotationPicker = ({
-  initialNotation: initialNotationType,
+  initialNotation,
   onNotationChange,
 }: NotationPickerProps) => {
   const t = useTranslations("home.erDiagram");
-  const [selectedNotationType, setSelectedNotationType] =
-    useState<Notations>(initialNotationType);
-
-  const handleNotationClick = (notation: Notations) => {
-    onNotationChange(notation);
-    setSelectedNotationType(notation);
-  };
 
   return (
-    <Menu>
-      <MenuButton
-        as={Button}
-        rightIcon={<ChevronDownIcon />}
-        border={"1px solid #eee"}
-        className="bg-[#fff]"
-        shadow={"sm"}
+    <Box>
+      <Heading size="xs" pb={2}>{t("notationButton")}</Heading>
+
+      <RadioGroup
+        defaultValue={initialNotation}
+        onChange={(v: NotationTypes) => onNotationChange(v)}
       >
-        {t("notationButton")}
-      </MenuButton>
-      <MenuList>
-        <MenuItem onClick={() => handleNotationClick("arrow")}>
-          <span>{t("arrowNotation")}</span>
-          {selectedNotationType === "arrow" && <CheckIcon marginLeft={"auto"} />}
-        </MenuItem>
-        <MenuItem onClick={() => handleNotationClick("minmax")}>
-          <span>{t("minMaxNotation")}</span>
-          {selectedNotationType === "minmax" && <CheckIcon marginLeft={"auto"} />}
-        </MenuItem>
-      </MenuList>
-    </Menu>
+        <Stack direction="column">
+          <Radio colorScheme="gray" value="arrow">
+            {t("arrowNotation")}
+          </Radio>
+          <Radio colorScheme="gray" value="minmax">
+            {t("minMaxNotation")}
+          </Radio>
+        </Stack>
+      </RadioGroup>
+    </Box>
   );
 };
