@@ -10,15 +10,23 @@ class ArrowNotation extends ErNotation {
         cardinality: string;
         isTotalParticipation: boolean;
       }>,
-    ) => <ArrowNotationEdge {...props} />,
+    ) => ( 
+      // inject isOrthogonal into edge data
+      <ArrowNotationEdge
+        {...{
+          ...props,
+          data: { ...props.data!, isOrthogonal: this.isOrthogonal! },
+        }}
+      />
+     ),
   };
 
   edgeMarkers = (cardinality: string, _isTotalParticipation: boolean) => ({
     markerEnd: cardinality === "1" ? "black-arrow" : undefined,
   });
 
-  constructor() {
-    super();
+  constructor(isOrthogonal: boolean) {
+    super(isOrthogonal);
   }
 }
 

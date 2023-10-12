@@ -12,12 +12,19 @@ class MinMaxNotation extends ErNotation {
         isTotalParticipation: boolean;
         isInAggregation: boolean;
       }>,
-    ) => <MinMaxEdge {...props} />,
+    ) => (
+      <MinMaxEdge
+        {...{
+          ...props,
+          data: { ...props.data!, isOrthogonal: this.isOrthogonal! },
+        }}
+      />
+    ),
   };
 
   edgeMarkers = (_cardinality: string, _isTotalParticipation: boolean) => ({});
-  constructor() {
-    super();
+  constructor(isOrthogonal: boolean) {
+    super(isOrthogonal);
   }
 }
 

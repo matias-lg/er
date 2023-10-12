@@ -2,35 +2,27 @@ import { ChevronDownIcon, CheckIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import ArrowNotation from "./notations/ArrowNotation/ArrowNotation";
-import ErNotation from "./notations/DefaultNotation";
-import MinMaxNotation from "./notations/MinMaxNotation/MinMaxNotation";
+
+type Notations = "minmax" | "arrow";
 
 type NotationPickerProps = {
-  onNotationChange: (newNotation: ErNotation) => void;
-  initialNotation: ErNotation;
+  onNotationChange: (newNotation: Notations) => void;
+  initialNotation: Notations;
   className?: string;
 };
 
-const notationMetadata = [
-  {
-    notation: new ArrowNotation(),
-    textKey: "arrowNotation",
-  },
-  {
-    notation: new MinMaxNotation(),
-    textKey: "minMaxNotation",
-  },
-];
-
 export const NotationPicker = ({
-  initialNotation,
+  initialNotation: initialNotationType,
   onNotationChange,
 }: NotationPickerProps) => {
   const t = useTranslations("home.erDiagram");
-  const [selectedNotation, setSelectedNotation] = useState<string>(
-    initialNotation.type,
-  );
+  const [selectedNotationType, setSelectedNotationType] =
+    useState<Notations>(initialNotationType);
+
+  const handleNotationClick = (notation: Notations) => {
+    onNotationChange(notation);
+    setSelectedNotationType(notation);
+  };
 
   return (
     <Menu>
@@ -44,20 +36,14 @@ export const NotationPicker = ({
         {t("notationButton")}
       </MenuButton>
       <MenuList>
-        {notationMetadata.map(({ notation, textKey }) => (
-          <MenuItem
-            key={notation.type}
-            onClick={() => {
-              onNotationChange(notation);
-              setSelectedNotation(notation.type);
-            }}
-          >
-            <span>{t(textKey)}</span>
-            {selectedNotation === notation.type && (
-              <CheckIcon marginLeft={"auto"} />
-            )}
-          </MenuItem>
-        ))}
+        <MenuItem onClick={() => handleNotationClick("arrow")}>
+          <span>{t("arrowNotation")}</span>
+          {selectedNotationType === "arrow" && <CheckIcon marginLeft={"auto"} />}
+        </MenuItem>
+        <MenuItem onClick={() => handleNotationClick("minmax")}>
+          <span>{t("minMaxNotation")}</span>
+          {selectedNotationType === "minmax" && <CheckIcon marginLeft={"auto"} />}
+        </MenuItem>
       </MenuList>
     </Menu>
   );

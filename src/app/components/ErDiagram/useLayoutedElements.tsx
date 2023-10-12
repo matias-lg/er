@@ -9,7 +9,7 @@ const defaultOptions = {
   "elk.algorithm": "org.eclipse.elk.force",
   "elk.force.temperature": "0.05",
   "elk.spacing.nodeNode": "4.5",
-  "elk.force.iterations": "1500",
+  "elk.force.iterations": "2500",
 };
 
 const useLayoutedElements = () => {
@@ -23,7 +23,7 @@ const useLayoutedElements = () => {
       setNodes(layoutedNodes);
       window.requestAnimationFrame(() => fitView());
     },
-    [],
+    [fitView, getEdges, getNodes, setNodes],
   );
 
   return { layoutElements };

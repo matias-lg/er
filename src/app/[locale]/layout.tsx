@@ -4,8 +4,9 @@ import "../globals.css";
 import ClientProviders from "./ClientProviders";
 import { StrictMode } from "react";
 
+// TODO: When the translations are ready, add the 'es' locale here
 export function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "es" }];
+  return [{ locale: "en" }];
 }
 
 const RootLayout = async ({

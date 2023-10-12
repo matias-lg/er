@@ -3,6 +3,7 @@ import {
   HandleElement,
   Node,
   Position,
+  getSmoothStepPath,
   getStraightPath,
   internalsSymbol,
   useStore,
@@ -53,6 +54,10 @@ const getHandleCoordsByPosition = (
       handleMatchCondition(h),
     );
 
+  if(handle === undefined) {
+    console.log("COULD NOT FIND MATCHING", node.data.erId, handlePrefix)
+  }
+
   const offsetX = handle!.width / 2;
   const offsetY = handle!.height / 2;
 
@@ -98,6 +103,7 @@ const getErEdgeParams = (
 export const useEdgePath = (
   sourceNodeId: string,
   targetNodeId: string,
+  isOrthogonal: boolean,
   shortenPathBy: number = 0,
   handlePrefix: string = "",
 ):
@@ -121,7 +127,7 @@ export const useEdgePath = (
   }
 
   // we mix const and let assigments, eslint will complain in both cases
-  let { sx, sy, tx, ty } = getErEdgeParams(
+  let { sx, sy, tx, ty, sourcePos, targetPos } = getErEdgeParams(
     sourceNode,
     targetNode,
     handlePrefix,
@@ -129,11 +135,11 @@ export const useEdgePath = (
 
   const angle = Math.atan2(ty - sy, tx - sx);
   const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
-  const labelDist = dist / 2;
+  const labelDist = isOrthogonal? dist /2 : dist / 3;
   const labelX = sx + labelDist * Math.cos(angle);
   const labelY = sy + labelDist * Math.sin(angle);
 
-  const roleDist = dist / 5;
+  const roleDist = dist * 0.7;
   const roleLabelX = sx + roleDist * Math.cos(angle);
   const roleLabelY = sy + roleDist * Math.sin(angle);
 
@@ -143,12 +149,22 @@ export const useEdgePath = (
     ty = sy + (dist - shortenPathBy) * Math.sin(angle);
   }
 
-  const [edgePath] = getStraightPath({
-    sourceX: sx,
-    sourceY: sy,
-    targetX: tx,
-    targetY: ty,
-  });
+  const [edgePath] = isOrthogonal
+    ? getSmoothStepPath({
+        sourceX: sx,
+        sourceY: sy,
+        targetX: tx,
+        targetY: ty,
+        borderRadius: 0,
+        sourcePosition: sourcePos,
+        targetPosition: targetPos,
+      })
+    : getStraightPath({
+        sourceX: sx,
+        sourceY: sy,
+        targetX: tx,
+        targetY: ty,
+      });
 
   return [edgePath, labelX, labelY, roleLabelX, roleLabelY];
 };

@@ -1,4 +1,4 @@
-import { Spinner } from "@chakra-ui/react";
+import { Radio, RadioGroup, Spinner, Stack } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
   Background,
@@ -26,27 +26,40 @@ import {
   useLayoutedElements,
 } from "./useLayoutedElements";
 import { useAlignmentGuide } from "./useAlignmentGuide";
+import MinMaxNotation from "./notations/MinMaxNotation/MinMaxNotation";
+
+const notations = {
+  arrow: ArrowNotation,
+  minmax: MinMaxNotation,
+};
+type NotationTypes = keyof typeof notations;
 
 type ErDiagramProps = {
   erDoc: ER;
   notation: ErNotation;
-  onErEdgeNotationChange: (newNotation: ErNotation) => void;
+  notationType: NotationTypes;
+  setEdgesOrthogonal: (isOrthogonal: boolean) => void;
+  onNotationChange: (newNotationType: NotationTypes) => void;
   erEdgeNotation: ErNotation["edgeMarkers"];
 };
 
-const initialNotation = new ArrowNotation();
-
 const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
-  const [notation, setNotation] = useState<ErNotation>(initialNotation);
+  const [edgesOrthogonal, setEdgesOrthogonal] = useState<boolean>(false);
+  const [notationType, setNotationType] = useState<NotationTypes>("arrow");
+  const notation = useMemo(
+    () => new notations[notationType](edgesOrthogonal),
+    [notationType, edgesOrthogonal],
+  );
+
   return (
     <ReactFlowProvider>
       <ErDiagram
         erDoc={erDoc}
         notation={notation}
         erEdgeNotation={notation.edgeMarkers}
-        onErEdgeNotationChange={(newNotation) => {
-          setNotation(newNotation);
-        }}
+        notationType={notationType}
+        onNotationChange={(newNotationType) => setNotationType(newNotationType)}
+        setEdgesOrthogonal={setEdgesOrthogonal}
       />
     </ReactFlowProvider>
   );
@@ -55,7 +68,9 @@ const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
 const ErDiagram = ({
   erDoc,
   notation,
-  onErEdgeNotationChange,
+  notationType,
+  onNotationChange,
+  setEdgesOrthogonal,
 }: ErDiagramProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -253,12 +268,23 @@ const ErDiagram = ({
 
       <Panel position="bottom-right">
         <NotationPicker
-          initialNotation={notation}
-          className=""
-          onNotationChange={(newNotation) =>
-            onErEdgeNotationChange(newNotation)
-          }
+          initialNotation={notationType}
+          onNotationChange={(newNotation) => onNotationChange(newNotation)}
         />
+
+        <RadioGroup
+          defaultValue="1"
+          onChange={(v) => setEdgesOrthogonal(v === "2")}
+        >
+          <Stack spacing={5} direction="row">
+            <Radio colorScheme="purple" value="1">
+              Straight
+            </Radio>
+            <Radio colorScheme="purple" value="2">
+              Orthogonal
+            </Radio>
+          </Stack>
+        </RadioGroup>
       </Panel>
       <CustomSVGs />
       <ControlPanel />

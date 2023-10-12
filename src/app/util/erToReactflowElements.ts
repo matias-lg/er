@@ -200,15 +200,16 @@ const childParticipantToEdge = (
   const edges: Edge[] = [];
 
   let childHandleNumbers: number[] = [];
+  // defines which handles the child participants will be connected to
   switch (entity.childParticipants.length) {
     case 1:
       childHandleNumbers = [0];
       break;
     case 2:
-      childHandleNumbers = [2, 3];
+      childHandleNumbers = [1, 4];
       break;
     case 3:
-      childHandleNumbers = [2, 0, 3];
+      childHandleNumbers = [1, 0, 4];
       break;
     case 4:
       childHandleNumbers = [1, 2, 3, 4];
@@ -379,6 +380,7 @@ export const updateGraphElementsWithAggregation = ({
 
   nodes.push({
     id: aggregationNodeId,
+    focusable: false,
     type: "aggregation",
     data: {
       label: aggregationName,

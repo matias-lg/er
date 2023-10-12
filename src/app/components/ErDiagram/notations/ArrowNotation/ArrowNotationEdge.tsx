@@ -12,10 +12,11 @@ function ArrowNotationEdge({
   data,
   markerEnd,
   label,
-}: EdgeProps<{ cardinality: string; isTotalParticipation: boolean }>) {
+}: EdgeProps<{ isOrthogonal: boolean, cardinality: string; isTotalParticipation: boolean }>) {
   const [edgePath, _labelX, _labelY, roleLabelX, roleLabelY] = useEdgePath(
     source,
     target,
+    data?.isOrthogonal!,
     data?.isTotalParticipation && data.cardinality === "1" ? ARROW_LENGTH : 0,
     getHandlePrefix(id),
   );
@@ -74,7 +75,7 @@ function ArrowNotationEdge({
               position: "absolute",
               transform: `translate(-50%, -50%) translate(${roleLabelX}px,${roleLabelY}px)`,
               background: "#F8FAFC",
-              padding: 3,
+              padding: 1,
               borderRadius: 5,
               fontSize: 11,
               fontWeight: 500,
