@@ -7,7 +7,7 @@ import {
   forceX,
   forceY,
 } from "d3-force";
-import { updateNodePosition } from "../../util/common";
+import { updateNodePosition } from "../../../util/common";
 
 export const useD3LayoutedElements = () => {
   const { getNodes, setNodes, getEdges, fitView } = useReactFlow();

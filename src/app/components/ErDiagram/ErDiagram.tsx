@@ -15,17 +15,17 @@ import { ER } from "../../../ERDoc/types/parser/ER";
 import { AggregationNode } from "../../types/ErDiagram";
 import { erToReactflowElements } from "../../util/erToReactflowElements";
 import { ControlPanel } from "./ControlPanel";
-import CustomSVGs from "./CustomSVGs";
+import EdgeCustomSVGs from "./EdgeCustomSVGs";
 import { NotationPicker } from "./NotationPicker";
 import ArrowNotation from "./notations/ArrowNotation/ArrowNotation";
 import ErNotation from "./notations/DefaultNotation";
-import { useColaLayoutedElements } from "./useColaLayoutedElements";
-import { useD3LayoutedElements } from "./useD3LayoutedElements";
+import { useColaLayoutedElements } from "./hooks/useColaLayoutedElements";
+import { useD3LayoutedElements } from "./hooks/useD3LayoutedElements";
 import {
   getLayoutedElements,
   useLayoutedElements,
-} from "./useLayoutedElements";
-import { useAlignmentGuide } from "./useAlignmentGuide";
+} from "./hooks/useLayoutedElements";
+import { useAlignmentGuide } from "./hooks/useAlignmentGuide";
 import MinMaxNotation from "./notations/MinMaxNotation/MinMaxNotation";
 
 const notations = {
@@ -194,7 +194,7 @@ const ErDiagram = ({
         variant={BackgroundVariant.Lines}
       />
 
-      <Panel position="top-right">
+      <Panel position="bottom-right">
         <br />
         <button
           onClick={() => {
@@ -266,7 +266,7 @@ const ErDiagram = ({
         {isLayouting && <Spinner color="black" />}
       </Panel>
 
-      <Panel position="bottom-right">
+      <Panel position="top-right">
         <NotationPicker
           initialNotation={notationType}
           onNotationChange={(newNotation) => onNotationChange(newNotation)}
@@ -285,8 +285,9 @@ const ErDiagram = ({
             </Radio>
           </Stack>
         </RadioGroup>
+
       </Panel>
-      <CustomSVGs />
+      <EdgeCustomSVGs />
       <ControlPanel />
     </ReactFlow>
   );

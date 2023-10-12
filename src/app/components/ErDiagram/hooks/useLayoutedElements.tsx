@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { useReactFlow, Node, Edge } from "reactflow";
 import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
-import { updateNodePosition } from "../../util/common";
-import { LayoutedNode } from "../../util/common";
+import { updateNodePosition } from "../../../util/common";
+import { LayoutedNode } from "../../../util/common";
 
 const elk = new ELK();
 const defaultOptions = {
