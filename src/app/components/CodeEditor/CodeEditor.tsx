@@ -176,7 +176,7 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
       <EditorHeader editorRef={editorRef} />
       <Box
         resize="none"
-        pt={1}
+        pt={0}
         flex={"1 1 auto"}
         width="full"
         height="max-content"
@@ -192,6 +192,7 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
           options={{
             autoClosingBrackets: "always",
             scrollBeyondLastLine: false,
+            fixedOverflowWidgets: true,
             minimap: {
               enabled: false,
             },
