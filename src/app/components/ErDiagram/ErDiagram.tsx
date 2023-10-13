@@ -1,4 +1,4 @@
-import { Radio, RadioGroup, Spinner, Stack } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
   Background,
@@ -13,26 +13,19 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
 import { AggregationNode } from "../../types/ErDiagram";
+import { NotationTypes, notations } from "../../util/common";
 import { erToReactflowElements } from "../../util/erToReactflowElements";
+import { ConfigPanel } from "./ConfigPanel";
 import { ControlPanel } from "./ControlPanel";
-import CustomSVGs from "./CustomSVGs";
-import { NotationPicker } from "./NotationPicker";
-import ArrowNotation from "./notations/ArrowNotation/ArrowNotation";
-import ErNotation from "./notations/DefaultNotation";
-import { useColaLayoutedElements } from "./useColaLayoutedElements";
-import { useD3LayoutedElements } from "./useD3LayoutedElements";
+import EdgeCustomSVGs from "./EdgeCustomSVGs";
+import { useAlignmentGuide } from "./hooks/useAlignmentGuide";
+import { useColaLayoutedElements } from "./hooks/useColaLayoutedElements";
+import { useD3LayoutedElements } from "./hooks/useD3LayoutedElements";
 import {
   getLayoutedElements,
   useLayoutedElements,
-} from "./useLayoutedElements";
-import { useAlignmentGuide } from "./useAlignmentGuide";
-import MinMaxNotation from "./notations/MinMaxNotation/MinMaxNotation";
-
-const notations = {
-  arrow: ArrowNotation,
-  minmax: MinMaxNotation,
-};
-type NotationTypes = keyof typeof notations;
+} from "./hooks/useLayoutedElements";
+import ErNotation from "./notations/DefaultNotation";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -194,7 +187,7 @@ const ErDiagram = ({
         variant={BackgroundVariant.Lines}
       />
 
-      <Panel position="top-right">
+      <Panel position="bottom-right">
         <br />
         <button
           onClick={() => {
@@ -266,27 +259,14 @@ const ErDiagram = ({
         {isLayouting && <Spinner color="black" />}
       </Panel>
 
-      <Panel position="bottom-right">
-        <NotationPicker
-          initialNotation={notationType}
-          onNotationChange={(newNotation) => onNotationChange(newNotation)}
+      <Panel position="top-right">
+        <ConfigPanel
+          notationType={notationType}
+          setEdgesOrthogonal={setEdgesOrthogonal}
+          onNotationChange={onNotationChange}
         />
-
-        <RadioGroup
-          defaultValue="1"
-          onChange={(v) => setEdgesOrthogonal(v === "2")}
-        >
-          <Stack spacing={5} direction="row">
-            <Radio colorScheme="purple" value="1">
-              Straight
-            </Radio>
-            <Radio colorScheme="purple" value="2">
-              Orthogonal
-            </Radio>
-          </Stack>
-        </RadioGroup>
       </Panel>
-      <CustomSVGs />
+      <EdgeCustomSVGs />
       <ControlPanel />
     </ReactFlow>
   );

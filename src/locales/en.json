@@ -18,7 +18,13 @@
       "arrowNotation": "Arrow notation",
       "minMaxNotation": "(Min, max) notation",
       "layoutButton": "Layout",
-      "fitViewButton": "Fit View"
+      "fitViewButton": "Fit View",
+      "configPanel": {
+        "title": "Diagram settings",
+        "edgeRouting": "Edge routing",
+        "orthogonal": "Orthogonal",
+        "straight": "Straight"
+      }
     },
 
     "codeEditor": {

@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { Node, useReactFlow, useStore } from "reactflow";
 import * as cola from "webcola";
-import { updateNodePosition } from "../../util/common";
-import { NodeConstraints } from "../../types/ErDiagram";
+import { updateNodePosition } from "../../../util/common";
+import { NodeConstraints } from "../../../types/ErDiagram";
 
 type ColaConstraints = (
   | {

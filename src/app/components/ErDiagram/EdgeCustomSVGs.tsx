@@ -1,4 +1,4 @@
-const CustomSVGs = () => (
+const EdgeCustomSVGs = () => (
   <svg>
     <defs>
       <marker
@@ -31,4 +31,4 @@ const CustomSVGs = () => (
   </svg>
 );
 
-export default CustomSVGs;
+export default EdgeCustomSVGs;

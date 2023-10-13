@@ -1,4 +1,4 @@
-import { useLayoutedElements } from "./useLayoutedElements";
+import { useLayoutedElements } from "./hooks/useLayoutedElements";
 import { Controls, ControlButton, useReactFlow } from "reactflow";
 import { useTranslations } from "next-intl";
 import { colors } from "../../util/colors";
