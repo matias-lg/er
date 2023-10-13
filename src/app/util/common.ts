@@ -47,8 +47,6 @@ export const getHandlePrefix = (edgeId: string) => {
   return handlePrefix;
 };
 
-
-
 export const notations = {
   arrow: ArrowNotation,
   minmax: MinMaxNotation,

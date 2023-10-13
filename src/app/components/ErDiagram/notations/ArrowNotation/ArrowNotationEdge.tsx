@@ -12,7 +12,11 @@ function ArrowNotationEdge({
   data,
   markerEnd,
   label,
-}: EdgeProps<{ isOrthogonal: boolean, cardinality: string; isTotalParticipation: boolean }>) {
+}: EdgeProps<{
+  isOrthogonal: boolean;
+  cardinality: string;
+  isTotalParticipation: boolean;
+}>) {
   const [edgePath, _labelX, _labelY, roleLabelX, roleLabelY] = useEdgePath(
     source,
     target,

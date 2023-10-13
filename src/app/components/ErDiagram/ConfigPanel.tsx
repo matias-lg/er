@@ -10,7 +10,7 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  StackDivider
+  StackDivider,
 } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
 import { AiFillSetting } from "react-icons/ai";
@@ -45,7 +45,7 @@ export const ConfigPanel = ({
         <PopoverContent maxW={"max-content"}>
           <PopoverCloseButton />
           <PopoverBody>
-            <Stack divider={<StackDivider />} spacing='4'>
+            <Stack divider={<StackDivider />} spacing="4">
               <Box>
                 <NotationPicker
                   initialNotation={notationType}
@@ -56,7 +56,9 @@ export const ConfigPanel = ({
               </Box>
 
               <Box>
-                <Heading size="xs" pb={2}>{t("edgeRouting")}</Heading>
+                <Heading size="xs" pb={2}>
+                  {t("edgeRouting")}
+                </Heading>
 
                 <RadioGroup
                   defaultValue="1"

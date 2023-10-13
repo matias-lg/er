@@ -1,10 +1,4 @@
-import {
-  Box,
-  Heading,
-  Radio,
-  RadioGroup,
-  Stack
-} from "@chakra-ui/react";
+import { Box, Heading, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
 import { NotationTypes } from "../../util/common";
 
@@ -22,7 +16,9 @@ export const NotationPicker = ({
 
   return (
     <Box>
-      <Heading size="xs" pb={2}>{t("notationButton")}</Heading>
+      <Heading size="xs" pb={2}>
+        {t("notationButton")}
+      </Heading>
 
       <RadioGroup
         defaultValue={initialNotation}

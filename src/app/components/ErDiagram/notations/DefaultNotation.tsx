@@ -6,7 +6,6 @@ import DefaultRelationship from "./DefaultRelationship";
 import DefaultIsA from "./DefaultIsA";
 
 abstract class ErNotation implements IErNotation {
-
   isOrthogonal: boolean;
 
   constructor(isOrthogonal: boolean = false) {
