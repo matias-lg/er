@@ -16,11 +16,7 @@ const Page = () => {
     >
       <GridItem
         mb={0}
-        textColor={"white"}
         display={"flex"}
-        justifyContent={"between"}
-        paddingX={4}
-        flex={"wrap"}
         backgroundColor={"#232730"}
         borderBottom={"1px"}
         borderBottomColor={"rgb(248 250 252 / 0.16)"}
