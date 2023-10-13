@@ -54,8 +54,10 @@ const getHandleCoordsByPosition = (
       handleMatchCondition(h),
     );
 
-  if(handle === undefined) {
-    console.log("COULD NOT FIND MATCHING", node.data.erId, handlePrefix)
+  if (handle === undefined) {
+    // FIXME!: See issue #1, sometimes the 5 handles per side are not created when they should be
+    // this hack doesn't cause edges to be routed differently, weird.
+    return [0, 0];
   }
 
   const offsetX = handle!.width / 2;
@@ -135,7 +137,7 @@ export const useEdgePath = (
 
   const angle = Math.atan2(ty - sy, tx - sx);
   const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
-  const labelDist = isOrthogonal? dist /2 : dist / 3;
+  const labelDist = isOrthogonal ? dist / 2 : dist / 3;
   const labelX = sx + labelDist * Math.cos(angle);
   const labelY = sy + labelDist * Math.sin(angle);
 
