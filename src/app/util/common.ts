@@ -52,3 +52,16 @@ export const notations = {
   minmax: MinMaxNotation,
 };
 export type NotationTypes = keyof typeof notations;
+
+export type DownloadFunc = (
+  w: number,
+  h: number,
+  transparentBg: boolean,
+) => void;
+
+export const downloadImage = (dataUrl: string) => {
+  const a = document.createElement("a");
+  a.setAttribute("download", "er_diagram.png");
+  a.setAttribute("href", dataUrl);
+  a.click();
+};

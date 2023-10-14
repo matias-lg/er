@@ -45,16 +45,14 @@ const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
   );
 
   return (
-    <ReactFlowProvider>
-      <ErDiagram
-        erDoc={erDoc}
-        notation={notation}
-        erEdgeNotation={notation.edgeMarkers}
-        notationType={notationType}
-        onNotationChange={(newNotationType) => setNotationType(newNotationType)}
-        setEdgesOrthogonal={setEdgesOrthogonal}
-      />
-    </ReactFlowProvider>
+    <ErDiagram
+      erDoc={erDoc}
+      notation={notation}
+      erEdgeNotation={notation.edgeMarkers}
+      notationType={notationType}
+      onNotationChange={(newNotationType) => setNotationType(newNotationType)}
+      setEdgesOrthogonal={setEdgesOrthogonal}
+    />
   );
 };
 

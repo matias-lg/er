@@ -1,64 +1,23 @@
-import { DownloadIcon } from "@chakra-ui/icons";
+import dynamic from "next/dynamic";
+const DynamicExportButton = dynamic(() => import("./ExportButton"), {
+  ssr: false,
+});
+
 const GITHUB_URL = "https://github.com/matias-lg/er";
 
 export const Header = () => {
-  const dummy = () => {
-    console.log("dummy");
-  };
   return (
     <>
       <div className="flex h-full w-[65%]  items-center pl-6  text-slate-200">
         ER Diagram Editor
       </div>
       <div className=" flex h-full w-[90%] items-center pl-2 text-slate-200">
-        <HeaderDropdown
-          title={
-            <>
-              <DownloadIcon /> Export ERD
-            </>
-          }
-          items={[
-            ["Export as PDF", dummy],
-            ["Export as PNG", dummy],
-            ["Export as SVG", dummy],
-            ["Export as JPG", dummy],
-          ]}
-        />
+        <DynamicExportButton />
       </div>
       <div className=" flex h-full items-center pl-2 text-slate-200">
         <GitHubButton />
       </div>
     </>
-  );
-};
-
-const HeaderDropdown = ({
-  title,
-  items,
-}: {
-  title: JSX.Element | string;
-  items: [string, () => void][];
-}) => {
-  return (
-    <ul className="flex w-full">
-      <li className="dropdown border-border group relative rounded border-[1px] px-4  py-2  tracking-wide text-slate-200">
-        {title}
-        <div className="dropdown-menu absolute z-[999] hidden h-auto pt-[0.87rem] text-sm group-hover:block">
-          <ul className="top-0 w-36  bg-primary px-0 py-2 shadow">
-            {items.map(([title, onClick], idx) => (
-              <li className="py-1" key={idx}>
-                <a
-                  className="block cursor-pointer px-2 py-1 hover:bg-slate-700 "
-                  onClick={onClick}
-                >
-                  {title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </li>
-    </ul>
   );
 };
 

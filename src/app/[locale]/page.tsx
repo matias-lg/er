@@ -1,7 +1,7 @@
 "use client";
 import { Grid, GridItem } from "@chakra-ui/react";
 import Body from "../components/Body";
-import Header from "../components/Header";
+import Header from "../components/Header/Header";
 
 const Page = () => {
   return (

@@ -6,6 +6,22 @@
       "errors": "Errors"
     },
 
+    "header": {
+      "exportDiagram": "Export Diagram",
+      "asPDF": "Export as PDF",
+      "asPNG": "Export as PNG",
+      "asSVG": "Export as SVG",
+      "asJPEG": "Export as JPEG"
+    },
+
+    "exportModal": {
+      "title": "Export diagram",
+      "imageWidth": "Image width",
+      "imageHeight": "Image height",
+      "export": "Export",
+      "transparent": "Transparent background"
+    },
+
     "examples": {
       "_title": "Examples",
       "bank": "Bank",
