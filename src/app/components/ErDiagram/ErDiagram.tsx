@@ -1,10 +1,9 @@
 import { Spinner } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
   Panel,
-  ReactFlowProvider,
   useEdgesState,
   useNodesInitialized,
   useNodesState,
@@ -158,8 +157,16 @@ const ErDiagram = ({
     }
   }, [nodes, edges, fitView, nodesInitialized, setEdges, setNodes]);
 
+  // add defs to viewport so they appear when exporting to image
+  const handleInit = useCallback(() => {
+    const viewport = document.querySelector(".react-flow__viewport")!;
+    const defs = document.querySelector("#defs")!;
+    viewport.append(defs);
+  }, []);
+
   return (
     <ReactFlow
+      onInit={handleInit}
       nodes={nodes}
       onNodesChange={onNodesChange}
       nodeTypes={erNodeTypes}

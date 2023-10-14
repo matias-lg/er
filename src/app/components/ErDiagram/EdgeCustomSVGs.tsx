@@ -1,5 +1,5 @@
 const EdgeCustomSVGs = () => (
-  <svg>
+  <svg id="defs">
     <defs>
       <marker
         id="black-arrow"

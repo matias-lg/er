@@ -4,16 +4,12 @@ import { useDisclosure } from "@chakra-ui/react";
 import { toJpeg, toPng, toSvg } from "html-to-image";
 import { useState } from "react";
 import { getRectOfNodes, getTransformForBounds, useReactFlow } from "reactflow";
-import { DownloadFunc, downloadImage } from "../../util/common";
+import { DownloadFunc, downloadImage, exportToPDF } from "../../util/common";
 import { Dropdown } from "./Dropdown";
 import { ExportImageModal } from "./ExportModal";
 import { useTranslations } from "next-intl";
 
 const ExportButton = () => {
-  const dummy = () => {
-    console.log("dummy");
-  };
-
   // lets get the window size
   const flow = document.querySelector(".react-flow__viewport");
   // lets get the dimensions of ele
@@ -21,13 +17,16 @@ const ExportButton = () => {
   const flowHeight = flow?.clientHeight;
 
   const { getNodes } = useReactFlow();
+
   const downloadFlow =
-    (toImg: typeof toPng) =>
+    (toImg: typeof toPng, fileExtension: string) =>
     (imageWidth: number, imageHeight: number, transparentBg: boolean) => {
       // we calculate a transform for the nodes so that all nodes are visible
       // we then overwrite the transform of the `.react-flow__viewport` element
       // with the style option of the html-to-image library
       const nodesBounds = getRectOfNodes(getNodes());
+      nodesBounds.height += 100;
+      nodesBounds.width += 100;
       const transform = getTransformForBounds(
         nodesBounds,
         imageWidth,
@@ -47,13 +46,13 @@ const ExportButton = () => {
           height: imageHeight,
           transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
         },
-      }).then(downloadImage);
+      }).then((s) => downloadImage(s, fileExtension));
     };
 
   const t = useTranslations("home.header");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [exportFunc, setExportFunc] = useState<DownloadFunc>(dummy);
+  const [exportFunc, setExportFunc] = useState<DownloadFunc>(() => {});
   const onItemClick = (func: DownloadFunc) => {
     setExportFunc(() => func);
     onOpen();
@@ -68,10 +67,10 @@ const ExportButton = () => {
           </>
         }
         items={[
-          [t("asPDF"), dummy],
-          [t("asPNG"), () => onItemClick(downloadFlow(toPng))],
-          [t("asSVG"), () => onItemClick(downloadFlow(toSvg))],
-          [t("asJPEG"), () => onItemClick(downloadFlow(toJpeg))],
+          [t("asPDF"), () => exportToPDF(1920, 1080).catch(() => {})],
+          [t("asPNG"), () => onItemClick(downloadFlow(toPng, "png"))],
+          [t("asSVG"), () => onItemClick(downloadFlow(toSvg, "svg"))],
+          [t("asJPEG"), () => onItemClick(downloadFlow(toJpeg, "jpeg"))],
         ]}
       />
       <ExportImageModal
