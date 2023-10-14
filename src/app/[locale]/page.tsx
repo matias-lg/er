@@ -1,7 +1,7 @@
 "use client";
 import { Grid, GridItem } from "@chakra-ui/react";
 import Body from "../components/Body";
-import Header from "../components/Header";
+import Header from "../components/Header/Header";
 
 const Page = () => {
   return (
@@ -16,11 +16,7 @@ const Page = () => {
     >
       <GridItem
         mb={0}
-        textColor={"white"}
         display={"flex"}
-        justifyContent={"between"}
-        paddingX={4}
-        flex={"wrap"}
         backgroundColor={"#232730"}
         borderBottom={"1px"}
         borderBottomColor={"rgb(248 250 252 / 0.16)"}

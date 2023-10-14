@@ -1,6 +1,7 @@
 "use client";
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider } from "@chakra-ui/react";
+import { ReactFlowProvider } from "reactflow";
 
 export default function ClientProviders({
   children,
@@ -9,7 +10,9 @@ export default function ClientProviders({
 }) {
   return (
     <CacheProvider>
-      <ChakraProvider>{children}</ChakraProvider>
+      <ChakraProvider>
+        <ReactFlowProvider>{children}</ReactFlowProvider>
+      </ChakraProvider>
     </CacheProvider>
   );
 }

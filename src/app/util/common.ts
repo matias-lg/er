@@ -2,6 +2,7 @@ import { Node } from "reactflow";
 import { Relationship } from "../../ERDoc/types/parser/Relationship";
 import ArrowNotation from "../components/ErDiagram/notations/ArrowNotation/ArrowNotation";
 import MinMaxNotation from "../components/ErDiagram/notations/MinMaxNotation/MinMaxNotation";
+import { toSvg } from "html-to-image";
 
 export const createRelationshipId = (relationship: Relationship): string => {
   // relationships are identified by their name and attributes, so we need all this info to generate a unique ID.
@@ -52,3 +53,80 @@ export const notations = {
   minmax: MinMaxNotation,
 };
 export type NotationTypes = keyof typeof notations;
+
+export type DownloadFunc = (
+  w: number,
+  h: number,
+  transparentBg: boolean,
+) => void;
+
+export const downloadImage = (dataUrl: string, fileExtension: string) => {
+  const a = document.createElement("a");
+  a.setAttribute("download", `er_diagram.${fileExtension}`);
+  a.setAttribute("href", dataUrl);
+  a.click();
+};
+
+export const exportToPDF = async (width: number, height: number) => {
+  // Get the DOM element
+  const flow = document.querySelector(".react-flow__viewport");
+  // Convert to SVG
+  // @ts-ignore
+  const svgContent = await toSvg(flow!);
+  console.log("Hello?");
+  const svgElement = decodeURIComponent(
+    svgContent.replace("data:image/svg+xml;charset=utf-8,", "").trim(),
+  );
+  // Open new window
+  const newWindow = open();
+  // Write our page content to the newly opened page
+  newWindow?.document.write(
+    `<html>
+                    <head>
+                        <title>ER Diagram</title>
+                        <style type="text/css" media="print">
+                          @page { size: landscape; }
+                        </style>
+                        <style>
+                            body {
+                                width: ${width.toString()} px;
+                                height: ${height.toString()} px;
+                                margin: auto
+                            }
+                            .container {
+                                 background: #393D43;
+                                text-align: center;
+                                height: 100%;
+                                 width: 100%;
+                            }
+                            
+                            @page {
+                                margin:0 !important;
+                            }
+                            @media print {
+
+                                * {
+                                    -webkit-print-color-adjust: exact !important;
+                                    color-adjust: exact !important;
+                                }
+                                .container {
+                                    background: none;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <div class='svg-container'>
+                                ${svgElement}
+                            </div>
+                            
+                            <script>
+                                document.close();
+                                window.print();
+                            </script>
+                        </div>
+                    </body>
+                </html>`,
+  );
+};
