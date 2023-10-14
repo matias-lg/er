@@ -3,16 +3,14 @@ import { DownloadIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/react";
 import { toJpeg, toPng, toSvg } from "html-to-image";
 import { useState } from "react";
-import { getRectOfNodes, getTransformForBounds, useReactFlow } from "reactflow";
+import { getRectOfNodes, useReactFlow } from "reactflow";
 import { DownloadFunc, downloadImage, exportToPDF } from "../../util/common";
 import { Dropdown } from "./Dropdown";
 import { ExportImageModal } from "./ExportModal";
 import { useTranslations } from "next-intl";
 
 const ExportButton = () => {
-  // lets get the window size
   const flow = document.querySelector(".react-flow__viewport");
-  // lets get the dimensions of ele
   const flowWidth = flow?.clientWidth;
   const flowHeight = flow?.clientHeight;
 
@@ -27,25 +25,12 @@ const ExportButton = () => {
       const nodesBounds = getRectOfNodes(getNodes());
       nodesBounds.height += 100;
       nodesBounds.width += 100;
-      const transform = getTransformForBounds(
-        nodesBounds,
-        imageWidth,
-        imageHeight,
-        0.5,
-        2,
-      );
       let toDownload = document.querySelector(".react-flow__renderer")!;
-
       // @ts-ignore
       toImg(toDownload, {
         backgroundColor: transparentBg ? "transparent" : "white",
         width: imageWidth,
         height: imageHeight,
-        style: {
-          width: imageWidth,
-          height: imageHeight,
-          transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
-        },
       }).then((s) => downloadImage(s, fileExtension));
     };
 
