@@ -99,10 +99,14 @@ const ErDiagram = ({
         oldNode = nodes.find(
           (oldNode) => oldNode.data.erId === newNode.data.erId,
         );
-        // old node by index id
-        if (oldNode === undefined)
-          oldNode = nodes.find((oldNode) => oldNode.id === newNode.id);
 
+        if (
+          oldNode === undefined &&
+          (newNode.type === "entity" ||
+            newNode.type === "relationship" ||
+            newNode.type === "aggregation")
+        )
+          oldNode = nodes.find((oldNode) => oldNode.id === newNode.id);
         if (oldNode !== undefined) {
           newNode.position = oldNode.position;
           // for aggregations, don't modify its size
