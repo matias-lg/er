@@ -72,6 +72,7 @@ const inheritanceToReactflowElements = (
 
 export const entityToReactflowElements = (
   entity: Entity,
+  position: { x: number; y: number } = { x: 0, y: 0 },
 ): [
   (EntityNode | EntityAttributeNode | CompositeAttributeNode | IsANode)[],
   EntityEdge[],
@@ -89,10 +90,7 @@ export const entityToReactflowElements = (
     id: entityId,
     type: "entity",
     data: { label: entity.name, isWeak: entity.hasDependencies },
-    position: {
-      x: 500,
-      y: 150,
-    },
+    position,
   };
   nodes.push(entityNode);
 
@@ -107,6 +105,7 @@ export const entityToReactflowElements = (
 
   // create attributes nodes and edges to the entity
   let attrNodeXoffset = -70;
+  const ATTR_RELATIVE_Y = 100;
   for (const attr of entity.attributes) {
     const attrID = `entity-attr: ${entity.name}|${attr.name}`;
     nodes.push({
@@ -118,7 +117,7 @@ export const entityToReactflowElements = (
         entityIsWeak: entity.hasDependencies,
       },
       parentNode: entityId,
-      position: { x: attrNodeXoffset, y: 100 },
+      position: { x: attrNodeXoffset, y: ATTR_RELATIVE_Y },
     });
 
     edges.push({
@@ -243,6 +242,7 @@ export const relationshipToReactflowElements = (
   relationship: Relationship,
   hasDependant: boolean,
   edgeNotation: ErNotation["edgeMarkers"],
+  position: { x: number; y: number } = { x: 0, y: 0 },
 ): [
   (RelationshipNode | RelationshipAttributeNode | CompositeAttributeNode)[],
   Edge[],
@@ -260,10 +260,12 @@ export const relationshipToReactflowElements = (
     id: relationshipNodeId,
     type: "relationship",
     data: { label: relationship.name, hasDependant },
-    position: { x: 0, y: 0 },
+    position,
   });
 
   // create a node and add an edge to each own attribute
+  let attrOffset = -70;
+  const ATTR_RELATIVE_Y = 150;
   for (const attr of relationship.attributes) {
     const attrID = `relationship-attr: ${relationshipId}|${attr.name}`;
     relationshipNodes.push({
@@ -271,8 +273,9 @@ export const relationshipToReactflowElements = (
       parentNode: relationshipNodeId,
       type: "relationship-attribute",
       data: { label: attr.name },
-      position: { x: 0, y: 0 },
+      position: { x: attrOffset, y: ATTR_RELATIVE_Y },
     });
+    attrOffset += 70;
 
     relationshipEdges.push({
       id: `relationship-attr: ${relationshipId}->${attr.name}`,
@@ -335,6 +338,7 @@ type Args = {
   edges: Edge[];
   aggregationName: string;
   aggregatedRelationshipNodeId: string;
+  position: { x: number; y: number };
 };
 
 export const updateGraphElementsWithAggregation = ({
@@ -342,7 +346,10 @@ export const updateGraphElementsWithAggregation = ({
   edges,
   aggregationName,
   aggregatedRelationshipNodeId,
+  position,
 }: Args) => {
+  // TODO: Layout the aggregation participants.
+
   const aggregationNodeId = createEntityNodeId(aggregationName);
   // BFS to find all nodes that are connected to the aggregated relationship node
   const visited = new Set<string>();
@@ -385,7 +392,7 @@ export const updateGraphElementsWithAggregation = ({
     data: {
       label: aggregationName,
     },
-    position: { x: 0, y: 0 },
+    position,
   });
 };
 
@@ -398,20 +405,32 @@ export const erToReactflowElements = (
   const newEdges: Edge[] = [];
   const relationshipsWithDependants = relationshipsWithDependantsFromEr(erDoc);
 
+  // TODO: set offset for entities and relationships
+  let ENTITY_COLUMN = 500;
+  let ent_offset = 0;
+
   for (const entity of erDoc.entities) {
-    const [newEntityNodes, newEntityEdges] = entityToReactflowElements(entity);
+    const [newEntityNodes, newEntityEdges] = entityToReactflowElements(entity, {
+      x: ENTITY_COLUMN,
+      y: ent_offset,
+    });
     newNodes.push(...newEntityNodes);
     newEdges.push(...newEntityEdges);
+    ent_offset += 150;
   }
 
+  let RELATIONSHIP_COLUMN = 700;
+  let rel_offset = 0;
   for (const rel of erDoc.relationships) {
     const [newRelNodes, newRelEdges] = relationshipToReactflowElements(
       rel,
       relationshipsWithDependants.some((r) => r.name === rel.name),
       erEdgeNotation,
+      { x: RELATIONSHIP_COLUMN, y: rel_offset },
     );
     newNodes.push(...newRelNodes);
     newEdges.push(...newRelEdges);
+    rel_offset += 150;
 
     const foundAgg = erDoc.aggregations.find(
       (agg) => agg.aggregatedRelationshipName === rel.name,
@@ -426,7 +445,9 @@ export const erToReactflowElements = (
         edges: newEdges,
         aggregationName: foundAgg.name,
         aggregatedRelationshipNodeId: aggregatedRelationshipNodeId!,
+        position: { x: ENTITY_COLUMN, y: ent_offset },
       });
+      ent_offset += 150;
     }
   }
 
