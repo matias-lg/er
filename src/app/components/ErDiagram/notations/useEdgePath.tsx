@@ -108,6 +108,7 @@ export const useEdgePath = (
   isOrthogonal: boolean,
   shortenPathBy: number = 0,
   handlePrefix: string = "",
+  labelDist: number | undefined = undefined,
 ):
   | [string, number, number, number, number]
   | [null, null, null, null, null] => {
@@ -137,7 +138,9 @@ export const useEdgePath = (
 
   const angle = Math.atan2(ty - sy, tx - sx);
   const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
-  const labelDist = isOrthogonal ? dist / 2 : dist / 3;
+  if (labelDist === undefined) labelDist = isOrthogonal ? dist / 2 : dist / 3;
+  labelDist = Math.min(labelDist, dist * 0.9);
+
   const labelX = sx + labelDist * Math.cos(angle);
   const labelY = sy + labelDist * Math.sin(angle);
 

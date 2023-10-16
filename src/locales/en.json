@@ -33,6 +33,7 @@
       "notationButton": "Notation",
       "arrowNotation": "Arrow notation",
       "minMaxNotation": "(Min, max) notation",
+      "chenNotation": "Chen notation",
       "layoutButton": "Layout",
       "fitViewButton": "Fit View",
       "configPanel": {

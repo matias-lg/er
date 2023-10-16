@@ -27,6 +27,44 @@ const EdgeCustomSVGs = () => (
       >
         <polygon points="0 0, 5 2.5, 0 5" />
       </marker>
+
+      <marker
+        id="chen-full-circle"
+        viewBox="0 0 10 10"
+        refX={"8%"}
+        refY={5}
+        markerWidth="10"
+        markerHeight="10"
+        orient="auto-start-reverse"
+      >
+        <circle
+          cx="5"
+          cy="5"
+          r="4"
+          fill="black"
+          stroke="black"
+          strokeWidth={1}
+        />
+      </marker>
+
+      <marker
+        id="chen-empty-circle"
+        viewBox="0 0 10 10"
+        refX={"8%"}
+        refY={5}
+        markerWidth="10"
+        markerHeight="10"
+        orient="auto-start-reverse"
+      >
+        <circle
+          cx="5"
+          cy="5"
+          r="4"
+          fill="#F8FAFC"
+          stroke="black"
+          strokeWidth={1}
+        />
+      </marker>
     </defs>
   </svg>
 );

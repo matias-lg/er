@@ -55,7 +55,7 @@ function ArrowNotationEdge({
             d={edgePath}
             style={{
               fill: "none",
-              stroke: "white",
+              stroke: "#F8FAFC",
               strokeWidth: 3,
             }}
           />

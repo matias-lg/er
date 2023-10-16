@@ -3,6 +3,7 @@ import { Relationship } from "../../ERDoc/types/parser/Relationship";
 import ArrowNotation from "../components/ErDiagram/notations/ArrowNotation/ArrowNotation";
 import MinMaxNotation from "../components/ErDiagram/notations/MinMaxNotation/MinMaxNotation";
 import { toSvg } from "html-to-image";
+import ChenNotation from "../components/ErDiagram/notations/ChenNotation/ChenNotation";
 
 export const createRelationshipId = (relationship: Relationship): string => {
   // relationships are identified by their name and attributes, so we need all this info to generate a unique ID.
@@ -51,7 +52,9 @@ export const getHandlePrefix = (edgeId: string) => {
 export const notations = {
   arrow: ArrowNotation,
   minmax: MinMaxNotation,
+  chen: ChenNotation,
 };
+
 export type NotationTypes = keyof typeof notations;
 
 export type DownloadFunc = (
