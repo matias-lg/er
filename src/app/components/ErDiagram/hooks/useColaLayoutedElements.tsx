@@ -11,7 +11,6 @@ type ColaConstraints = (
       offsets: { node: number; offset: string }[];
     }
   | {
-      type: "inequality";
       axis: "x" | "y";
       left: number;
       right: number;
@@ -85,9 +84,8 @@ export const useColaLayoutedElements = () => {
     let constraints: ColaConstraints = [];
     for (const node of nodes) {
       if (node.data.constraints) {
-        constraints = nodeConstrainsToColaConstraints(
-          node.data.constraints,
-          node2idx,
+        constraints.push(
+          ...nodeConstrainsToColaConstraints(node.data.constraints, node2idx),
         );
       }
     }
@@ -122,7 +120,7 @@ export const useColaLayoutedElements = () => {
       // .groups(aggregationGroups)
       .jaccardLinkLengths(90)
       // .flowLayout("x", 500)
-      .start(100, 1009, 1009);
+      .start(2, 5, 1000);
 
     // manually move the aggregation nodes
     for (const aggGroup of aggregationGroups) {
@@ -175,7 +173,6 @@ const nodeConstrainsToColaConstraints = (
 
     if (con.type === "inequality") {
       constraints.push({
-        type: con.type,
         axis: con.axis,
         left: node2idxMap.get(con.left)!,
         right: node2idxMap.get(con.right)!,

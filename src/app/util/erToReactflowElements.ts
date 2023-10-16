@@ -26,6 +26,7 @@ import {
 const inheritanceToReactflowElements = (
   childEntityNodeId: string,
   parentEntityNodeId: string,
+  isANodePosition: { x: number; y: number },
 ): [IsANode, Edge[]] => {
   const isANodeId = `isA: ${childEntityNodeId}|${parentEntityNodeId}`;
 
@@ -35,17 +36,23 @@ const inheritanceToReactflowElements = (
     data: {
       constraints: [
         {
-          type: "alignment",
-          axis: "x",
-          offsets: [
-            { node: parentEntityNodeId, offset: "0" },
-            { node: isANodeId, offset: "0" },
-            { node: childEntityNodeId, offset: "0" },
-          ],
+          type: "inequality",
+          axis: "y",
+          left: parentEntityNodeId,
+          right: isANodeId,
+          gap: 100,
+        },
+
+        {
+          type: "inequality",
+          axis: "y",
+          left: isANodeId,
+          right: childEntityNodeId,
+          gap: 100,
         },
       ],
     },
-    position: { x: 0, y: 0 },
+    position: isANodePosition,
   };
 
   const edges = [
@@ -95,9 +102,11 @@ export const entityToReactflowElements = (
   nodes.push(entityNode);
 
   if (entity.hasParent) {
+    let isANodeYOffset = position.y + 100;
     const [isANode, inheritanceEdges] = inheritanceToReactflowElements(
       entityId,
       createEntityNodeId(entity.parentName!),
+      { x: position.x, y: isANodeYOffset },
     );
     nodes.push(isANode);
     edges.push(...inheritanceEdges);
@@ -387,6 +396,7 @@ export const updateGraphElementsWithAggregation = ({
 
   nodes.push({
     id: aggregationNodeId,
+    selectable: false,
     focusable: false,
     type: "aggregation",
     data: {
@@ -454,7 +464,6 @@ export const erToReactflowElements = (
   // now that we've processed all the ER logic, we convert the ids to just the index in the array.
   // this way, if  we rename an entity in the text editor the id will stay the same
   renameIdsToNumeric(newNodes, newEdges);
-
   return [newNodes, newEdges];
 };
 
