@@ -40,6 +40,7 @@
         "title": "Diagram settings",
         "edgeRouting": "Edge routing",
         "orthogonal": "Orthogonal",
+        "orthogonalDisabled": "Orthogonal routing is only available for Arrow notation",
         "straight": "Straight"
       }
     },
