@@ -28,8 +28,13 @@ export const NotationPicker = ({
           <Radio colorScheme="gray" value="arrow">
             {t("arrowNotation")}
           </Radio>
+
           <Radio colorScheme="gray" value="minmax">
             {t("minMaxNotation")}
+          </Radio>
+
+          <Radio colorScheme="gray" value="chen">
+            {t("chenNotation")}
           </Radio>
         </Stack>
       </RadioGroup>
