@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 const DynamicExportButton = dynamic(() => import("./ExportButton"), {
   ssr: false,
 });
+import { BiSolidBook } from "react-icons/bi";
 
 const GITHUB_URL = "https://github.com/matias-lg/er";
 
@@ -13,6 +14,12 @@ export const Header = () => {
       </div>
       <div className=" flex h-full w-[90%] items-center pl-2 text-slate-200">
         <DynamicExportButton />
+
+        <button className="mx-2 items-center rounded border-[1px] border-border px-4 py-2   text-center  tracking-wide text-slate-200">
+          <div className="flex items-center">
+            <BiSolidBook /> <span className="pl-2">Documentation</span>
+          </div>
+        </button>
       </div>
       <div className=" flex h-full items-center pl-2 text-slate-200">
         <GitHubButton />
