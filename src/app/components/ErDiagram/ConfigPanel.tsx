@@ -8,11 +8,12 @@ import {
   PopoverContent,
   PopoverTrigger,
   Radio,
-  RadioGroup,
   Stack,
   StackDivider,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import { AiFillSetting } from "react-icons/ai";
 import { NotationTypes } from "../../util/common";
 import { NotationPicker } from "./NotationPicker";
@@ -29,6 +30,11 @@ export const ConfigPanel = ({
   onNotationChange,
 }: ConfigPanelProps) => {
   const t = useTranslations("home.erDiagram.configPanel");
+  const [isOrthogonal, setIsOrthogonal] = useState<boolean>(false);
+
+  useEffect(() => {
+    setEdgesOrthogonal(isOrthogonal);
+  }, [isOrthogonal, setEdgesOrthogonal]);
 
   return (
     <>
@@ -49,9 +55,13 @@ export const ConfigPanel = ({
               <Box>
                 <NotationPicker
                   initialNotation={notationType}
-                  onNotationChange={(newNotation) =>
-                    onNotationChange(newNotation)
-                  }
+                  onNotationChange={(newNotation) => {
+                    onNotationChange(newNotation);
+                    if (newNotation !== "arrow") {
+                      setEdgesOrthogonal(false);
+                      setIsOrthogonal(false);
+                    }
+                  }}
                 />
               </Box>
 
@@ -60,19 +70,32 @@ export const ConfigPanel = ({
                   {t("edgeRouting")}
                 </Heading>
 
-                <RadioGroup
-                  defaultValue="1"
-                  onChange={(v) => setEdgesOrthogonal(v === "2")}
-                >
-                  <Stack direction="column">
-                    <Radio colorScheme="gray" value="1">
-                      {t("straight")}
-                    </Radio>
-                    <Radio colorScheme="gray" value="2">
+                <Stack direction="column">
+                  <Radio
+                    colorScheme="gray"
+                    isChecked={!isOrthogonal}
+                    onChange={() => setIsOrthogonal(false)}
+                  >
+                    {t("straight")}
+                  </Radio>
+
+                  <Radio
+                    colorScheme="gray"
+                    isChecked={isOrthogonal}
+                    onChange={() => setIsOrthogonal(true)}
+                    isDisabled={notationType !== "arrow"}
+                  >
+                    <Tooltip
+                      label={
+                        notationType !== "arrow"
+                          ? t("orthogonalDisabled")
+                          : undefined
+                      }
+                    >
                       {t("orthogonal")}
-                    </Radio>
-                  </Stack>
-                </RadioGroup>
+                    </Tooltip>
+                  </Radio>
+                </Stack>
               </Box>
             </Stack>
           </PopoverBody>
