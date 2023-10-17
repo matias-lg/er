@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { Node, useReactFlow, useStore } from "reactflow";
 import * as cola from "webcola";
-import { updateNodePosition } from "../../../util/common";
+import { getPositionAfterLayout } from "../../../util/common";
 import { NodeConstraints } from "../../../types/ErDiagram";
 
 type ColaConstraints = (
@@ -20,6 +20,7 @@ type ColaConstraints = (
 
 type ErGroup = cola.Group & { id: string };
 type LayoutNodeData = {
+  erId: string;
   constraints?: NodeConstraints;
   label: string;
   width: number;
@@ -136,6 +137,7 @@ export const useColaLayoutedElements = () => {
       }
 
       agg.data = {
+        erId: agg.data.erId,
         label: agg.data.label,
         height: maxY - minY + PADDING,
         width: maxX - minX + PADDING,
@@ -144,7 +146,9 @@ export const useColaLayoutedElements = () => {
       agg.y = minY - PADDING / 2;
     }
 
-    setNodes(layoutNodes.map((node) => updateNodePosition(node, layoutNodes)));
+    setNodes(
+      layoutNodes.map((node) => getPositionAfterLayout(node, layoutNodes)),
+    );
     window.requestAnimationFrame(() => fitView());
   }, [initialised, fitView, getEdges, getNodes, setNodes]);
   return { ColaLayoutElements };

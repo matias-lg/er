@@ -23,7 +23,7 @@ export const createRelationshipNodeId = (relationshipId: string): string => {
 
 export type LayoutedNode = Node & { x: number; y: number };
 
-export const updateNodePosition = (
+export const getPositionAfterLayout = (
   node: LayoutedNode,
   nodes: LayoutedNode[],
   adjustAnchor: boolean = false,

@@ -13,29 +13,35 @@ abstract class ErNotation implements IErNotation {
   }
 
   nodeTypes: IErNotation["nodeTypes"] = {
-    entity: ({ data }) => <DefaultEntity data={data} />,
+    entity: (nodeProps) => <DefaultEntity {...nodeProps} />,
 
-    "entity-attribute": ({ data }) => <DefaultAttribute data={data} />,
+    "entity-attribute": (nodeProps) => <DefaultAttribute {...nodeProps} />,
 
-    "composite-attribute": ({ data }) => (
+    "composite-attribute": (nodeProps) => (
       <DefaultAttribute
+        {...nodeProps}
         data={{
-          label: data.label,
+          label: nodeProps.data.label,
           isKey: false,
           entityIsWeak: false,
         }}
       />
     ),
 
-    relationship: ({ data }) => <DefaultRelationship data={data} />,
+    relationship: (nodeProps) => <DefaultRelationship {...nodeProps} />,
 
-    "relationship-attribute": ({ data }) => (
+    "relationship-attribute": (nodeProps) => (
       <DefaultAttribute
-        data={{ label: data.label, isKey: false, entityIsWeak: false }}
+        {...nodeProps}
+        data={{
+          label: nodeProps.data.label,
+          isKey: false,
+          entityIsWeak: false,
+        }}
       />
     ),
 
-    aggregation: ({ data }) => <DefaultAggregation data={data} />,
+    aggregation: (nodeProps) => <DefaultAggregation {...nodeProps} />,
 
     isA: (_) => <DefaultIsA />,
   };

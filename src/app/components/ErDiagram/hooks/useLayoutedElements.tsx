@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useReactFlow, Node, Edge } from "reactflow";
 import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
-import { updateNodePosition } from "../../../util/common";
+import { getPositionAfterLayout } from "../../../util/common";
 import { LayoutedNode } from "../../../util/common";
 
 const elk = new ELK();
@@ -95,6 +95,7 @@ const getLayoutedElements = async (
       // we need to create a new instance of data to trigger a rerender
       (node as Node).data = {
         label: (node as Node<{ label: string }>).data.label,
+        erId: (node as Node<{ erId: string }>).data.erId,
         width: node.width,
         height: node.height,
       };
@@ -111,7 +112,7 @@ const getLayoutedElements = async (
       });
     } else {
       layoutedNodes.push(
-        updateNodePosition(
+        getPositionAfterLayout(
           node as LayoutedNode,
           children as LayoutedNode[],
           true,

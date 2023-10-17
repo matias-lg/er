@@ -7,7 +7,7 @@ import {
   forceX,
   forceY,
 } from "d3-force";
-import { updateNodePosition } from "../../../util/common";
+import { getPositionAfterLayout } from "../../../util/common";
 
 export const useD3LayoutedElements = () => {
   const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
@@ -45,7 +45,7 @@ export const useD3LayoutedElements = () => {
       )
       .tick(5500);
 
-    setNodes(nodes.map((node) => updateNodePosition(node, nodes)));
+    setNodes(nodes.map((node) => getPositionAfterLayout(node, nodes)));
     window.requestAnimationFrame(() => fitView());
   }, [initialised, fitView, getEdges, getNodes, setNodes]);
   return { d3LayoutElements };
