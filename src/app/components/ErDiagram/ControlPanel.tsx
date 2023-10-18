@@ -1,17 +1,20 @@
-import { useLayoutedElements } from "./hooks/useLayoutedElements";
-import { Controls, ControlButton, useReactFlow } from "reactflow";
 import { useTranslations } from "next-intl";
-import { colors } from "../../util/colors";
 import { HiSparkles } from "react-icons/hi2";
+import { ControlButton, Controls } from "reactflow";
+import { colors } from "../../util/colors";
+import { useLayoutedElements } from "./hooks/useLayoutedElements";
 
-export const ControlPanel = () => {
+type ControlPanelProps = {
+  onLayoutClick: () => void;
+};
+
+export const ControlPanel = ({ onLayoutClick }: ControlPanelProps) => {
   const { layoutElements } = useLayoutedElements();
-  const { fitView } = useReactFlow();
   const t = useTranslations("home.erDiagram");
 
   const handleLayoutClick = () => {
     void layoutElements().then(() => {
-      window.requestAnimationFrame(() => fitView());
+      setTimeout(onLayoutClick, 100);
     });
   };
 
