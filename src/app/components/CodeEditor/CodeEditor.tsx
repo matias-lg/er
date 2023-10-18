@@ -78,6 +78,8 @@ const erdocTokenizer: languages.IMonarchLanguage = {
   },
 };
 
+const LOCAL_STORAGE_EDITOR_CONTENT_KEY = "monaco-editor-content";
+
 const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
   const [selectedExample, setSelectedExample] = useState<string | null>(null);
 
@@ -114,6 +116,7 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
 
   const handleEditorContent = (content: string) => {
     try {
+      localStorage.setItem(LOCAL_STORAGE_EDITOR_CONTENT_KEY, content);
       const [erDoc, errors] = getERDoc(content);
       onErDocChange(erDoc);
       const errorMsgs: ErrorMessage[] = errors.map((err) => ({
@@ -137,7 +140,10 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
 
   const handleEditorMount: OnMount = (editor, m) => {
     editorRef.current = editor;
-    handleEditorContent(DEFAULT_CONTENT);
+    const prevContent = localStorage.getItem(LOCAL_STORAGE_EDITOR_CONTENT_KEY);
+    const initialContent = prevContent ?? DEFAULT_CONTENT;
+    editor.setValue(initialContent);
+    handleEditorContent(initialContent);
     // mount erdoc language
     m.languages.register({ id: "erdoc" });
     m.languages.setMonarchTokensProvider("erdoc", erdocTokenizer);
@@ -147,7 +153,6 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
       m.editor.defineTheme(themeName, theme);
     }
     m.editor.setTheme(DEFAULT_THEME);
-    editor.setValue(DEFAULT_CONTENT);
   };
 
   useEffect(() => {
