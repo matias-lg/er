@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
+  NodeDragHandler,
+  OnInit,
   Panel,
   useEdgesState,
   useNodesInitialized,
@@ -25,6 +27,7 @@ import {
   useLayoutedElements,
 } from "./hooks/useLayoutedElements";
 import ErNotation from "./notations/DefaultNotation";
+import { useDiagramToLocalStorage } from "./hooks/useDiagramToLocalStorage";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -78,6 +81,8 @@ const ErDiagram = ({
   const erEdgeTypes = useMemo(() => notation.edgeTypes, [notation]);
   const erEdgeNotation = useMemo(() => notation.edgeMarkers, [notation]);
   const { onNodeDrag, onNodeDragStart, onNodeDragStop } = useAlignmentGuide();
+  const { saveToLocalStorage, loadFromLocalStorage, setRfInstance } =
+    useDiagramToLocalStorage();
 
   useEffect(() => {
     if (erDoc === null) return;
@@ -129,44 +134,72 @@ const ErDiagram = ({
         });
       } else return newEdges;
     });
-  }, [erDoc, erEdgeNotation, setEdges, setNodes]);
+    setTimeout(saveToLocalStorage, 100);
+  }, [erDoc, erEdgeNotation, setEdges, setNodes, saveToLocalStorage]);
 
-  /* auto layout on initial render */
+  /* On initial render, load from storage or auto layout the default content */
   useEffect(() => {
     if (isFirstRenderRef.current === true && nodesInitialized) {
-      const updateElements = async () => {
-        const layoutedElements = await getLayoutedElements(nodes, edges);
-        setNodes(
-          layoutedElements.map((n) => ({
-            ...n,
-            style: {
-              ...n.style,
-              opacity: 1,
-            },
-          })),
-        );
-        setEdges((eds) =>
-          eds.map((e) => {
-            e.hidden = false;
-            return e;
-          }),
-        );
-        window.requestAnimationFrame(() => fitView());
+      const loaded = loadFromLocalStorage();
+      if (!loaded) {
+        const updateElements = async () => {
+          const layoutedElements = await getLayoutedElements(nodes, edges);
+          setNodes(
+            layoutedElements.map((n) => ({
+              ...n,
+              style: {
+                ...n.style,
+                opacity: 1,
+              },
+            })),
+          );
+          setEdges((eds) =>
+            eds.map((e) => {
+              e.hidden = false;
+              return e;
+            }),
+          );
+          window.requestAnimationFrame(() => fitView());
+          isFirstRenderRef.current = false;
+        };
+        void updateElements();
+      } else {
         isFirstRenderRef.current = false;
-      };
-      void updateElements();
+      }
     } else if (isFirstRenderRef.current === false) {
       window.requestAnimationFrame(() => fitView());
       isFirstRenderRef.current = null;
     }
-  }, [nodes, edges, fitView, nodesInitialized, setEdges, setNodes]);
+  }, [
+    nodes,
+    edges,
+    fitView,
+    nodesInitialized,
+    setEdges,
+    setNodes,
+    loadFromLocalStorage,
+  ]);
 
   // add defs to viewport so they appear when exporting to image
-  const handleInit = useCallback(() => {
-    const viewport = document.querySelector(".react-flow__viewport")!;
-    const defs = document.querySelector("#defs")!;
-    viewport.append(defs);
-  }, []);
+  const handleInit: OnInit = useCallback(
+    (rf) => {
+      setRfInstance(rf);
+      const viewport = document.querySelector(".react-flow__viewport")!;
+      const defs = document.querySelector("#defs")!;
+      viewport.append(defs);
+    },
+    [setRfInstance],
+  );
+
+  const onNodeDragStartHandler: NodeDragHandler = (e, node, nodes) => {
+    saveToLocalStorage();
+    onNodeDragStart(e, node, nodes);
+  };
+
+  const onNodeDragStopHandler: NodeDragHandler = (e, node, nodes) => {
+    saveToLocalStorage();
+    onNodeDragStop(e, node, nodes);
+  };
 
   return (
     <ReactFlow
@@ -178,8 +211,8 @@ const ErDiagram = ({
       onEdgesChange={onEdgesChange}
       edgeTypes={erEdgeTypes}
       onNodeDrag={onNodeDrag}
-      onNodeDragStart={onNodeDragStart}
-      onNodeDragStop={onNodeDragStop}
+      onNodeDragStart={onNodeDragStartHandler}
+      onNodeDragStop={onNodeDragStopHandler}
       proOptions={{ hideAttribution: true }}
     >
       <Background
@@ -276,7 +309,7 @@ const ErDiagram = ({
         />
       </Panel>
       <EdgeCustomSVGs />
-      <ControlPanel />
+      <ControlPanel onLayoutClick={saveToLocalStorage} />
     </ReactFlow>
   );
 };
