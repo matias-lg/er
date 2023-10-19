@@ -4,6 +4,7 @@ import ArrowNotation from "../components/ErDiagram/notations/ArrowNotation/Arrow
 import MinMaxNotation from "../components/ErDiagram/notations/MinMaxNotation/MinMaxNotation";
 import { toSvg } from "html-to-image";
 import ChenNotation from "../components/ErDiagram/notations/ChenNotation/ChenNotation";
+import { ER } from "../../ERDoc/types/parser/ER";
 
 export const createRelationshipId = (relationship: Relationship): string => {
   // relationships are identified by their name and attributes, so we need all this info to generate a unique ID.
@@ -132,4 +133,35 @@ export const exportToPDF = async (width: number, height: number) => {
                     </body>
                 </html>`,
   );
+};
+
+export const erDocWithoutLocation = (erDoc: ER) => {
+  return {
+    entities: erDoc.entities.map((entity) => ({
+      ...entity,
+      attributes: entity.attributes.map((attr) => ({
+        ...attr,
+        location: undefined,
+      })),
+      location: undefined,
+    })),
+
+    relationships: erDoc.relationships.map((relationship) => ({
+      ...relationship,
+      location: undefined,
+      attributes: relationship.attributes.map((attr) => ({
+        ...attr,
+        location: undefined,
+      })),
+      participantEntities: relationship.participantEntities.map((part) => ({
+        ...part,
+        location: undefined,
+      })),
+    })),
+
+    aggregations: erDoc.aggregations.map((agg) => ({
+      ...agg,
+      location: undefined,
+    })),
+  };
 };

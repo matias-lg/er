@@ -4,13 +4,29 @@ import CodeEditor from "./CodeEditor/CodeEditor";
 import { PanelResizeHandle } from "react-resizable-panels";
 import { ErDiagram } from "./ErDiagram/ErDiagram";
 import { Box } from "@chakra-ui/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ER } from "../../ERDoc/types/parser/ER";
+import { erDocWithoutLocation } from "../util/common";
 
 const Body = () => {
   const [erDoc, setErDoc] = useState<ER | null>(null);
   const [erDocHasError, setErDocHasError] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
+
+  const onErDocChange = useCallback(
+    (er: ER) => {
+      setErDoc((currentEr) => {
+        if (currentEr === null) return er;
+        const currentErNoLoc = erDocWithoutLocation(currentEr);
+        const newErNoLoc = erDocWithoutLocation(er);
+        const sameSemanticValue =
+          JSON.stringify(currentErNoLoc) === JSON.stringify(newErNoLoc);
+        return sameSemanticValue ? currentEr : er;
+      });
+    },
+    [setErDoc],
+  );
+
   return (
     <PanelGroup direction="horizontal">
       <Panel defaultSize={40} minSize={25}>
@@ -22,7 +38,7 @@ const Body = () => {
           overflow={"hidden"}
         >
           <CodeEditor
-            onErDocChange={setErDoc}
+            onErDocChange={onErDocChange}
             onErrorChange={setErDocHasError}
           />
         </Box>
