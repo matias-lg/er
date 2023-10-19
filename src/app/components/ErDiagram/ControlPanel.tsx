@@ -9,13 +9,13 @@ type ControlPanelProps = {
 };
 
 export const ControlPanel = ({ onLayoutClick }: ControlPanelProps) => {
-  const { layoutElements } = useLayoutedElements();
+  // const { layoutElements } = useLayoutedElements();
   const t = useTranslations("home.erDiagram");
 
   const handleLayoutClick = () => {
-    void layoutElements().then(() => {
-      setTimeout(onLayoutClick, 100);
-    });
+    // void layoutElements().then(() => {
+    //   setTimeout(onLayoutClick, 100);
+    // });
   };
 
   return (
