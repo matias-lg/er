@@ -31,6 +31,7 @@ import { useDiagramToLocalStorage } from "./hooks/useDiagramToLocalStorage";
 
 type ErDiagramProps = {
   erDoc: ER;
+  erDocHasError: boolean;
   notation: ErNotation;
   notationType: NotationTypes;
   setEdgesOrthogonal: (isOrthogonal: boolean) => void;
@@ -38,7 +39,13 @@ type ErDiagramProps = {
   erEdgeNotation: ErNotation["edgeMarkers"];
 };
 
-const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
+const NotationSelectorErDiagramWrapper = ({
+  erDoc,
+  erDocHasError,
+}: {
+  erDoc: ER;
+  erDocHasError: boolean;
+}) => {
   const [edgesOrthogonal, setEdgesOrthogonal] = useState<boolean>(false);
   const [notationType, setNotationType] = useState<NotationTypes>("arrow");
   const notation = useMemo(
@@ -49,6 +56,7 @@ const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
   return (
     <ErDiagram
       erDoc={erDoc}
+      erDocHasError={erDocHasError}
       notation={notation}
       erEdgeNotation={notation.edgeMarkers}
       notationType={notationType}
@@ -60,6 +68,7 @@ const NotationSelectorErDiagramWrapper = ({ erDoc }: { erDoc: ER }) => {
 
 const ErDiagram = ({
   erDoc,
+  erDocHasError,
   notation,
   notationType,
   onNotationChange,
@@ -68,7 +77,7 @@ const ErDiagram = ({
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const { layoutElements } = useLayoutedElements();
+  useLayoutedElements();
   const { d3LayoutElements } = useD3LayoutedElements();
   const { ColaLayoutElements } = useColaLayoutedElements();
   const [isLayouting, setIsLayouting] = useState(false);
@@ -85,18 +94,20 @@ const ErDiagram = ({
     useDiagramToLocalStorage();
 
   useEffect(() => {
-    if (erDoc === null) return;
+    console.log("######");
+    console.log(erDocHasError);
+    if (erDoc === null || erDocHasError) return;
     const [newNodes, newEdges] = erToReactflowElements(erDoc, erEdgeNotation);
 
     setNodes((nodes) => {
       for (const newNode of newNodes) {
         // hack: on first render, hide the nodes before they are layouted
-        if (isFirstRenderRef.current === true) {
-          newNode.style = {
-            ...newNode.style,
-            opacity: 0,
-          };
-        }
+        // if (isFirstRenderRef.current === true) {
+        newNode.style = {
+          ...newNode.style,
+          opacity: 1,
+        };
+        // }
 
         // if the node already exists, keep its position
         let oldNode;
@@ -106,10 +117,11 @@ const ErDiagram = ({
         );
 
         if (
-          oldNode === undefined &&
-          (newNode.type === "entity" ||
-            newNode.type === "relationship" ||
-            newNode.type === "aggregation")
+          nodes.length === newNodes.length &&
+          oldNode === undefined
+          // && (newNode.type === "entity" ||
+          //   newNode.type === "relationship" ||
+          //   newNode.type === "aggregation")
         )
           oldNode = nodes.find((oldNode) => oldNode.id === newNode.id);
         if (oldNode !== undefined) {
@@ -121,64 +133,77 @@ const ErDiagram = ({
           }
         }
       }
-
       return newNodes;
     });
 
     setEdges(() => {
       // same hack as above
-      if (isFirstRenderRef.current === true) {
-        return newEdges.map((e) => {
-          e.hidden = true;
-          return e;
-        });
-      } else return newEdges;
+      // if (isFirstRenderRef.current === true) {
+      return newEdges.map((e) => ({
+        ...e,
+        style: {
+          ...e.style,
+          opacity: 1,
+        },
+      }));
+      // } else return newEdges;
     });
     setTimeout(saveToLocalStorage, 100);
-  }, [erDoc, erEdgeNotation, setEdges, setNodes, saveToLocalStorage]);
+  }, [
+    erDoc,
+    erEdgeNotation,
+    setEdges,
+    setNodes,
+    saveToLocalStorage,
+    erDocHasError,
+  ]);
 
   /* On initial render, load from storage or auto layout the default content */
   useEffect(() => {
-    if (isFirstRenderRef.current === true && nodesInitialized) {
-      const loaded = loadFromLocalStorage();
-      if (!loaded) {
-        const updateElements = async () => {
-          const layoutedElements = await getLayoutedElements(nodes, edges);
-          setNodes(
-            layoutedElements.map((n) => ({
-              ...n,
-              style: {
-                ...n.style,
-                opacity: 1,
-              },
-            })),
-          );
-          setEdges((eds) =>
-            eds.map((e) => {
-              e.hidden = false;
-              return e;
-            }),
-          );
-          window.requestAnimationFrame(() => fitView());
-          isFirstRenderRef.current = false;
-        };
-        void updateElements();
-      } else {
-        isFirstRenderRef.current = false;
-      }
-    } else if (isFirstRenderRef.current === false) {
-      window.requestAnimationFrame(() => fitView());
-      isFirstRenderRef.current = null;
-    }
-  }, [
-    nodes,
-    edges,
-    fitView,
-    nodesInitialized,
-    setEdges,
-    setNodes,
-    loadFromLocalStorage,
-  ]);
+    loadFromLocalStorage();
+  }, []);
+
+  // useEffect(() => {
+  //   if (isFirstRenderRef.current === true && nodesInitialized) {
+  //     const loaded = loadFromLocalStorage();
+  //     if (!loaded) {
+  //       const updateElements = async () => {
+  //         const layoutedElements = await getLayoutedElements(nodes, edges);
+  //         setNodes(
+  //           layoutedElements.map((n) => ({
+  //             ...n,
+  //             style: {
+  //               ...n.style,
+  //               opacity: 1,
+  //             },
+  //           })),
+  //         );
+  //         setEdges((eds) =>
+  //           eds.map((e) => {
+  //             e.hidden = false;
+  //             return e;
+  //           }),
+  //         );
+  //         window.requestAnimationFrame(() => fitView());
+  //         isFirstRenderRef.current = false;
+  //       };
+  //       void updateElements();
+  //     } else {
+  //       isFirstRenderRef.current = false;
+  //     }
+  //   } else if (isFirstRenderRef.current === false) {
+  //     window.requestAnimationFrame(() => fitView());
+  //     isFirstRenderRef.current = null;
+  //   }
+  // }, [
+  //   nodes,
+  //   edges,
+  //   fitView,
+  //   nodesInitialized,
+  //   setEdges,
+  //   setNodes,
+  //   loadFromLocalStorage,
+  // ]);
 
   // add defs to viewport so they appear when exporting to image
   const handleInit: OnInit = useCallback(
@@ -231,7 +256,7 @@ const ErDiagram = ({
 
       <Panel position="bottom-right">
         <br />
-        <button
+        {/* <button
           onClick={() => {
             setIsLayouting(true);
             void layoutElements({
@@ -241,7 +266,8 @@ const ErDiagram = ({
           }}
         >
           ELK stress layout
-        </button>
+        </button> */}
+
         {/* <button
           onClick={() => {
             void layoutElements({
@@ -253,7 +279,7 @@ const ErDiagram = ({
           ELK radial layout
         </button> */}
 
-        <br />
+        {/* <br />
         <button
           onClick={() => {
             setIsLayouting(true);
@@ -268,7 +294,7 @@ const ErDiagram = ({
           }}
         >
           ELK 5K force layout
-        </button>
+        </button> */}
 
         <br />
         <button
@@ -299,6 +325,8 @@ const ErDiagram = ({
 
       <Panel position="top-left">
         {isLayouting && <Spinner color="black" />}
+        <br />
+        {erDocHasError && <span>Fix Errors to sync layout!</span>}
       </Panel>
 
       <Panel position="top-right">

@@ -14,6 +14,7 @@ import ErrorTable from "./ErrorTable";
 
 type ErrorReportingEditorProps = {
   onErDocChange: (er: ER) => void;
+  onErrorChange: (hasError: boolean) => void;
 };
 
 const editorThemes: [themeName: string, theme: editor.IStandaloneThemeData][] =
@@ -80,7 +81,10 @@ const erdocTokenizer: languages.IMonarchLanguage = {
 
 const LOCAL_STORAGE_EDITOR_CONTENT_KEY = "monaco-editor-content";
 
-const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
+const CodeEditor = ({
+  onErDocChange,
+  onErrorChange,
+}: ErrorReportingEditorProps) => {
   const [selectedExample, setSelectedExample] = useState<string | null>(null);
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
@@ -118,6 +122,7 @@ const CodeEditor = ({ onErDocChange }: ErrorReportingEditorProps) => {
     try {
       localStorage.setItem(LOCAL_STORAGE_EDITOR_CONTENT_KEY, content);
       const [erDoc, errors] = getERDoc(content);
+      onErrorChange(errors.length > 0);
       onErDocChange(erDoc);
       const errorMsgs: ErrorMessage[] = errors.map((err) => ({
         errorMessage: getErrorMessage(semanticErrT, err),

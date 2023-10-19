@@ -1,9 +1,9 @@
 import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
-import { useCallback } from "react";
-import { Edge, Node, useReactFlow } from "reactflow";
+import { useCallback, useEffect } from "react";
+import { Edge, Node, ReactFlowState, useReactFlow } from "reactflow";
 import { LayoutedNode, updateNodePosition } from "../../../util/common";
+import { useStore } from "reactflow";
 
-const elk = new ELK();
 const defaultOptions = {
   "elk.algorithm": "org.eclipse.elk.force",
   "elk.force.temperature": "0.02",
@@ -11,28 +11,80 @@ const defaultOptions = {
   "elk.force.iterations": "100",
 };
 
-const useLayoutedElements = () => {
-  const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
-
-  const layoutElements = useCallback(
-    async (elkOptions: { [key: string]: string } = {}) => {
-      const nodes = getNodes();
-      const edges = getEdges();
-      const layoutedNodes = await getLayoutedElements(nodes, edges, elkOptions);
-      setNodes(layoutedNodes);
-      window.requestAnimationFrame(() => fitView());
-    },
-    [fitView, getEdges, getNodes, setNodes],
+const nodeCountSelector = (state: ReactFlowState) => state.nodeInternals.size;
+const nodesInitializedSelector = (state: ReactFlowState) =>
+  Array.from(state.nodeInternals.values()).every(
+    (node) => node.width && node.height,
   );
 
-  return { layoutElements };
+const useLayoutedElements = () => {
+  const { getNodes, setNodes, getEdges, setEdges, fitView } = useReactFlow();
+  const nodeCount = useStore(nodeCountSelector);
+  const nodesInitialized = useStore(nodesInitializedSelector);
+
+  useEffect(() => {
+    if (!nodeCount || !nodesInitialized) {
+      return;
+    }
+    const nodes = getNodes();
+    const edges = getEdges();
+    getLayoutedElements(nodes, edges).then((layoutedNodes) => {
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          const layoutedNode = layoutedNodes.find((n) => n.id === node.id);
+          return {
+            ...node,
+            position: layoutedNode?.position!,
+            style: {
+              ...node.style,
+              opacity: 1,
+            },
+          };
+        }),
+      );
+
+      setEdges((edges) =>
+        edges.map((edge) => ({
+          ...edge,
+          style: {
+            ...edge.style,
+            opacity: 1,
+          },
+        })),
+      );
+      window.requestAnimationFrame(() => fitView());
+    });
+  }, [
+    nodeCount,
+    nodesInitialized,
+    getNodes,
+    getEdges,
+    setNodes,
+    setEdges,
+    fitView,
+  ]);
 };
+
+//   const layoutElements = useCallback(
+//     async (elkOptions: { [key: string]: string } = {}) => {
+//       const nodes = getNodes();
+//       const edges = getEdges();
+//       const layoutedNodes = await getLayoutedElements(nodes, edges, elkOptions);
+//       setNodes(layoutedNodes);
+//       window.requestAnimationFrame(() => fitView());
+//     },
+//     [fitView, getEdges, getNodes, setNodes],
+//   );
+
+//   return { layoutElements };
+// };
 
 const getLayoutedElements = async (
   flowNodes: Node[],
   flowEdges: Edge[],
   elkOptions: { [key: string]: string } = {},
 ) => {
+  const elk = new ELK();
   const layoutOptions = { ...defaultOptions, ...elkOptions };
 
   const nodesWithChildren = flowNodes
@@ -138,15 +190,15 @@ const getLayoutedElements = async (
       let originalParentPos: { x: number; y: number } = { x: 0, y: 0 };
       let parentName = "";
 
-      console.log(node);
+      //console.log(node);
       for (const childNode of node.children!) {
         const position = { x: childNode.x!, y: childNode.y! };
         if (childNode.id === node.represents) {
           originalParentPos.x = childNode.x!;
           originalParentPos.y = childNode.y!;
           parentName = childNode.data.erId;
-          console.log(parentName, position.x, position.y);
-          console.log("CONTAINER", node.x, node.y);
+          //console.log(parentName, position.x, position.y);
+          //console.log("CONTAINER", node.x, node.y);
           position.x += node.x!;
           position.y += node.y!;
           layoutedNodes.push({
@@ -164,7 +216,7 @@ const getLayoutedElements = async (
         let cy = childNode.y!;
 
         if (childNode.parentNode) {
-          console.log(childNode.data.erId, cx, cy);
+          //console.log(childNode.data.erId, cx, cy);
           cx -= px;
           cy -= py;
 
@@ -174,7 +226,7 @@ const getLayoutedElements = async (
           } as Node);
         }
       });
-      console.log("############");
+      //console.log("############");
     } else {
       layoutedNodes.push(
         updateNodePosition(
@@ -213,5 +265,6 @@ const debug = (graph: any): any => {
     return asElk;
   };
   const str = JSON.stringify(recur(graph), null, 2);
+  console.log("#####");
   console.log(str);
 };

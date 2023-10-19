@@ -9,6 +9,7 @@ import { ER } from "../../ERDoc/types/parser/ER";
 
 const Body = () => {
   const [erDoc, setErDoc] = useState<ER | null>(null);
+  const [erDocHasError, setErDocHasError] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
   return (
     <PanelGroup direction="horizontal">
@@ -20,7 +21,10 @@ const Body = () => {
           flexDir={"column"}
           overflow={"hidden"}
         >
-          <CodeEditor onErDocChange={setErDoc} />
+          <CodeEditor
+            onErDocChange={setErDoc}
+            onErrorChange={setErDocHasError}
+          />
         </Box>
       </Panel>
       <PanelResizeHandle
@@ -33,7 +37,7 @@ const Body = () => {
       </PanelResizeHandle>
       <Panel defaultSize={60}>
         <Box pt={1} height="full">
-          <ErDiagram erDoc={erDoc!} />
+          <ErDiagram erDoc={erDoc!} erDocHasError={erDocHasError} />
         </Box>
       </Panel>
     </PanelGroup>
