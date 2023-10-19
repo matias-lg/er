@@ -35,13 +35,18 @@ const inheritanceToReactflowElements = (
     data: {
       constraints: [
         {
-          type: "alignment",
-          axis: "x",
-          offsets: [
-            { node: parentEntityNodeId, offset: "0" },
-            { node: isANodeId, offset: "0" },
-            { node: childEntityNodeId, offset: "0" },
-          ],
+          type: "inequality",
+          axis: "y",
+          left: parentEntityNodeId,
+          right: isANodeId,
+          gap: 50,
+        },
+        {
+          type: "inequality",
+          axis: "y",
+          left: isANodeId,
+          right: childEntityNodeId,
+          gap: 50,
         },
       ],
     },
@@ -122,8 +127,8 @@ export const entityToReactflowElements = (
 
     edges.push({
       id: `entity-attr: ${entity.name}->${attr.name}`,
-      source: attrID,
-      target: entityId,
+      source: entityId,
+      target: attrID,
       sourceHandle: "l",
       targetHandle: "r",
       type: "erEdge",
@@ -279,8 +284,8 @@ export const relationshipToReactflowElements = (
 
     relationshipEdges.push({
       id: `relationship-attr: ${relationshipId}->${attr.name}`,
-      source: attrID,
-      target: relationshipNodeId,
+      source: relationshipNodeId,
+      target: attrID,
       sourceHandle: "l",
       targetHandle: "r",
       type: "erEdge",
@@ -304,8 +309,8 @@ export const relationshipToReactflowElements = (
       );
       relationshipEdges.push({
         id: `relationship-part: ${relationshipId}->${entity.entityName}`,
-        source: createEntityNodeId(entity.entityName),
-        target: relationshipNodeId,
+        source: relationshipNodeId,
+        target: createEntityNodeId(entity.entityName),
         sourceHandle: "l",
         targetHandle: "r",
         type: "erEdge",
@@ -382,12 +387,16 @@ export const updateGraphElementsWithAggregation = ({
       node.zIndex = 10;
       node.extent = "parent";
       node.parentNode = aggregationNodeId;
+      node.position = { x: 0, y: 0 };
     }
   });
+
+  console.log(nodes);
 
   nodes.push({
     id: aggregationNodeId,
     focusable: false,
+    selectable: false,
     type: "aggregation",
     data: {
       label: aggregationName,
