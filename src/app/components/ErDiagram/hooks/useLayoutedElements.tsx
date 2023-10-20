@@ -6,12 +6,14 @@ import { useStore } from "reactflow";
 
 const defaultOptions = {
   "elk.algorithm": "org.eclipse.elk.force",
-  "elk.force.temperature": "0.02",
-  "elk.spacing.nodeNode": "1.5",
+  "elk.force.temperature": "0.03",
+  "elk.spacing.nodeNode": "1",
   "elk.force.iterations": "100",
 };
 
 const nodeCountSelector = (state: ReactFlowState) => state.nodeInternals.size;
+const edgeCountSelector = (state: ReactFlowState) =>
+  state.edges.filter((e) => !e.id.startsWith("ALIGN")).length;
 const nodesInitializedSelector = (state: ReactFlowState) =>
   Array.from(state.nodeInternals.values()).every(
     (node) => node.width && node.height,
@@ -20,6 +22,7 @@ const nodesInitializedSelector = (state: ReactFlowState) =>
 const useLayoutedElements = () => {
   const { getNodes, setNodes, getEdges, setEdges, fitView } = useReactFlow();
   const nodeCount = useStore(nodeCountSelector);
+  const edgeCount = useStore(edgeCountSelector);
   const nodesInitialized = useStore(nodesInitializedSelector);
 
   useEffect(() => {
@@ -35,10 +38,7 @@ const useLayoutedElements = () => {
           return {
             ...node,
             position: layoutedNode?.position!,
-            style: {
-              ...node.style,
-              opacity: 1,
-            },
+            style: { ...node.style, opacity: 1 },
           };
         }),
       );
@@ -46,16 +46,18 @@ const useLayoutedElements = () => {
       setEdges((edges) =>
         edges.map((edge) => ({
           ...edge,
+          hidden: false,
           style: {
             ...edge.style,
             opacity: 1,
           },
         })),
       );
-      window.requestAnimationFrame(() => fitView());
+      setTimeout(() => window.requestAnimationFrame(() => fitView()), 0);
     });
   }, [
     nodeCount,
+    edgeCount,
     nodesInitialized,
     getNodes,
     getEdges,
@@ -86,6 +88,11 @@ const getLayoutedElements = async (
 ) => {
   const elk = new ELK();
   const layoutOptions = { ...defaultOptions, ...elkOptions };
+  const subGraphOptions = {
+    ...layoutOptions,
+    "elk.algorithm": "org.eclipse.elk.radial",
+    // "org.eclipse.elk.radial.centerOnRoot": "true",
+  };
 
   const nodesWithChildren = flowNodes
     .map((n) => n.parentNode)
@@ -93,6 +100,8 @@ const getLayoutedElements = async (
     .map((parentId) => flowNodes.find((n) => n.id === parentId)!)
     // make sure we only have unique nodes
     .filter((node, index, self) => self.indexOf(node) === index);
+  // only aggretions
+  // .filter((node) => node.type === "aggregation");
 
   // create subgraphs for every node and its children
   const subGraphs = nodesWithChildren.map((parentNode) => {
@@ -118,11 +127,7 @@ const getLayoutedElements = async (
       isAggregation: parentNode.type === "aggregation",
       represents: parentNode.id,
       layoutOptions:
-        parentNode.type === "aggregation"
-          ? layoutOptions
-          : {
-              "elk.algorithm": "org.eclipse.elk.radial",
-            },
+        parentNode.type === "aggregation" ? layoutOptions : subGraphOptions,
       children: subGraphNodes,
       edges: childrenEdges,
     };
@@ -160,7 +165,9 @@ const getLayoutedElements = async (
   debug(graph);
 
   // layout nodes
-  let { children } = await elk.layout(graph as unknown as ElkNode);
+  let layout = await elk.layout(graph as unknown as ElkNode);
+
+  const children = layout.children;
   const layoutedNodes: Node[] = [];
 
   children?.forEach((node) => {

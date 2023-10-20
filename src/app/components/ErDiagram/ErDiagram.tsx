@@ -1,5 +1,5 @@
 import { Spinner } from "@chakra-ui/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -7,9 +7,7 @@ import ReactFlow, {
   OnInit,
   Panel,
   useEdgesState,
-  useNodesInitialized,
   useNodesState,
-  useReactFlow,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
@@ -22,12 +20,9 @@ import EdgeCustomSVGs from "./EdgeCustomSVGs";
 import { useAlignmentGuide } from "./hooks/useAlignmentGuide";
 import { useColaLayoutedElements } from "./hooks/useColaLayoutedElements";
 import { useD3LayoutedElements } from "./hooks/useD3LayoutedElements";
-import {
-  getLayoutedElements,
-  useLayoutedElements,
-} from "./hooks/useLayoutedElements";
-import ErNotation from "./notations/DefaultNotation";
 import { useDiagramToLocalStorage } from "./hooks/useDiagramToLocalStorage";
+import { useLayoutedElements } from "./hooks/useLayoutedElements";
+import ErNotation from "./notations/DefaultNotation";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -77,14 +72,9 @@ const ErDiagram = ({
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  useLayoutedElements();
   const { d3LayoutElements } = useD3LayoutedElements();
   const { ColaLayoutElements } = useColaLayoutedElements();
   const [isLayouting, setIsLayouting] = useState(false);
-
-  const isFirstRenderRef = useRef<boolean | null>(true);
-  const nodesInitialized = useNodesInitialized();
-  const { fitView } = useReactFlow();
 
   const erNodeTypes = useMemo(() => notation.nodeTypes, [notation]);
   const erEdgeTypes = useMemo(() => notation.edgeTypes, [notation]);
@@ -93,47 +83,49 @@ const ErDiagram = ({
   const { saveToLocalStorage, loadFromLocalStorage, setRfInstance } =
     useDiagramToLocalStorage();
 
+  useLayoutedElements();
+
   useEffect(() => {
-    console.log("######");
-    console.log(erDocHasError);
     if (erDoc === null || erDocHasError) return;
     const [newNodes, newEdges] = erToReactflowElements(erDoc, erEdgeNotation);
-
     setNodes((nodes) => {
-      for (const newNode of newNodes) {
-        // hack: on first render, hide the nodes before they are layouted
-        // if (isFirstRenderRef.current === true) {
-        newNode.style = {
-          ...newNode.style,
-          opacity: 1,
-        };
-        // }
+      const alreadyExists: string[] = [];
+      const renaming = nodes.length === newNodes.length;
 
-        // if the node already exists, keep its position
-        let oldNode;
-        // old node by data.erId
-        oldNode = nodes.find(
-          (oldNode) => oldNode.data.erId === newNode.data.erId,
-        );
-
-        if (
-          nodes.length === newNodes.length &&
-          oldNode === undefined
-          // && (newNode.type === "entity" ||
-          //   newNode.type === "relationship" ||
-          //   newNode.type === "aggregation")
-        )
-          oldNode = nodes.find((oldNode) => oldNode.id === newNode.id);
-        if (oldNode !== undefined) {
-          newNode.position = oldNode.position;
-          // for aggregations, don't modify its size
-          if (newNode.type === "aggregation") {
-            newNode.data.height = (oldNode as AggregationNode).data.height;
-            newNode.data.width = (oldNode as AggregationNode).data.width;
-          }
-        }
-      }
-      return newNodes;
+      return (
+        nodes
+          // if the node already exists, keep its position
+          .map((oldNode) => {
+            let newNode = newNodes.find(
+              (newNode) => newNode.data.erId === oldNode.data.erId,
+            );
+            if (!newNode && renaming) {
+              newNode = newNodes.find((newNode) => newNode.id === oldNode.id);
+            }
+            if (newNode) {
+              alreadyExists.push(newNode.id);
+              newNode.position = oldNode.position;
+              // for aggregations, don't modify its size
+              if (newNode.type === "aggregation") {
+                newNode.data.height = (oldNode as AggregationNode).data.height;
+                newNode.data.width = (oldNode as AggregationNode).data.width;
+              }
+              return newNode;
+            }
+            return undefined;
+          })
+          // add the new nodes
+          .concat(newNodes.filter((nn) => !alreadyExists.includes(nn.id)))
+          .filter((n) => n !== undefined)
+          // hide all nodes before layouting
+          .map((n) => ({
+            ...n,
+            style: {
+              ...n!.style,
+              opacity: 1,
+            },
+          }))
+      );
     });
 
     setEdges(() => {
@@ -141,6 +133,7 @@ const ErDiagram = ({
       // if (isFirstRenderRef.current === true) {
       return newEdges.map((e) => ({
         ...e,
+        hidden: true,
         style: {
           ...e.style,
           opacity: 1,
@@ -148,6 +141,7 @@ const ErDiagram = ({
       }));
       // } else return newEdges;
     });
+
     setTimeout(saveToLocalStorage, 100);
   }, [
     erDoc,
@@ -158,52 +152,20 @@ const ErDiagram = ({
     erDocHasError,
   ]);
 
+  useEffect(() => console.log("erdoc changed"), [erDoc]);
+  useEffect(() => console.log("erdoc has error changed"), [erDocHasError]);
+  useEffect(() => console.log("erEdgeNotation changed"), [erEdgeNotation]);
+  useEffect(() => console.log("setEdges changed"), [setEdges]);
+  useEffect(() => console.log("setNodes changed"), [setNodes]);
+  useEffect(
+    () => console.log("saveToLocalStorage changed"),
+    [saveToLocalStorage],
+  );
+
   /* On initial render, load from storage or auto layout the default content */
   useEffect(() => {
     loadFromLocalStorage();
   }, []);
-
-  // useEffect(() => {
-  //   if (isFirstRenderRef.current === true && nodesInitialized) {
-  //     const loaded = loadFromLocalStorage();
-  //     if (!loaded) {
-  //       const updateElements = async () => {
-  //         const layoutedElements = await getLayoutedElements(nodes, edges);
-  //         setNodes(
-  //           layoutedElements.map((n) => ({
-  //             ...n,
-  //             style: {
-  //               ...n.style,
-  //               opacity: 1,
-  //             },
-  //           })),
-  //         );
-  //         setEdges((eds) =>
-  //           eds.map((e) => {
-  //             e.hidden = false;
-  //             return e;
-  //           }),
-  //         );
-  //         window.requestAnimationFrame(() => fitView());
-  //         isFirstRenderRef.current = false;
-  //       };
-  //       void updateElements();
-  //     } else {
-  //       isFirstRenderRef.current = false;
-  //     }
-  //   } else if (isFirstRenderRef.current === false) {
-  //     window.requestAnimationFrame(() => fitView());
-  //     isFirstRenderRef.current = null;
-  //   }
-  // }, [
-  //   nodes,
-  //   edges,
-  //   fitView,
-  //   nodesInitialized,
-  //   setEdges,
-  //   setNodes,
-  //   loadFromLocalStorage,
-  // ]);
 
   // add defs to viewport so they appear when exporting to image
   const handleInit: OnInit = useCallback(
