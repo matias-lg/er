@@ -1,4 +1,7 @@
 import dynamic from "next/dynamic";
+import { BiSolidBook } from "react-icons/bi";
+import AutoLayoutSwitch from "./AutoLayoutSwitch";
+
 const DynamicExportButton = dynamic(() => import("./ExportButton"), {
   ssr: false,
 });
@@ -11,9 +14,25 @@ export const Header = () => {
       <div className="flex h-full w-[65%]  items-center pl-6  text-slate-200">
         ER Diagram Editor
       </div>
+
       <div className=" flex h-full w-[90%] items-center pl-2 text-slate-200">
+        <HeaderButton>
+          <>
+            <span className="pr-2"> Auto Layout </span>
+            <AutoLayoutSwitch />
+          </>
+        </HeaderButton>
+
         <DynamicExportButton />
+
+        <HeaderButton>
+          <>
+            {" "}
+            <BiSolidBook /> <span className="pl-2">Documentation</span>{" "}
+          </>
+        </HeaderButton>
       </div>
+
       <div className=" flex h-full items-center pl-2 text-slate-200">
         <GitHubButton />
       </div>
@@ -36,5 +55,11 @@ const GitHubButton = () => {
     </a>
   );
 };
+
+const HeaderButton = ({ children }: { children: JSX.Element }) => (
+  <button className="mx-0 mx-2 items-center rounded border-[1px] border-border px-4 py-2   text-center  tracking-wide text-slate-200">
+    <div className="flex items-center">{children}</div>
+  </button>
+);
 
 export default Header;
