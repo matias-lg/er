@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
+  Edge,
   NodeDragHandler,
   OnInit,
   Panel,
@@ -11,7 +12,7 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
-import { AggregationNode } from "../../types/ErDiagram";
+import { AggregationNode, ErNode } from "../../types/ErDiagram";
 import { NotationTypes, notations } from "../../util/common";
 import { erToReactflowElements } from "../../util/erToReactflowElements";
 import { ConfigPanel } from "./ConfigPanel";
@@ -69,7 +70,7 @@ const ErDiagram = ({
   onNotationChange,
   setEdgesOrthogonal,
 }: ErDiagramProps) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<ErNode["data"]>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const { d3LayoutElements } = useD3LayoutedElements();
@@ -88,10 +89,11 @@ const ErDiagram = ({
   useEffect(() => {
     if (erDoc === null || erDocHasError) return;
     const [newNodes, newEdges] = erToReactflowElements(erDoc, erEdgeNotation);
+    const renaming = nodes.length === newNodes.length && edges.length === newEdges.length;
+    // @ts-ignore
     setNodes((nodes) => {
       const alreadyExists: string[] = [];
       const renaming = nodes.length === newNodes.length;
-
       return (
         nodes
           // if the node already exists, keep its position
@@ -114,21 +116,41 @@ const ErDiagram = ({
             }
             return undefined;
           })
-          // add the new nodes
-          .concat(newNodes.filter((nn) => !alreadyExists.includes(nn.id)))
           .filter((n) => n !== undefined)
+          // hide the new nodes and add them
+          .concat(
+            newNodes
+              .filter((nn) => !alreadyExists.includes(nn.id))
+              .map((newNode) => ({
+                ...newNode,
+                style: { ...newNode.style, opacity: renaming? 1: 0 },
+              })),
+          )
           // hide all nodes before layouting
           .map((n) => ({
             ...n,
             style: {
               ...n!.style,
-              opacity: 1,
             },
           }))
       );
     });
 
-    setEdges(() => {
+    setEdges((oldEdges) => {
+      const alreadyExists: string[] = [];
+      return oldEdges
+        .map((oldEdge) => {
+          const updatedEdge = newEdges.find((ne) => ne.id === oldEdge.id);
+          if (updatedEdge) alreadyExists.push(updatedEdge.id);
+          return updatedEdge;
+        })
+        .concat(
+          newEdges
+            .filter((ne) => !alreadyExists.includes(ne.id))
+            .map((e) => ({ ...e, hidden: renaming? false: true})),
+        )
+        .filter((e) => e !== undefined) as Edge[];
+
       // same hack as above
       // if (isFirstRenderRef.current === true) {
       return newEdges.map((e) => ({
