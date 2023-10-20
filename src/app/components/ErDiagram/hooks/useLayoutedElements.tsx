@@ -7,7 +7,7 @@ import { useStore } from "reactflow";
 const defaultOptions = {
   "elk.algorithm": "org.eclipse.elk.force",
   "elk.force.temperature": "0.03",
-  "elk.spacing.nodeNode": "1",
+  "elk.spacing.nodeNode": "1.1",
   "elk.force.iterations": "100",
 };
 
@@ -19,14 +19,14 @@ const nodesInitializedSelector = (state: ReactFlowState) =>
     (node) => node.width && node.height,
   );
 
-const useLayoutedElements = () => {
+const useLayoutedElements = (shouldLayout: boolean) => {
   const { getNodes, setNodes, getEdges, setEdges, fitView } = useReactFlow();
   const nodeCount = useStore(nodeCountSelector);
   const edgeCount = useStore(edgeCountSelector);
   const nodesInitialized = useStore(nodesInitializedSelector);
 
   useEffect(() => {
-    if (!nodeCount || !nodesInitialized) {
+    if (!nodeCount || !nodesInitialized || !shouldLayout) {
       return;
     }
     const nodes = getNodes();
@@ -49,7 +49,6 @@ const useLayoutedElements = () => {
           hidden: false,
           style: {
             ...edge.style,
-            opacity: 1,
           },
         })),
       );
@@ -64,6 +63,7 @@ const useLayoutedElements = () => {
     setNodes,
     setEdges,
     fitView,
+    shouldLayout
   ]);
 };
 

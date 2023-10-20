@@ -6,7 +6,7 @@ export const Dropdown = ({
   items: [string, () => void][];
 }) => {
   return (
-    <ul className="flex w-full">
+    <ul className="flex">
       <li className="dropdown group relative rounded border-[1px] border-border px-4  py-2  tracking-wide text-slate-200">
         {title}
         <div className="dropdown-menu absolute z-[999] hidden h-auto pt-[0.87rem] text-sm group-hover:block">

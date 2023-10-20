@@ -1,5 +1,5 @@
 import { Spinner } from "@chakra-ui/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -9,6 +9,7 @@ import ReactFlow, {
   Panel,
   useEdgesState,
   useNodesState,
+  useReactFlow,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
@@ -24,6 +25,7 @@ import { useD3LayoutedElements } from "./hooks/useD3LayoutedElements";
 import { useDiagramToLocalStorage } from "./hooks/useDiagramToLocalStorage";
 import { useLayoutedElements } from "./hooks/useLayoutedElements";
 import ErNotation from "./notations/DefaultNotation";
+import { Context } from "../../context";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -72,9 +74,12 @@ const ErDiagram = ({
 }: ErDiagramProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<ErNode["data"]>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const { fitView } = useReactFlow();
+  const { autoLayoutEnabled } = useContext(Context);
 
   const { d3LayoutElements } = useD3LayoutedElements();
   const { ColaLayoutElements } = useColaLayoutedElements();
+
   const [isLayouting, setIsLayouting] = useState(false);
 
   const erNodeTypes = useMemo(() => notation.nodeTypes, [notation]);
@@ -84,16 +89,18 @@ const ErDiagram = ({
   const { saveToLocalStorage, loadFromLocalStorage, setRfInstance } =
     useDiagramToLocalStorage();
 
-  useLayoutedElements();
+  useLayoutedElements(autoLayoutEnabled);
 
   useEffect(() => {
     if (erDoc === null || erDocHasError) return;
     const [newNodes, newEdges] = erToReactflowElements(erDoc, erEdgeNotation);
-    const renaming = nodes.length === newNodes.length && edges.length === newEdges.length;
+    const renaming =
+      nodes.length === newNodes.length && edges.length === newEdges.length;
+    const hideItems = !renaming && autoLayoutEnabled;
+
     // @ts-ignore
     setNodes((nodes) => {
       const alreadyExists: string[] = [];
-      const renaming = nodes.length === newNodes.length;
       return (
         nodes
           // if the node already exists, keep its position
@@ -123,16 +130,9 @@ const ErDiagram = ({
               .filter((nn) => !alreadyExists.includes(nn.id))
               .map((newNode) => ({
                 ...newNode,
-                style: { ...newNode.style, opacity: renaming? 1: 0 },
+                style: { ...newNode.style, opacity: hideItems ? 0 : 1 },
               })),
           )
-          // hide all nodes before layouting
-          .map((n) => ({
-            ...n,
-            style: {
-              ...n!.style,
-            },
-          }))
       );
     });
 
@@ -147,42 +147,25 @@ const ErDiagram = ({
         .concat(
           newEdges
             .filter((ne) => !alreadyExists.includes(ne.id))
-            .map((e) => ({ ...e, hidden: renaming? false: true})),
+            .map((e) => ({ ...e, hidden: hideItems ? true : false })),
         )
         .filter((e) => e !== undefined) as Edge[];
-
-      // same hack as above
-      // if (isFirstRenderRef.current === true) {
-      return newEdges.map((e) => ({
-        ...e,
-        hidden: true,
-        style: {
-          ...e.style,
-          opacity: 1,
-        },
-      }));
-      // } else return newEdges;
     });
+
+    if (!autoLayoutEnabled) setTimeout(() => window.requestAnimationFrame(() => fitView()),0);
 
     setTimeout(saveToLocalStorage, 100);
   }, [
     erDoc,
+    autoLayoutEnabled,
     erEdgeNotation,
     setEdges,
     setNodes,
     saveToLocalStorage,
     erDocHasError,
+    nodes.length,
+    edges.length,
   ]);
-
-  useEffect(() => console.log("erdoc changed"), [erDoc]);
-  useEffect(() => console.log("erdoc has error changed"), [erDocHasError]);
-  useEffect(() => console.log("erEdgeNotation changed"), [erEdgeNotation]);
-  useEffect(() => console.log("setEdges changed"), [setEdges]);
-  useEffect(() => console.log("setNodes changed"), [setNodes]);
-  useEffect(
-    () => console.log("saveToLocalStorage changed"),
-    [saveToLocalStorage],
-  );
 
   /* On initial render, load from storage or auto layout the default content */
   useEffect(() => {
