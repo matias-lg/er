@@ -27,7 +27,6 @@ export const Header = () => {
 
         <HeaderButton>
           <>
-            {" "}
             <BiSolidBook /> <span className="pl-2">Documentation</span>{" "}
           </>
         </HeaderButton>
