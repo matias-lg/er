@@ -3,18 +3,17 @@ import { Context } from "../../context";
 
 const AUTO_LAYOUT_LOCAL_STORAGE_KEY = "auto-layout";
 
-const getFromLocalStorage = () => {
-  const storedAutoLayout = localStorage.getItem(AUTO_LAYOUT_LOCAL_STORAGE_KEY);
-  if (storedAutoLayout !== null) {
-    return JSON.parse(storedAutoLayout);
-  }
-  // auto layout enabled by default
-  return true;
-};
-
 const AutoLayoutSwitch = () => {
   const { setAutoLayoutEnabled } = useContext(Context);
-  const [isChecked, setIsChecked] = useState<boolean>(getFromLocalStorage());
+
+  const [isChecked, setIsChecked] = useState<boolean>(() => {
+    // load from localStorage only in the client, defaults to true.
+    if (typeof window !== "undefined") {
+      let stored = localStorage.getItem(AUTO_LAYOUT_LOCAL_STORAGE_KEY);
+      if (stored === null) return true;
+      return stored === "true";
+    } else return true;
+  });
 
   const handleCheckboxChange = () => {
     setIsChecked((isChecked) => !isChecked);
