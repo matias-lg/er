@@ -151,8 +151,8 @@ export const entityToReactflowElements = (
 
       edges.push({
         id: `entity-attr-composite: ${entity.name} ${attr.name}->${childAttrName}`,
-        source: childAttrID,
-        target: attrID,
+        source: attrID,
+        target: childAttrID,
         sourceHandle: "l",
         targetHandle: "r",
         type: "erEdge",
