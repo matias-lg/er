@@ -16,7 +16,7 @@ export const Header = () => {
       </div>
 
       <div className=" flex h-full w-[90%] items-center pl-2 text-slate-200">
-        <HeaderButton>
+        <HeaderButton xBorderSide="left">
           <>
             <span className="pr-2"> Auto Layout </span>
             <AutoLayoutSwitch />
@@ -25,7 +25,7 @@ export const Header = () => {
 
         <DynamicExportButton />
 
-        <HeaderButton>
+        <HeaderButton xBorderSide="right">
           <>
             <BiSolidBook /> <span className="pl-2">Documentation</span>{" "}
           </>
@@ -55,8 +55,21 @@ const GitHubButton = () => {
   );
 };
 
-const HeaderButton = ({ children }: { children: JSX.Element }) => (
-  <button className="mx-0 mx-2 items-center rounded border-[1px] border-border px-4 py-2   text-center  tracking-wide text-slate-200">
+const HeaderButton = ({
+  children,
+  xBorderSide,
+}: {
+  children: JSX.Element;
+  xBorderSide: "left" | "right" | "both";
+}) => (
+  <button
+    className={`mx-0 items-center rounded
+   ${xBorderSide === "left" && "border-l-[1px]"}
+   ${xBorderSide === "right" && "border-r-[1px]"}
+   ${xBorderSide === "both" && "border-l-[1px] border-r-[1px]"}
+    border-b-[1px] border-t-[1px]
+    border-border px-4 py-2   text-center tracking-wide text-slate-200`}
+  >
     <div className="flex items-center">{children}</div>
   </button>
 );
