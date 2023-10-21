@@ -1,8 +1,7 @@
 import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
-import { useCallback, useEffect } from "react";
-import { Edge, Node, ReactFlowState, useReactFlow } from "reactflow";
+import { useEffect } from "react";
+import { Edge, Node, ReactFlowState, useReactFlow, useStore } from "reactflow";
 import { LayoutedNode, updateNodePosition } from "../../../util/common";
-import { useStore } from "reactflow";
 
 const defaultOptions = {
   "elk.algorithm": "org.eclipse.elk.force",
@@ -63,23 +62,9 @@ const useLayoutedElements = (shouldLayout: boolean) => {
     setNodes,
     setEdges,
     fitView,
-    shouldLayout
+    shouldLayout,
   ]);
 };
-
-//   const layoutElements = useCallback(
-//     async (elkOptions: { [key: string]: string } = {}) => {
-//       const nodes = getNodes();
-//       const edges = getEdges();
-//       const layoutedNodes = await getLayoutedElements(nodes, edges, elkOptions);
-//       setNodes(layoutedNodes);
-//       window.requestAnimationFrame(() => fitView());
-//     },
-//     [fitView, getEdges, getNodes, setNodes],
-//   );
-
-//   return { layoutElements };
-// };
 
 const getLayoutedElements = async (
   flowNodes: Node[],
@@ -100,8 +85,6 @@ const getLayoutedElements = async (
     .map((parentId) => flowNodes.find((n) => n.id === parentId)!)
     // make sure we only have unique nodes
     .filter((node, index, self) => self.indexOf(node) === index);
-  // only aggretions
-  // .filter((node) => node.type === "aggregation");
 
   // create subgraphs for every node and its children
   const subGraphs = nodesWithChildren.map((parentNode) => {
@@ -204,8 +187,6 @@ const getLayoutedElements = async (
           originalParentPos.x = childNode.x!;
           originalParentPos.y = childNode.y!;
           parentName = childNode.data.erId;
-          //console.log(parentName, position.x, position.y);
-          //console.log("CONTAINER", node.x, node.y);
           position.x += node.x!;
           position.y += node.y!;
           layoutedNodes.push({
@@ -223,7 +204,6 @@ const getLayoutedElements = async (
         let cy = childNode.y!;
 
         if (childNode.parentNode) {
-          //console.log(childNode.data.erId, cx, cy);
           cx -= px;
           cy -= py;
 
@@ -233,7 +213,6 @@ const getLayoutedElements = async (
           } as Node);
         }
       });
-      //console.log("############");
     } else {
       layoutedNodes.push(
         updateNodePosition(

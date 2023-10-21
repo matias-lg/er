@@ -152,8 +152,6 @@ const ErDiagram = ({
         .filter((e) => e !== undefined) as Edge[];
     });
 
-    if (!autoLayoutEnabled) setTimeout(() => window.requestAnimationFrame(() => fitView()),0);
-
     setTimeout(saveToLocalStorage, 100);
   }, [
     erDoc,
@@ -167,7 +165,13 @@ const ErDiagram = ({
     edges.length,
   ]);
 
-  /* On initial render, load from storage or auto layout the default content */
+  useEffect(() => {
+    if (!autoLayoutEnabled) {
+      setTimeout(() => window.requestAnimationFrame(() => fitView()), 0);
+    }
+  }, [nodes.length, autoLayoutEnabled, fitView]);
+
+  // On initial render, load from storage
   useEffect(() => {
     loadFromLocalStorage();
   }, []);
