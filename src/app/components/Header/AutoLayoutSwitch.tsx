@@ -3,24 +3,38 @@ import { Context } from "../../context";
 
 const AUTO_LAYOUT_LOCAL_STORAGE_KEY = "auto-layout";
 
+const loadFromLocalStorage = () => {
+  if (typeof window !== "undefined") {
+    let storedState: null | boolean | string = localStorage.getItem(
+      AUTO_LAYOUT_LOCAL_STORAGE_KEY,
+    );
+    if (storedState === null) return null;
+    else return storedState === "true";
+  } else return null;
+};
+
 const AutoLayoutSwitch = () => {
   const { setAutoLayoutEnabled } = useContext(Context);
 
-  const [isChecked, setIsChecked] = useState<boolean>(() => {
-    // load from localStorage only in the client, defaults to true.
-    if (typeof window !== "undefined") {
-      let stored = localStorage.getItem(AUTO_LAYOUT_LOCAL_STORAGE_KEY);
-      if (stored === null) return true;
-      return stored === "true";
-    } else return true;
-  });
+  const [isChecked, setIsChecked] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    // load from localStorage in the client, default to true
+    const storedState = loadFromLocalStorage();
+    if (storedState !== null) {
+      setIsChecked(storedState);
+    } else {
+      setIsChecked(true);
+    }
+  }, []);
 
   const handleCheckboxChange = () => {
     setIsChecked((isChecked) => !isChecked);
   };
 
   useEffect(() => {
-    setAutoLayoutEnabled(isChecked);
+    console.log("isCheked", isChecked);
+    setAutoLayoutEnabled(isChecked!);
     localStorage.setItem(
       AUTO_LAYOUT_LOCAL_STORAGE_KEY,
       JSON.stringify(isChecked),
@@ -33,7 +47,7 @@ const AutoLayoutSwitch = () => {
         <div className="relative">
           <input
             type="checkbox"
-            checked={isChecked}
+            checked={isChecked!}
             onChange={handleCheckboxChange}
             className="sr-only"
           />
