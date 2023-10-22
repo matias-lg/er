@@ -70,29 +70,33 @@ const ErDiagram = ({
   onNotationChange,
   setEdgesOrthogonal,
 }: ErDiagramProps) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<ErNode["data"]>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const { fitView } = useReactFlow();
-  const { autoLayoutEnabled } = useContext(Context);
-
   const t = useTranslations("home.erDiagram");
-
   const erNodeTypes = useMemo(() => notation.nodeTypes, [notation]);
   const erEdgeTypes = useMemo(() => notation.edgeTypes, [notation]);
   const erEdgeNotation = useMemo(() => notation.edgeMarkers, [notation]);
+
+  const [prevErDoc, setPrevErDoc] = useState<ER | null>(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState<ErNode["data"]>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  const { fitView } = useReactFlow();
+  const { autoLayoutEnabled } = useContext(Context);
+
   const { onNodeDrag, onNodeDragStart, onNodeDragStop } = useAlignmentGuide();
   const { saveToLocalStorage, loadFromLocalStorage, setRfInstance } =
     useDiagramToLocalStorage();
-
   useLayoutedElements(autoLayoutEnabled);
 
-  useEffect(() => {
-    if (erDoc === null || erDocHasError) return;
-    const [newNodes, newEdges] = erToReactflowElements(erDoc, erEdgeNotation);
+  if (!erDocHasError && erDoc !== prevErDoc) {
+    setPrevErDoc(erDoc);
+    const [fromErNodes, fromErEdges] = erToReactflowElements(
+      erDoc,
+      erEdgeNotation,
+    );
     const renaming =
-      nodes.length === newNodes.length && edges.length === newEdges.length;
+      nodes.length === fromErNodes.length &&
+      edges.length === fromErEdges.length;
     const hideItems = !renaming && autoLayoutEnabled;
-
     // @ts-ignore
     setNodes((nodes) => {
       const alreadyExists: string[] = [];
@@ -100,11 +104,13 @@ const ErDiagram = ({
         nodes
           // if the node already exists, keep its position
           .map((oldNode) => {
-            let newNode = newNodes.find(
+            let newNode = fromErNodes.find(
               (newNode) => newNode.data.erId === oldNode.data.erId,
             );
             if (!newNode && renaming) {
-              newNode = newNodes.find((newNode) => newNode.id === oldNode.id);
+              newNode = fromErNodes.find(
+                (newNode) => newNode.id === oldNode.id,
+              );
             }
             if (newNode) {
               alreadyExists.push(newNode.id);
@@ -121,7 +127,7 @@ const ErDiagram = ({
           .filter((n) => n !== undefined)
           // hide the new nodes and add them
           .concat(
-            newNodes
+            fromErNodes
               .filter((nn) => !alreadyExists.includes(nn.id))
               .map((newNode) => ({
                 ...newNode,
@@ -135,41 +141,25 @@ const ErDiagram = ({
       const alreadyExists: string[] = [];
       return oldEdges
         .map((oldEdge) => {
-          const updatedEdge = newEdges.find((ne) => ne.id === oldEdge.id);
+          const updatedEdge = fromErEdges.find((ne) => ne.id === oldEdge.id);
           if (updatedEdge) alreadyExists.push(updatedEdge.id);
           return updatedEdge;
         })
         .concat(
-          newEdges
+          fromErEdges
             .filter((ne) => !alreadyExists.includes(ne.id))
             .map((e) => ({ ...e, hidden: hideItems ? true : false })),
         )
         .filter((e) => e !== undefined) as Edge[];
     });
-
     setTimeout(saveToLocalStorage, 100);
-  }, [
-    erDoc,
-    autoLayoutEnabled,
-    erEdgeNotation,
-    setEdges,
-    setNodes,
-    saveToLocalStorage,
-    erDocHasError,
-    nodes.length,
-    edges.length,
-  ]);
+  }
 
   useEffect(() => {
     if (!autoLayoutEnabled) {
       setTimeout(() => window.requestAnimationFrame(() => fitView()), 0);
     }
   }, [nodes.length, autoLayoutEnabled, fitView]);
-
-  // On initial render, load from storage
-  useEffect(() => {
-    loadFromLocalStorage();
-  }, []);
 
   // add defs to viewport so they appear when exporting to image
   const handleInit: OnInit = useCallback(
@@ -178,8 +168,10 @@ const ErDiagram = ({
       const viewport = document.querySelector(".react-flow__viewport")!;
       const defs = document.querySelector("#defs")!;
       viewport.append(defs);
+      // on mount, load from local storage
+      loadFromLocalStorage();
     },
-    [setRfInstance],
+    [setRfInstance, loadFromLocalStorage],
   );
 
   const onNodeDragStartHandler: NodeDragHandler = (e, node, nodes) => {
