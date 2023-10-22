@@ -391,8 +391,6 @@ export const updateGraphElementsWithAggregation = ({
     }
   });
 
-  console.log(nodes);
-
   nodes.push({
     id: aggregationNodeId,
     focusable: false,
