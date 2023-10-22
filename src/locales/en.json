@@ -16,6 +16,7 @@
       },
       "autoLayout": "Auto Layout",
       "exportDiagram": "Export Diagram",
+      "asJSON": "Export as JSON",
       "asPDF": "Export as PDF",
       "asPNG": "Export as PNG",
       "asSVG": "Export as SVG",

@@ -1,23 +1,29 @@
-import dynamic from "next/dynamic";
-import { BiSolidBook } from "react-icons/bi";
-import { HeaderElement } from "./HeaderElement";
-import AutoLayoutSwitch from "./AutoLayoutSwitch";
 import { useTranslations } from "next-intl";
-import { DownloadIcon } from "@chakra-ui/icons";
+import dynamic from "next/dynamic";
+import { useMemo } from "react";
+import { BiSolidBook } from "react-icons/bi";
+import { MdDownload } from "react-icons/md";
+import AutoLayoutSwitch from "./AutoLayoutSwitch";
+import { HeaderElement } from "./HeaderElement";
 import ImportJSONButton from "./ImportJSONButton";
 
 const GITHUB_URL = "https://github.com/matias-lg/er";
 
 export const Header = () => {
   const t = useTranslations("home.header");
-  const DynamicExportButton = dynamic(() => import("./ExportButton"), {
-    ssr: false,
-    loading: () => (
-      <>
-        <DownloadIcon /> {t("exportDiagram")}{" "}
-      </>
-    ),
-  });
+  const DynamicExportButton = useMemo(
+    () =>
+      dynamic(() => import("./ExportButton"), {
+        ssr: false,
+        loading: () => (
+          <div className="flex items-center">
+            <MdDownload size={25} />{" "}
+            <span className="pl-2"> {t("exportDiagram")}</span>
+          </div>
+        ),
+      }),
+    [],
+  );
 
   return (
     <>

@@ -14,31 +14,32 @@ const loadFromLocalStorage = () => {
 };
 
 const AutoLayoutSwitch = ({ title }: { title: string }) => {
-  const { setAutoLayoutEnabled } = useContext(Context);
-  const [isChecked, setIsChecked] = useState<boolean | null>(null);
+  const { autoLayoutEnabled, setAutoLayoutEnabled } = useContext(Context);
 
   useEffect(() => {
     // load from localStorage in the client, default to true
     const storedState = loadFromLocalStorage();
     if (storedState !== null) {
-      setIsChecked(storedState);
+      setAutoLayoutEnabled(storedState);
     } else {
-      setIsChecked(true);
+      setAutoLayoutEnabled(true);
     }
   }, []);
 
   const handleCheckboxChange = () => {
-    setIsChecked((isChecked) => !isChecked);
+    setAutoLayoutEnabled(!autoLayoutEnabled);
   };
 
   useEffect(() => {
-    console.log("isCheked", isChecked);
-    setAutoLayoutEnabled(isChecked!);
     localStorage.setItem(
       AUTO_LAYOUT_LOCAL_STORAGE_KEY,
-      JSON.stringify(isChecked),
+      JSON.stringify(autoLayoutEnabled),
     );
-  }, [isChecked, setAutoLayoutEnabled]);
+  }, [autoLayoutEnabled]);
+
+  // useEffect(() => {
+  //   if (isChecked !== autoLayoutEnabled) setIsChecked(autoLayoutEnabled);
+  // }, [autoLayoutEnabled]);
 
   return (
     <>
@@ -49,18 +50,18 @@ const AutoLayoutSwitch = ({ title }: { title: string }) => {
         <div className="relative">
           <input
             type="checkbox"
-            checked={isChecked!}
+            checked={autoLayoutEnabled!}
             onChange={handleCheckboxChange}
             className="sr-only"
           />
           <div
             className={`box block h-7 w-12 rounded-full ${
-              isChecked ? "bg-secondary" : "bg-[#CBD5E0]"
+              autoLayoutEnabled ? "bg-secondary" : "bg-[#CBD5E0]"
             }`}
           ></div>
           <div
             className={`absolute left-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-white transition ${
-              isChecked ? "translate-x-full" : ""
+              autoLayoutEnabled ? "translate-x-full" : ""
             }`}
           ></div>
         </div>
