@@ -1,37 +1,45 @@
 import dynamic from "next/dynamic";
 import { BiSolidBook } from "react-icons/bi";
+import { HeaderElement } from "./HeaderElement";
 import AutoLayoutSwitch from "./AutoLayoutSwitch";
-
-const DynamicExportButton = dynamic(() => import("./ExportButton"), {
-  ssr: false,
-});
+import { useTranslations } from "next-intl";
+import { DownloadIcon } from "@chakra-ui/icons";
 
 const GITHUB_URL = "https://github.com/matias-lg/er";
 
 export const Header = () => {
+  const t = useTranslations("home.header");
+  const DynamicExportButton = dynamic(() => import("./ExportButton"), {
+    ssr: false,
+    loading: () => (
+      <>
+        <DownloadIcon /> {t("exportDiagram")}{" "}
+      </>
+    ),
+  });
+
   return (
     <>
       <div className="flex h-full w-[65%]  items-center pl-6  text-slate-200">
         ER Diagram Editor
       </div>
-
       <div className=" flex h-full w-[90%] items-center pl-2 text-slate-200">
-        <HeaderButton xBorderSide="left">
+        <HeaderElement className="border-l-[1px]">
           <>
-            <span className="pr-2"> Auto Layout </span>
-            <AutoLayoutSwitch />
+            <AutoLayoutSwitch title={t("autoLayout")} />
           </>
-        </HeaderButton>
-
-        <DynamicExportButton />
-
-        <HeaderButton xBorderSide="right">
+        </HeaderElement>
+        <HeaderElement className="cursor-pointer border-l-[1px] border-r-[1px]">
+          <DynamicExportButton />
+        </HeaderElement>
+        <HeaderElement className="border-r-[1px]">
           <>
-            <BiSolidBook /> <span className="pl-2">Documentation</span>{" "}
+            <button className="flex items-center">
+              <BiSolidBook /> <span className="pl-2">{t("documentation")}</span>
+            </button>
           </>
-        </HeaderButton>
+        </HeaderElement>
       </div>
-
       <div className=" flex h-full items-center pl-2 text-slate-200">
         <GitHubButton />
       </div>
@@ -54,24 +62,5 @@ const GitHubButton = () => {
     </a>
   );
 };
-
-const HeaderButton = ({
-  children,
-  xBorderSide,
-}: {
-  children: JSX.Element;
-  xBorderSide: "left" | "right" | "both";
-}) => (
-  <button
-    className={`mx-0 items-center rounded
-   ${xBorderSide === "left" && "border-l-[1px]"}
-   ${xBorderSide === "right" && "border-r-[1px]"}
-   ${xBorderSide === "both" && "border-l-[1px] border-r-[1px]"}
-    border-b-[1px] border-t-[1px]
-    border-border px-4 py-2   text-center tracking-wide text-slate-200`}
-  >
-    <div className="flex items-center">{children}</div>
-  </button>
-);
 
 export default Header;

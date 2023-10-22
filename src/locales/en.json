@@ -7,6 +7,8 @@
     },
 
     "header": {
+      "documentation": "Documentation",
+      "autoLayout": "Auto Layout",
       "exportDiagram": "Export Diagram",
       "asPDF": "Export as PDF",
       "asPNG": "Export as PNG",
