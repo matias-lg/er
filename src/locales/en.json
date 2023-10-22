@@ -8,6 +8,12 @@
 
     "header": {
       "documentation": "Documentation",
+      "import": "Import JSON",
+      "importModal": {
+        "title": "Import JSON",
+        "description": "Load an existing ER Diagram and ERDoc from a JSON file. This will replace the current ER Diagram.",
+        "upload": "Upload JSON file"
+      },
       "autoLayout": "Auto Layout",
       "exportDiagram": "Export Diagram",
       "asPDF": "Export as PDF",
