@@ -36,6 +36,7 @@
       "chenNotation": "Chen notation",
       "layoutButton": "Layout",
       "fitViewButton": "Fit View",
+      "fixErrorsToSync": "Fix errors to sync diagram!",
       "configPanel": {
         "title": "Diagram settings",
         "edgeRouting": "Edge routing",
