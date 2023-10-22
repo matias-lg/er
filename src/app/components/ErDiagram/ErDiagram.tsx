@@ -1,4 +1,3 @@
-import { Spinner } from "@chakra-ui/react";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   Background,
@@ -13,6 +12,7 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { ER } from "../../../ERDoc/types/parser/ER";
+import { Context } from "../../context";
 import { AggregationNode, ErNode } from "../../types/ErDiagram";
 import { NotationTypes, notations } from "../../util/common";
 import { erToReactflowElements } from "../../util/erToReactflowElements";
@@ -20,12 +20,10 @@ import { ConfigPanel } from "./ConfigPanel";
 import { ControlPanel } from "./ControlPanel";
 import EdgeCustomSVGs from "./EdgeCustomSVGs";
 import { useAlignmentGuide } from "./hooks/useAlignmentGuide";
-import { useColaLayoutedElements } from "./hooks/useColaLayoutedElements";
-import { useD3LayoutedElements } from "./hooks/useD3LayoutedElements";
 import { useDiagramToLocalStorage } from "./hooks/useDiagramToLocalStorage";
 import { useLayoutedElements } from "./hooks/useLayoutedElements";
 import ErNotation from "./notations/DefaultNotation";
-import { Context } from "../../context";
+import { useTranslations } from "next-intl";
 
 type ErDiagramProps = {
   erDoc: ER;
@@ -77,10 +75,7 @@ const ErDiagram = ({
   const { fitView } = useReactFlow();
   const { autoLayoutEnabled } = useContext(Context);
 
-  const { d3LayoutElements } = useD3LayoutedElements();
-  const { ColaLayoutElements } = useColaLayoutedElements();
-
-  const [isLayouting, setIsLayouting] = useState(false);
+  const t = useTranslations("home.erDiagram");
 
   const erNodeTypes = useMemo(() => notation.nodeTypes, [notation]);
   const erEdgeTypes = useMemo(() => notation.edgeTypes, [notation]);
@@ -225,9 +220,9 @@ const ErDiagram = ({
         variant={BackgroundVariant.Lines}
       />
 
-      <Panel position="bottom-right">
-        <br />
-        {/* <button
+      {/* <Panel position="bottom-right">
+        <br /> */}
+      {/* <button
           onClick={() => {
             setIsLayouting(true);
             void layoutElements({
@@ -239,7 +234,7 @@ const ErDiagram = ({
           ELK stress layout
         </button> */}
 
-        {/* <button
+      {/* <button
           onClick={() => {
             void layoutElements({
               "elk.algorithm": "org.eclipse.elk.radial",
@@ -250,7 +245,7 @@ const ErDiagram = ({
           ELK radial layout
         </button> */}
 
-        {/* <br />
+      {/* <br />
         <button
           onClick={() => {
             setIsLayouting(true);
@@ -267,7 +262,7 @@ const ErDiagram = ({
           ELK 5K force layout
         </button> */}
 
-        <br />
+      {/* <br />
         <button
           onClick={() => {
             setIsLayouting(true);
@@ -292,12 +287,14 @@ const ErDiagram = ({
         >
           Cola Layout
         </button>
-      </Panel>
+      </Panel> */}
 
       <Panel position="top-left">
-        {isLayouting && <Spinner color="black" />}
-        <br />
-        {erDocHasError && <span>Fix Errors to sync layout!</span>}
+        {erDocHasError && (
+          <div className="absolute w-52 rounded border-2 border-red-950 bg-red-800 p-1 text-slate-200">
+            <p>{t("fixErrorsToSync")}</p>
+          </div>
+        )}
       </Panel>
 
       <Panel position="top-right">
