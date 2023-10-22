@@ -131,6 +131,7 @@ const CodeEditor = ({
       setEditorErrors(errorMsgs, MarkerSeverity.Error);
       setSemanticErrorMessages(errorMsgs);
     } catch (e) {
+      onErrorChange(true);
       setEditorErrors(
         [
           {
