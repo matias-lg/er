@@ -1,13 +1,13 @@
 "use client";
-import { DownloadIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/react";
 import { toJpeg, toPng, toSvg } from "html-to-image";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { MdDownload } from "react-icons/md";
 import { getRectOfNodes, useReactFlow } from "reactflow";
 import { DownloadFunc, downloadImage, exportToPDF } from "../../util/common";
 import { Dropdown } from "./Dropdown";
 import { ExportImageModal } from "./ExportModal";
-import { useTranslations } from "next-intl";
 
 const ExportButton = () => {
   const flow = document.querySelector(".react-flow__viewport");
@@ -47,9 +47,10 @@ const ExportButton = () => {
     <>
       <Dropdown
         title={
-          <>
-            <DownloadIcon /> {t("exportDiagram")}
-          </>
+          <div className="flex items-center">
+            <MdDownload size={25} />{" "}
+            <span className="pl-2"> {t("exportDiagram")}</span>
+          </div>
         }
         items={[
           [t("asPDF"), () => exportToPDF(1920, 1080).catch(() => {})],

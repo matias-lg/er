@@ -4,6 +4,7 @@ import { HeaderElement } from "./HeaderElement";
 import AutoLayoutSwitch from "./AutoLayoutSwitch";
 import { useTranslations } from "next-intl";
 import { DownloadIcon } from "@chakra-ui/icons";
+import ImportJSONButton from "./ImportJSONButton";
 
 const GITHUB_URL = "https://github.com/matias-lg/er";
 
@@ -29,6 +30,15 @@ export const Header = () => {
             <AutoLayoutSwitch title={t("autoLayout")} />
           </>
         </HeaderElement>
+        <HeaderElement className="border-l-[1px]">
+          <ImportJSONButton
+            title={t("import")}
+            modalTitle={t("importModal.title")}
+            modalDescription={t("importModal.description")}
+            modalConfirm={t("importModal.upload")}
+          />
+        </HeaderElement>
+
         <HeaderElement className="cursor-pointer border-l-[1px] border-r-[1px]">
           <DynamicExportButton />
         </HeaderElement>
