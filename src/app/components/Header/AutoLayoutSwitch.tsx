@@ -13,9 +13,8 @@ const loadFromLocalStorage = () => {
   } else return null;
 };
 
-const AutoLayoutSwitch = () => {
+const AutoLayoutSwitch = ({ title }: { title: string }) => {
   const { setAutoLayoutEnabled } = useContext(Context);
-
   const [isChecked, setIsChecked] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -43,6 +42,9 @@ const AutoLayoutSwitch = () => {
 
   return (
     <>
+      <span className="cursor-pointer pr-2" onClick={handleCheckboxChange}>
+        {title}
+      </span>
       <label className="flex cursor-pointer select-none items-center">
         <div className="relative">
           <input
