@@ -21,12 +21,14 @@ import { DownloadFunc } from "../../util/common";
 
 export const ExportImageModal = ({
   isOpen,
+  allowTransparent,
   onClose,
   defaultWidth,
   defaultHeight,
   onButtonClick,
 }: {
   isOpen: boolean;
+  allowTransparent: boolean;
   onClose: () => void;
   onButtonClick: DownloadFunc;
   defaultWidth: number;
@@ -75,15 +77,17 @@ export const ExportImageModal = ({
               </NumberInputStepper>
             </NumberInput>
           </Box>
-          <Box pt={2}>
-            <Checkbox
-              onChange={() => {
-                setTransparentBg((t) => !t);
-              }}
-            >
-              {t("transparent")}
-            </Checkbox>
-          </Box>
+          {allowTransparent && (
+            <Box pt={2}>
+              <Checkbox
+                onChange={() => {
+                  setTransparentBg((t) => !t);
+                }}
+              >
+                {t("transparent")}
+              </Checkbox>
+            </Box>
+          )}
         </ModalBody>
 
         <ModalFooter>

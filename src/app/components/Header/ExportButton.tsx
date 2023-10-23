@@ -39,7 +39,9 @@ const ExportButton = () => {
   const { exportToJSON } = useJSON();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [exportFunc, setExportFunc] = useState<DownloadFunc>(() => {});
-  const onItemClick = (func: DownloadFunc) => {
+  const [allowTransparent, setAllowTransparent] = useState<boolean>(true);
+  const onItemClick = (func: DownloadFunc, allowTransparent: boolean) => {
+    setAllowTransparent(allowTransparent);
     setExportFunc(() => func);
     onOpen();
   };
@@ -55,14 +57,15 @@ const ExportButton = () => {
         }
         items={[
           [t("asPDF"), () => exportToPDF(1920, 1080).catch(() => {})],
-          [t("asSVG"), () => onItemClick(downloadFlow(toSvg, "svg"))],
+          [t("asSVG"), () => onItemClick(downloadFlow(toSvg, "svg"), true)],
           [t("asJSON"), () => exportToJSON()],
-          [t("asPNG"), () => onItemClick(downloadFlow(toPng, "png"))],
-          [t("asJPEG"), () => onItemClick(downloadFlow(toJpeg, "jpeg"))],
+          [t("asPNG"), () => onItemClick(downloadFlow(toPng, "png"), true)],
+          [t("asJPEG"), () => onItemClick(downloadFlow(toJpeg, "jpeg"), false)],
         ]}
       />
       <ExportImageModal
         isOpen={isOpen}
+        allowTransparent={allowTransparent}
         onButtonClick={exportFunc}
         onClose={onClose}
         defaultWidth={flowWidth || 1920}
