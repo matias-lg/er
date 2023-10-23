@@ -164,6 +164,7 @@ const getLayoutedElements = async (
   // @ts-ignore
   const finallyProcessedNodes = [
     ...isA_subGraphs,
+    // @ts-ignore
     ...allNodes.filter((n) => n.considered === undefined),
   ];
   const notInIsA_subGraphEdges = notInSubGraphEdges.filter(
@@ -174,6 +175,7 @@ const getLayoutedElements = async (
   // We have to do the same but now for the isAs...
   notInIsA_subGraphEdges.forEach((edge) => {
     finallyProcessedNodes.forEach((node) => {
+      // @ts-ignore
       if (node.children) {
         // @ts-ignore
         if (node.children?.some((c) => c.id === edge.source)) {
@@ -193,6 +195,7 @@ const getLayoutedElements = async (
     id: "root",
     layoutOptions: layoutOptions,
     children: finallyProcessedNodes,
+    // @ts-ignore
     edges: notInSubGraphEdges.filter((n) => n.considered === undefined),
   };
   debug(rootGraph);
