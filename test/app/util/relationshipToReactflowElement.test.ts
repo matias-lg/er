@@ -31,8 +31,8 @@ describe("Convert a relationship to ReactFlow Nodes and Edges", () => {
       edges.some(
         (edge) =>
           edge.id === "relationship-part: Owns$Arrow$Human->Human" &&
-          edge.target === "relationship: Owns$Arrow$Human" &&
-          edge.source === "entity: Human",
+          edge.source === "relationship: Owns$Arrow$Human" &&
+          edge.target === "entity: Human",
       ),
     ).toBe(true);
 
@@ -40,8 +40,8 @@ describe("Convert a relationship to ReactFlow Nodes and Edges", () => {
       edges.some(
         (edge) =>
           edge.id === "relationship-part: Owns$Arrow$Human->Arrow" &&
-          edge.target === "relationship: Owns$Arrow$Human" &&
-          edge.source === "entity: Arrow",
+          edge.source === "relationship: Owns$Arrow$Human" &&
+          edge.target === "entity: Arrow",
       ),
     ).toBe(true);
   });

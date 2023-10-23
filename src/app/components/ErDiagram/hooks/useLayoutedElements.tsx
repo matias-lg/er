@@ -1,7 +1,19 @@
-import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
+import ELK, { ElkExtendedEdge, ElkNode } from "elkjs/lib/elk.bundled.js";
 import { useEffect } from "react";
 import { Edge, Node, ReactFlowState, useReactFlow, useStore } from "reactflow";
 import { LayoutedNode, updateNodePosition } from "../../../util/common";
+import { AggregationNode, ErNode } from "../../../types/ErDiagram";
+import { Layout } from "webcola";
+
+type LayoutNode = Partial<
+  ElkNode &
+    ErNode & {
+      isIsA: boolean;
+      isAggregation: boolean;
+      isRelationship: boolean;
+      represents: string;
+    }
+>;
 
 const defaultOptions = {
   "elk.algorithm": "org.eclipse.elk.force",
@@ -76,7 +88,6 @@ const getLayoutedElements = async (
   const subGraphOptions = {
     ...layoutOptions,
     "elk.algorithm": "org.eclipse.elk.radial",
-    // "org.eclipse.elk.radial.centerOnRoot": "true",
   };
 
   const nodesWithChildren = flowNodes
@@ -108,6 +119,7 @@ const getLayoutedElements = async (
           ? parentNode.id
           : "subgraph-" + parentNode.id,
       isAggregation: parentNode.type === "aggregation",
+      isRelationship: parentNode.type === "relationship",
       represents: parentNode.id,
       layoutOptions:
         parentNode.type === "aggregation" ? layoutOptions : subGraphOptions,
@@ -128,6 +140,7 @@ const getLayoutedElements = async (
     subGraphs.every((sg) => sg.edges.every((ed) => ed.id !== edge.id)),
   );
 
+  // if an edge is connected to a subgraph child element we need to connect it to the subgraph instead
   notInSubGraphEdges.forEach((edge) => {
     subGraphs.forEach((subGraph) => {
       if (subGraph.children.some((c) => c.id === edge.source)) {
@@ -139,88 +152,67 @@ const getLayoutedElements = async (
     });
   });
 
-  const graph = {
+  const allNodes = [...notInSubGraphNodes, ...subGraphs];
+
+  // subgraphs will be inside another subgraph containing entities and isAs.
+  const isA_subGraphs = findConnectedToIsA(
+    // @ts-ignore
+    allNodes,
+    notInSubGraphEdges,
+  );
+
+  // @ts-ignore
+  const finallyProcessedNodes = [
+    ...isA_subGraphs,
+    ...allNodes.filter((n) => n.considered === undefined),
+  ];
+  const notInIsA_subGraphEdges = notInSubGraphEdges.filter(
+    // @ts-ignore
+    (n) => n.considered === undefined,
+  );
+
+  // We have to do the same but now for the isAs...
+  notInIsA_subGraphEdges.forEach((edge) => {
+    finallyProcessedNodes.forEach((node) => {
+      if (node.children) {
+        // @ts-ignore
+        if (node.children?.some((c) => c.id === edge.source)) {
+          // @ts-ignore
+          edge.source = node.id;
+        }
+        // @ts-ignore
+        if (node.children.some((c) => c.id === edge.target)) {
+          // @ts-ignore
+          edge.target = node.id;
+        }
+      }
+    });
+  });
+
+  const rootGraph = {
     id: "root",
     layoutOptions: layoutOptions,
-    children: [...notInSubGraphNodes, ...subGraphs],
-    edges: notInSubGraphEdges,
+    children: finallyProcessedNodes,
+    edges: notInSubGraphEdges.filter((n) => n.considered === undefined),
   };
-  debug(graph);
+  debug(rootGraph);
+
+  console.log(rootGraph);
 
   // layout nodes
-  let layout = await elk.layout(graph as unknown as ElkNode);
+  let layout = await elk.layout(rootGraph as unknown as ElkNode);
 
-  const children = layout.children;
+  const children = layout.children as unknown as LayoutNode[];
   const layoutedNodes: Node[] = [];
 
   children?.forEach((node) => {
     if (Object.prototype.hasOwnProperty.call(node, "children")) {
-      if (node.isAggregation) {
-        // if it is an aggregation, mutate the subgraph back into a regular node
-        const originalAgg = flowNodes.find((fn) => fn.id === node.id);
-        node = {
-          ...originalAgg,
-          ...node,
-        } as ElkNode;
-        // we need to create a new instance of data to trigger a rerender
-        (node as Node).data = {
-          // @ts-ignore
-          erId: node.data.erId,
-          label: (node as Node<{ label: string }>).data.label,
-          width: node.width,
-          height: node.height,
-        };
-        layoutedNodes.push({
-          ...node,
-          position: { x: node.x, y: node.y },
-        } as Node);
-      }
-
-      // adjust the position of the parent
-      let originalParentPos: { x: number; y: number } = { x: 0, y: 0 };
-      let parentName = "";
-
-      //console.log(node);
-      for (const childNode of node.children!) {
-        const position = { x: childNode.x!, y: childNode.y! };
-        if (childNode.id === node.represents) {
-          originalParentPos.x = childNode.x!;
-          originalParentPos.y = childNode.y!;
-          parentName = childNode.data.erId;
-          position.x += node.x!;
-          position.y += node.y!;
-          layoutedNodes.push({
-            ...childNode,
-            position,
-          } as Node);
-          break;
-        }
-      }
-
-      // position the children relative to the parent
-      node.children?.forEach((childNode) => {
-        let { x: px, y: py } = originalParentPos;
-        let cx = childNode.x!;
-        let cy = childNode.y!;
-
-        if (childNode.parentNode) {
-          cx -= px;
-          cy -= py;
-
-          layoutedNodes.push({
-            ...childNode,
-            position: { x: cx, y: cy },
-          } as Node);
-        }
-      });
+      layoutedNodes.push(...unwrapSubgraph(node, flowNodes, 0, 0));
     } else {
-      layoutedNodes.push(
-        updateNodePosition(
-          node as LayoutedNode,
-          children as LayoutedNode[],
-          true,
-        ),
-      );
+      layoutedNodes.push({
+        ...node,
+        position: { x: node.x!, y: node.y! },
+      } as ErNode);
     }
   });
 
@@ -253,4 +245,213 @@ const debug = (graph: any): any => {
   const str = JSON.stringify(recur(graph), null, 2);
   console.log("#####");
   console.log(str);
+};
+
+const BFS = (edges: Edge[], start: LayoutNode, nodes: LayoutNode[]) => {
+  const visitedIds = new Set<string>();
+  const visitedEdgeIds = new Set<string>();
+  const queue: LayoutNode[] = [];
+  queue.push(start);
+
+  const connectedNodes: LayoutNode[] = [];
+
+  while (queue.length > 0) {
+    const currNode = queue.shift()!;
+    if (visitedIds.has(currNode.id!)) continue;
+    connectedNodes.push(currNode);
+    visitedIds.add(currNode.id!);
+    for (const edge of edges) {
+      if (edge.source == currNode.id || edge.target == currNode.id) {
+        let toPushNode: (typeof nodes)[0];
+        const sourceNode = nodes.find((n) => n.id === edge.source)!;
+        const targetNode = nodes.find((n) => n.id === edge.target)!;
+        if (sourceNode.id === currNode.id) toPushNode = targetNode;
+        else toPushNode = sourceNode;
+        if (toPushNode.type === "relationship" || toPushNode.isRelationship)
+          continue;
+        visitedEdgeIds.add(edge.id);
+        queue.push(toPushNode);
+      }
+    }
+  }
+
+  return [
+    connectedNodes,
+    edges.filter((e) => visitedEdgeIds.has(e.id)),
+  ] as const;
+};
+
+// If there's nodes connected by an "IsA", group them into a subgraph.
+const findConnectedToIsA = (nodes: LayoutNode[], edges: Edge[]) => {
+  const isALayoutOptions = {
+    "org.eclipse.elk.direction": "DOWN",
+  };
+  const visitedNodes = new Set<string>();
+  const visitedEdges = new Set<string>();
+  const subgraphs: LayoutNode[] = [];
+  for (const node of nodes) {
+    if (node.type === "isA" && !visitedNodes.has(node.id!)) {
+      const [nods, eds] = BFS(edges, node, nodes);
+      visitedNodes.add(node.id!);
+      nods.forEach((n) => visitedNodes.add(n.id!));
+      eds.forEach((e) => visitedEdges.add(e.id));
+      subgraphs.push({
+        id: "subgraph-isA-" + node.id,
+        children: nods as ElkNode[],
+        isAggregation: false,
+        isIsA: true,
+        represents: node.id,
+        layoutOptions: isALayoutOptions,
+        edges: eds as unknown as ElkExtendedEdge[],
+      });
+    }
+  }
+
+  for (const node of nodes) {
+    // @ts-ignore
+    if (visitedNodes.has(node.id!)) node.considered = true;
+  }
+
+  for (const edge of edges) {
+    // @ts-ignore
+    if (visitedEdges.has(edge.id)) edge.considered = true;
+  }
+
+  return subgraphs;
+};
+
+// transforms a subgraph back into reactflow nodes and edges
+const unwrapSubgraph = (
+  subgraph: LayoutNode,
+  flowNodes: Node[],
+  offsetX: number,
+  offsetY: number,
+): Node[] => {
+  if (Object.prototype.hasOwnProperty.call(subgraph, "children")) {
+    if (subgraph.isAggregation) {
+      return unwrapAggregationSubgraph(subgraph, flowNodes, offsetX, offsetY);
+    } else if (subgraph.isIsA) {
+      return unwrapIsASubgraph(subgraph, flowNodes, offsetX, offsetY);
+    } else return unwrapRegularSubgraph(subgraph, flowNodes, offsetX, offsetY);
+  } else return [];
+};
+
+const unwrapIsASubgraph = (
+  subgraph: LayoutNode,
+  flowNodes: Node[],
+  offsetX: number,
+  offsetY: number,
+) => {
+  const layoutedNodes: Node[] = [];
+  for (const child of subgraph.children!) {
+    const x = subgraph.x! + offsetX;
+    const y = subgraph.y! + offsetY;
+    if (Object.prototype.hasOwnProperty.call(child, "children")) {
+      layoutedNodes.push(...unwrapRegularSubgraph(child, flowNodes, x, y));
+    } else {
+      layoutedNodes.push({
+        ...child,
+        position: { x: x + child.x!, y: y + child.y! },
+      } as ErNode);
+    }
+  }
+  return layoutedNodes;
+};
+
+const unwrapRegularSubgraph = (
+  subgraph: LayoutNode,
+  flowNodes: Node[],
+  offsetX: number,
+  offsetY: number,
+) => {
+  const layoutedNodes: Node[] = [];
+  const parent = subgraph.children?.find(
+    (child) => child.id === subgraph.represents,
+  );
+
+  layoutedNodes.push(
+    // @ts-ignore
+    ...subgraph.children?.map(
+      (childNode) =>
+        positionRelativeToParent(
+          childNode,
+          subgraph.represents!,
+          parent?.x!,
+          parent?.y!,
+          subgraph.x! + offsetX,
+          subgraph.y! + offsetY,
+        ) as ElkNode,
+    ),
+  );
+  return layoutedNodes;
+};
+
+const unwrapAggregationSubgraph = (
+  subgraph: LayoutNode,
+  flowNodes: Node[],
+  offsetX: number,
+  offsetY: number,
+) => {
+  const layoutedNodes: Node[] = [];
+  // if it is an aggregation, mutate the subgraph back into a regular node
+  const originalAgg = flowNodes.find((fn) => fn.id === subgraph.id);
+  subgraph = {
+    ...originalAgg,
+    ...subgraph,
+  } as ElkNode;
+  // we need to create a new instance of data to trigger a rerender
+  subgraph.data = {
+    // @ts-ignore
+    erId: subgraph.data.erId as string,
+    label: (subgraph as AggregationNode).data?.label,
+    width: subgraph.width,
+    height: subgraph.height,
+  };
+  const x = subgraph.x! + offsetX;
+  const y = subgraph.y! + offsetY;
+
+  console.log("IN AGG", x, y);
+
+  layoutedNodes.push({
+    ...subgraph,
+    position: { x, y },
+  } as ErNode);
+  layoutedNodes.push(
+    // @ts-ignore
+    ...subgraph.children?.map(
+      (childNode) =>
+        positionRelativeToParent(
+          childNode,
+          "not_possible",
+          0,
+          0,
+          x,
+          y,
+        ) as ElkNode,
+    ),
+  );
+  return layoutedNodes;
+};
+
+const positionRelativeToParent = (
+  node: LayoutNode,
+  parentId: string,
+  parentX: number,
+  parentY: number,
+  subgraphX: number,
+  subgraphY: number,
+): LayoutNode => {
+  // adjust the position of the parent
+  if (node.id === parentId) {
+    return {
+      ...node,
+      position: { x: node.x! + subgraphX, y: node.y! + subgraphY },
+    };
+  } else {
+    console.log("PARENT", subgraphX, subgraphY);
+    return {
+      ...node,
+      position: { x: node.x! - parentX, y: node.y! - parentY },
+    };
+  }
 };
