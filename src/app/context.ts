@@ -6,7 +6,7 @@ type ContextProps = {
 };
 
 const Context = createContext<ContextProps>({
-  autoLayoutEnabled: false,
+  autoLayoutEnabled: true,
   setAutoLayoutEnabled: () => {},
 });
 

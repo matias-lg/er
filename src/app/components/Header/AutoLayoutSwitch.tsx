@@ -27,19 +27,12 @@ const AutoLayoutSwitch = ({ title }: { title: string }) => {
   }, []);
 
   const handleCheckboxChange = () => {
-    setAutoLayoutEnabled(!autoLayoutEnabled);
-  };
-
-  useEffect(() => {
     localStorage.setItem(
       AUTO_LAYOUT_LOCAL_STORAGE_KEY,
-      JSON.stringify(autoLayoutEnabled),
+      JSON.stringify(!autoLayoutEnabled),
     );
-  }, [autoLayoutEnabled]);
-
-  // useEffect(() => {
-  //   if (isChecked !== autoLayoutEnabled) setIsChecked(autoLayoutEnabled);
-  // }, [autoLayoutEnabled]);
+    setAutoLayoutEnabled(!autoLayoutEnabled);
+  };
 
   return (
     <>
