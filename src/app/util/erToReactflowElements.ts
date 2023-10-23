@@ -56,8 +56,8 @@ const inheritanceToReactflowElements = (
   const edges = [
     {
       id: `isA: ${childEntityNodeId}|${parentEntityNodeId}`,
-      source: childEntityNodeId,
-      target: isANodeId,
+      source: isANodeId,
+      target: childEntityNodeId,
       sourceHandle: "l",
       targetHandle: "r",
       type: "erEdge",
