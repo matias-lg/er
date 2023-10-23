@@ -178,8 +178,8 @@ const createChildParticipantEdge = (
     child.entityName
   }`,
   label: child.entityName,
-  source: createEntityNodeId(entity.entityName),
-  target: relationshipNodeId,
+  source: relationshipNodeId,
+  target: createEntityNodeId(entity.entityName),
   sourceHandle: "l",
   targetHandle: "r",
   type: "erEdge",

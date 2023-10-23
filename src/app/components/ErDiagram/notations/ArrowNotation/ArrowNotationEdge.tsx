@@ -2,7 +2,8 @@ import { BaseEdge, EdgeLabelRenderer, EdgeProps } from "reactflow";
 import { useEdgePath } from "../useEdgePath";
 import { getHandlePrefix } from "../../../../util/common";
 
-const ARROW_LENGTH = 7;
+const ONE_TO_ONE_SHORTEN_PATH_BY = 7.5;
+const ZERO_TO_ONE_SHORTEN_PATH_BY = 3.035;
 
 function ArrowNotationEdge({
   id,
@@ -21,7 +22,11 @@ function ArrowNotationEdge({
     source,
     target,
     data?.isOrthogonal!,
-    data?.isTotalParticipation && data.cardinality === "1" ? ARROW_LENGTH : 0,
+    data?.isTotalParticipation && data.cardinality === "1"
+      ? ONE_TO_ONE_SHORTEN_PATH_BY
+      : data?.cardinality === "1"
+      ? ZERO_TO_ONE_SHORTEN_PATH_BY
+      : 0,
     getHandlePrefix(id),
   );
 
@@ -37,7 +42,7 @@ function ArrowNotationEdge({
             key={1}
             className="react-flow__edge-path"
             d={edgePath}
-            markerStart={markerStart}
+            // markerStart={markerStart}
             style={{
               fill: "none",
               stroke: "black",
@@ -49,7 +54,7 @@ function ArrowNotationEdge({
             id={id}
             key={2}
             className="react-flow__edge-path"
-            markerEnd={
+            markerStart={
               data.cardinality === "1" ? "url(#1to1-arrow)" : undefined
             }
             d={edgePath}

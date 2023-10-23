@@ -1,17 +1,20 @@
+const w = 16;
+const h = 15;
+
 const EdgeCustomSVGs = () => (
   <svg id="defs">
     <defs>
       <marker
         id="black-arrow"
-        markerWidth="10"
-        markerHeight="7"
-        refX="10"
-        refY="3.5"
+        markerWidth={w}
+        markerHeight={h}
+        refX={w - 1.5}
+        refY={h / 2}
         fill="black"
         color="black"
         orient="auto-start-reverse"
       >
-        <polygon points="0 0, 10 3.5, 0 7" />
+        <polygon points={`0 0, ${w} ${h / 2}, 0 ${h}`} />
       </marker>
 
       {/* Custom SVG for black arrow marker */}

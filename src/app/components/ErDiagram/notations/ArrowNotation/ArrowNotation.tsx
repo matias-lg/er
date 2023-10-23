@@ -22,7 +22,7 @@ class ArrowNotation extends ErNotation {
   };
 
   edgeMarkers = (cardinality: string, _isTotalParticipation: boolean) => ({
-    markerEnd: cardinality === "1" ? "black-arrow" : undefined,
+    markerStart: cardinality === "1" ? "black-arrow" : undefined,
   });
 
   constructor(isOrthogonal: boolean) {

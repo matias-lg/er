@@ -138,20 +138,21 @@ export const useEdgePath = (
 
   const angle = Math.atan2(ty - sy, tx - sx);
   const dist = Math.sqrt((tx - sx) ** 2 + (ty - sy) ** 2);
-  if (labelDist === undefined) labelDist = isOrthogonal ? dist / 2 : dist / 3;
+  if (labelDist === undefined)
+    labelDist = isOrthogonal ? dist / 2 : dist * 0.66;
   labelDist = Math.min(labelDist, dist * 0.9);
 
   const labelX = sx + labelDist * Math.cos(angle);
   const labelY = sy + labelDist * Math.sin(angle);
 
-  const roleDist = dist * 0.7;
+  const roleDist = dist * 0.3;
   const roleLabelX = sx + roleDist * Math.cos(angle);
   const roleLabelY = sy + roleDist * Math.sin(angle);
 
   if (shortenPathBy !== 0) {
     // we need to shorten the path so the arrowhead looks good
-    tx = sx + (dist - shortenPathBy) * Math.cos(angle);
-    ty = sy + (dist - shortenPathBy) * Math.sin(angle);
+    sx = sx + shortenPathBy * Math.cos(angle);
+    sy = sy + shortenPathBy * Math.sin(angle);
   }
 
   const [edgePath] = isOrthogonal
