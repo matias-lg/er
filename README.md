@@ -1,10 +1,9 @@
+## Dev environment
 To install the project:
 ```bash
 git clone https://github.com/matias-lg/er
 npm install
 ```
-
-## Dev environment
 
 build the parser:
 ```bash
