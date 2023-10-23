@@ -2,8 +2,6 @@ import { BaseEdge, EdgeLabelRenderer, EdgeProps } from "reactflow";
 import { useEdgePath } from "../useEdgePath";
 import { getHandlePrefix } from "../../../../util/common";
 
-const LABEL_DIST = 36;
-
 function ChenEdge({
   id,
   label,
@@ -22,7 +20,6 @@ function ChenEdge({
     data?.isOrthogonal!,
     0,
     getHandlePrefix(id),
-    LABEL_DIST,
   );
   if (edgePath === null) return null;
 
@@ -44,7 +41,7 @@ function ChenEdge({
           strokeWidth: 1,
           stroke: "black",
         }}
-        markerStart={
+        markerEnd={
           data?.isTotalParticipation === undefined
             ? undefined
             : data?.isTotalParticipation
