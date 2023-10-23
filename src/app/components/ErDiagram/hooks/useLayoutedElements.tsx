@@ -85,9 +85,17 @@ const getLayoutedElements = async (
 ) => {
   const elk = new ELK();
   const layoutOptions = { ...defaultOptions, ...elkOptions };
+
+  const aggregationSubGraphOptions = {
+    "elk.algorithm": "org.eclipse.elk.force",
+    "elk.force.temperature": "0.03",
+    "elk.spacing.nodeNode": "2.1",
+    "elk.force.iterations": "80",
+  };
+
   const subGraphOptions = {
-    ...layoutOptions,
     "elk.algorithm": "org.eclipse.elk.radial",
+    // "org.eclipse.elk.radial.compactor": "WEDGE_COMPACTION",
   };
 
   const nodesWithChildren = flowNodes
@@ -122,7 +130,9 @@ const getLayoutedElements = async (
       isRelationship: parentNode.type === "relationship",
       represents: parentNode.id,
       layoutOptions:
-        parentNode.type === "aggregation" ? layoutOptions : subGraphOptions,
+        parentNode.type === "aggregation"
+          ? aggregationSubGraphOptions
+          : subGraphOptions,
       children: subGraphNodes,
       edges: childrenEdges,
     };
@@ -199,8 +209,6 @@ const getLayoutedElements = async (
     edges: notInSubGraphEdges.filter((n) => n.considered === undefined),
   };
   debug(rootGraph);
-
-  console.log(rootGraph);
 
   // layout nodes
   let layout = await elk.layout(rootGraph as unknown as ElkNode);
@@ -413,8 +421,6 @@ const unwrapAggregationSubgraph = (
   const x = subgraph.x! + offsetX;
   const y = subgraph.y! + offsetY;
 
-  console.log("IN AGG", x, y);
-
   layoutedNodes.push({
     ...subgraph,
     position: { x, y },
@@ -451,7 +457,6 @@ const positionRelativeToParent = (
       position: { x: node.x! + subgraphX, y: node.y! + subgraphY },
     };
   } else {
-    console.log("PARENT", subgraphX, subgraphY);
     return {
       ...node,
       position: { x: node.x! - parentX, y: node.y! - parentY },
