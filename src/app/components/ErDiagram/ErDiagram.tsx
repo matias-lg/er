@@ -80,7 +80,11 @@ const ErDiagram = ({
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const { fitView } = useReactFlow();
-  const { autoLayoutEnabled } = useContext(Context);
+  const {
+    autoLayoutEnabled,
+    loadedDiagramFromOutside,
+    setLoadedDiagramFromOutside,
+  } = useContext(Context);
 
   const { onNodeDrag, onNodeDragStart, onNodeDragStop } = useAlignmentGuide();
   const { saveToLocalStorage, loadFromLocalStorage, setRfInstance } =
@@ -89,70 +93,78 @@ const ErDiagram = ({
 
   if (!erDocHasError && erDoc !== prevErDoc) {
     setPrevErDoc(erDoc);
-    const [fromErNodes, fromErEdges] = erToReactflowElements(
-      erDoc,
-      erEdgeNotation,
-    );
-    const renaming =
-      nodes.length === fromErNodes.length &&
-      edges.length === fromErEdges.length;
-    const hideItems = !renaming && autoLayoutEnabled;
-    // @ts-ignore
-    setNodes((nodes) => {
-      const alreadyExists: string[] = [];
-      return (
-        nodes
-          // if the node already exists, keep its position
-          .map((oldNode) => {
-            let newNode = fromErNodes.find(
-              (newNode) => newNode.data.erId === oldNode.data.erId,
-            );
-            if (!newNode && renaming) {
-              newNode = fromErNodes.find(
-                (newNode) => newNode.id === oldNode.id,
-              );
-            }
-            if (newNode) {
-              alreadyExists.push(newNode.id);
-              newNode.position = oldNode.position;
-              // for aggregations, don't modify its size
-              if (newNode.type === "aggregation") {
-                newNode.data.height = (oldNode as AggregationNode).data.height;
-                newNode.data.width = (oldNode as AggregationNode).data.width;
-              }
-              return newNode;
-            }
-            return undefined;
-          })
-          .filter((n) => n !== undefined)
-          // hide the new nodes and add them
-          .concat(
-            fromErNodes
-              .filter((nn) => !alreadyExists.includes(nn.id))
-              .map((newNode) => ({
-                ...newNode,
-                style: { ...newNode.style, opacity: hideItems ? 0 : 1 },
-              })),
-          )
+    // don't update the diagram if it was loaded from json or localstorage
+    if (loadedDiagramFromOutside) {
+      setLoadedDiagramFromOutside(false);
+      saveToLocalStorage();
+    } else {
+      const [fromErNodes, fromErEdges] = erToReactflowElements(
+        erDoc,
+        erEdgeNotation,
       );
-    });
+      const renaming =
+        nodes.length === fromErNodes.length &&
+        edges.length === fromErEdges.length;
+      const hideItems = !renaming && autoLayoutEnabled;
+      // @ts-ignore
+      setNodes((nodes) => {
+        const alreadyExists: string[] = [];
+        return (
+          nodes
+            // if the node already exists, keep its position
+            .map((oldNode) => {
+              let newNode = fromErNodes.find(
+                (newNode) => newNode.data.erId === oldNode.data.erId,
+              );
+              if (!newNode && renaming) {
+                newNode = fromErNodes.find(
+                  (newNode) => newNode.id === oldNode.id,
+                );
+              }
+              if (newNode) {
+                alreadyExists.push(newNode.id);
+                newNode.position = oldNode.position;
+                // for aggregations, don't modify its size
+                if (newNode.type === "aggregation") {
+                  newNode.data.height = (
+                    oldNode as AggregationNode
+                  ).data.height;
+                  newNode.data.width = (oldNode as AggregationNode).data.width;
+                }
+                return newNode;
+              }
+              return undefined;
+            })
+            .filter((n) => n !== undefined)
+            // hide the new nodes and add them
+            .concat(
+              fromErNodes
+                .filter((nn) => !alreadyExists.includes(nn.id))
+                .map((newNode) => ({
+                  ...newNode,
+                  style: { ...newNode.style, opacity: hideItems ? 0 : 1 },
+                })),
+            )
+        );
+      });
 
-    setEdges((oldEdges) => {
-      const alreadyExists: string[] = [];
-      return oldEdges
-        .map((oldEdge) => {
-          const updatedEdge = fromErEdges.find((ne) => ne.id === oldEdge.id);
-          if (updatedEdge) alreadyExists.push(updatedEdge.id);
-          return updatedEdge;
-        })
-        .concat(
-          fromErEdges
-            .filter((ne) => !alreadyExists.includes(ne.id))
-            .map((e) => ({ ...e, hidden: hideItems ? true : false })),
-        )
-        .filter((e) => e !== undefined) as Edge[];
-    });
-    setTimeout(saveToLocalStorage, 100);
+      setEdges((oldEdges) => {
+        const alreadyExists: string[] = [];
+        return oldEdges
+          .map((oldEdge) => {
+            const updatedEdge = fromErEdges.find((ne) => ne.id === oldEdge.id);
+            if (updatedEdge) alreadyExists.push(updatedEdge.id);
+            return updatedEdge;
+          })
+          .concat(
+            fromErEdges
+              .filter((ne) => !alreadyExists.includes(ne.id))
+              .map((e) => ({ ...e, hidden: hideItems ? true : false })),
+          )
+          .filter((e) => e !== undefined) as Edge[];
+      });
+      setTimeout(saveToLocalStorage, 100);
+    }
   }
 
   useEffect(() => {
@@ -211,75 +223,6 @@ const ErDiagram = ({
         color="#e3e1e1"
         variant={BackgroundVariant.Lines}
       />
-
-      {/* <Panel position="bottom-right">
-        <br /> */}
-      {/* <button
-          onClick={() => {
-            setIsLayouting(true);
-            void layoutElements({
-              "elk.algorithm": "org.eclipse.elk.stress",
-              "elk.stress.desiredEdgeLength": "110",
-            }).then(() => setIsLayouting(false));
-          }}
-        >
-          ELK stress layout
-        </button> */}
-
-      {/* <button
-          onClick={() => {
-            void layoutElements({
-              "elk.algorithm": "org.eclipse.elk.radial",
-              "elk.portLabels.placement": "ALWAYS_SAME_SIDE",
-            });
-          }}
-        >
-          ELK radial layout
-        </button> */}
-
-      {/* <br />
-        <button
-          onClick={() => {
-            setIsLayouting(true);
-            void layoutElements({
-              "elk.algorithm": "org.eclipse.elk.force",
-              // "elk.force.model": "EADES",
-              // "elk.force.repulsion": "20",
-              "elk.force.temperature": "0.05",
-              "elk.spacing.nodeNode": "4",
-              "elk.force.iterations": "1500",
-            }).then(() => setIsLayouting(false));
-          }}
-        >
-          ELK 5K force layout
-        </button> */}
-
-      {/* <br />
-        <button
-          onClick={() => {
-            setIsLayouting(true);
-            d3LayoutElements();
-            setIsLayouting(false);
-          }}
-        >
-          d3-force Layout
-        </button>
-
-        <br />
-        <button
-          onClick={() => {
-            setIsLayouting(true);
-            // HACK: wrap in promise to allow state to update
-            void new Promise((resolve) => setTimeout(resolve, 1))
-              .then(() => {
-                ColaLayoutElements();
-              })
-              .then(() => setIsLayouting(false));
-          }}
-        >
-          Cola Layout
-        </button>
-      </Panel> */}
 
       <Panel position="top-left">
         {erDocHasError && (

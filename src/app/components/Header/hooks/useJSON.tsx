@@ -1,6 +1,6 @@
 import { useMonaco } from "@monaco-editor/react";
-import { useCallback, useContext } from "react";
-import { useReactFlow, useNodesInitialized } from "reactflow";
+import { useContext } from "react";
+import { useReactFlow } from "reactflow";
 import { Context } from "../../../context";
 
 export type ValidJSON = {
@@ -39,7 +39,8 @@ const exportObject = (object: any, filename: string) => {
 export const useJSON = () => {
   const { getNodes, getEdges, setNodes, fitView } = useReactFlow();
   const monaco = useMonaco();
-  const { setAutoLayoutEnabled } = useContext(Context);
+  const { setAutoLayoutEnabled, setLoadedDiagramFromOutside } =
+    useContext(Context);
 
   const exportToJSON = () => {
     const filename = "er-diagram.json";
@@ -71,18 +72,23 @@ export const useJSON = () => {
     setAutoLayoutEnabled(false);
     // set the text in monaco
     monaco?.editor.getModels()[0].setValue(editorText);
-    // this will trigger the onChange event and update the erDoc, now we need to update the saved positions
-    setNodes((nodes) => {
-      return nodes.map((node) => {
-        const savedNode = json.nodes.find((n) => n.id === node.id);
-        if (savedNode) {
-          return {
-            ...node,
-            position: savedNode.position,
-          };
-        } else return node;
+    // HACK: setting the editor value will trigger an OnChange event which will cause the
+    // ER Diagram to be updated to the nodes with default positions, we need to wait for that
+    // to happen and then update the positions. There's probably a better way to do this.
+    setTimeout(() => {
+      setLoadedDiagramFromOutside(true);
+      setNodes((nodes) => {
+        return nodes.map((node) => {
+          const savedNode = json.nodes.find((n) => n.id === node.id);
+          if (savedNode) {
+            return {
+              ...node,
+              position: savedNode.position,
+            };
+          } else return node;
+        });
       });
-    });
+    }, 1);
   };
 
   return { exportToJSON, importJSON };

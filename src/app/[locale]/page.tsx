@@ -1,15 +1,24 @@
 "use client";
 import { Grid, GridItem } from "@chakra-ui/react";
+import { useState } from "react";
 import Body from "../components/Body";
 import Header from "../components/Header/Header";
 import { Context } from "../context";
-import { useContext, useState } from "react";
 
 const Page = () => {
   const [autoLayoutEnabled, setAutoLayoutEnabled] = useState<boolean>(false);
+  const [loadedDiagramFromOutside, setLoadedDiagramFromOutside] =
+    useState<boolean>(false);
 
   return (
-    <Context.Provider value={{ autoLayoutEnabled, setAutoLayoutEnabled }}>
+    <Context.Provider
+      value={{
+        autoLayoutEnabled,
+        setAutoLayoutEnabled,
+        loadedDiagramFromOutside,
+        setLoadedDiagramFromOutside,
+      }}
+    >
       <Grid
         templateAreas={`
      "header"
