@@ -1,0 +1,24 @@
+{
+  "scopeName": "source.erdoc",
+  "patterns": [
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#keyKeywords"
+    }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword",
+          "match": "(?i)(entity|relation|aggregation|depends on|extends)"
+        }
+      ]
+    },
+    "keyKeywords": {
+      "patterns": [{ "name": "string", "match": "(key|pkey)" }]
+    }
+  }
+}
