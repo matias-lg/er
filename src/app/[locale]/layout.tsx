@@ -25,6 +25,7 @@ const RootLayout = async ({
 
   return (
     <html className="h-full" lang={locale}>
+      <title>ERdoc Playground</title>
       <body className="h-full bg-slate-50">
         <StrictMode>
           <NextIntlClientProvider locale={locale} messages={messages}>

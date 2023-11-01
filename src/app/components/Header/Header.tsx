@@ -48,7 +48,7 @@ export const Header = () => {
           <DynamicExportButton />
         </HeaderElement>
         <HeaderElement className="border-r-[1px]">
-          <a className="flex items-center" href="/docs">
+          <a className="flex items-center" href="/docs" target="_blank">
             <BiSolidBook /> <span className="pl-2">{t("documentation")}</span>
           </a>
         </HeaderElement>
@@ -65,6 +65,7 @@ const GitHubButton = () => {
     <a
       className="ml-6 block pr-6 text-slate-400  hover:text-slate-300"
       href={GITHUB_URL}
+      target="_blank"
     >
       <svg
         viewBox="0 0 16 16"
