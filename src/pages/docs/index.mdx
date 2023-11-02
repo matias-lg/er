@@ -1,6 +1,6 @@
 import { Callout } from 'nextra/components'
 import Image from 'next/image'
-import university from '../../../public/docs/university.svg'
+import university from '../../../public/docs/university.png'
 import company from '../../../public/docs/complex_company.png'
 
 # About ERdoc
@@ -13,30 +13,7 @@ aggregations, subclass/superclass, n-ary relationships, cardinality and particip
 
 ## Examples
 
-An ER document is composed by a sequence of entity, relationship or aggregation declarations, the following ER document declares two entities and a relationship
-between them:
-
-```erdoc
-entity Student {
-  id key
-  name
-  age
-}
-
-entity University {
-  name 
-  address: [city, street, number]
-  university_id key
-}
-
-relation Studies_at(Student 1, University N!) {
-  enrollment_date
-}
-```
-this ER document will render the following ER diagram:
-<Image src={university} alt="university ER Diagram" style={{ backgroundColor: "#fff" }}/>
-
-ER documents can be arbitrarily complex:
+An ER document is composed by a sequence of entity, relationship or aggregation declarations. The following example features ternary relationships, weak entities, inheritance and other concepts of the ER model:
 ```erdoc
 entity Employee {
     e_id key
@@ -89,8 +66,33 @@ entity Dependent depends on Dependent_of {
 
 relation Dependent_of(Employee 1, Dependent N!)
 ```
-The ERD generated using the Playground:
+
+In the playground, this example will generate the following ER diagram (after adjusting some positions).
 <Image src={company} alt="complex company ER Diagram" style={{ backgroundColor: "#fff" }}/>
+Once you get familiar with the syntax, you'll find it much faster to create ER diagrams this way rather than using conventional, visual charting tools.
+
+-----
+The following ER document declares two entities and a relationship between them:
+
+```erdoc
+entity Student {
+  id key
+  name
+  age
+}
+
+entity University {
+  name 
+  address: [city, street, number]
+  university_id key
+}
+
+relation Studies_at(Student 1, University N!) {
+  enrollment_date
+}
+```
+And the ER diagram:
+<Image src={university} alt="university ER Diagram" style={{ backgroundColor: "#fff" }}/>
 
 <Callout>
 The ER Diagrams in this page use the (min, max) notation.
