@@ -1,0 +1,65 @@
+import Image from "next/image";
+import bagg from "../../../../public/docs/basic_agg.png";
+import agg_in_rel from "../../../../public/docs/agg_in_rel.png";
+import { Callout } from "nextra/components";
+
+# Aggregation expression
+
+The syntax to define an aggregation -a virtual entity- uses the `aggregation` keyword, followed by the name of the aggregation and the name of the 
+relationship to be aggregated surrounded by parenthesis. The following example defines an aggregation named "Human_drinks_coffe" that aggregates the
+"Drinks" relationship:
+
+```erdoc
+entity Human {
+  id key
+  name
+  age
+}
+
+entity Coffee {
+  id key
+  species
+  roast_date
+}
+
+relation Drinks(Human 1, Coffee) {
+  amount
+}
+
+aggregation Human_drinks_coffee(Drinks)
+```
+The visualization of the aggregation:
+<Image src={bagg} alt="aggregation ER Diagram" style={{ backgroundColor: "#fff" }}/>
+
+Aggregations can be used just as an entity in relationships, identifying them by their name. The following example shows an aggregation participating in a
+relationship:
+
+```erdoc
+entity Library {
+  name key
+  address key
+}
+
+entity Book {
+  bid key
+  name
+  n_pages
+}
+
+entity Author {
+  id key
+  name
+  language
+}
+
+relation Writes(Author 1, Book N!) {
+  took
+}
+
+aggregation Book_written_by_Author(Writes)
+
+relation Contains(Library 1, Book_written_by_Author)
+```
+
+
+<Image src={agg_in_rel} alt="aggregation participating in relationship ER Diagram" style={{ backgroundColor: "#fff" }}/>

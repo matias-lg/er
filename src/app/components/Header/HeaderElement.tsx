@@ -7,10 +7,10 @@ export const HeaderElement = ({
 }) => (
   <div
     className={
-      "mx-0 items-center border-border px-4 py-2   text-center tracking-wide text-slate-200 " +
+      "mx-0 flex items-center border-border px-4 py-2   text-center tracking-wide text-slate-200 " +
       className
     }
   >
-    <div className="flex items-center">{children}</div>
+    {children}
   </div>
 );

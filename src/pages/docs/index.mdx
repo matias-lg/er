@@ -1,0 +1,101 @@
+import { Callout } from 'nextra/components'
+import Image from 'next/image'
+import university from '../../../public/docs/university.png'
+import company from '../../../public/docs/complex_company.png'
+
+# About ERdoc
+ 
+ERdoc is a markup language for creating Entity-Relationship models through text (ER documents).
+The Playground is a web-based tool to visualize ER documents as ER diagrams using common notations.
+
+The ERdoc language features the core concepts of the ER model (entities, relationships, attributes) and other advanced features such as
+aggregations, subclass/superclass, n-ary relationships, cardinality and participation constraints.
+
+## Examples
+
+An ER document is composed by a sequence of entity, relationship or aggregation declarations. The following example features ternary relationships, weak entities, inheritance and other concepts of the ER model:
+```erdoc
+entity Employee {
+    e_id key
+    name
+}
+
+entity Department {
+    d_number key
+    d_name
+}
+
+relation Manages(Department: [Management 1!, Research])
+
+
+relation Works_for(Employee N, Department 1!)
+
+entity Project {
+    p_id key
+    p_name
+}
+
+relation Controls(Department 1, Project N!)
+
+relation Works_on(Employee M, Project N) {
+    hours
+}
+
+entity Part {
+    p_number key
+    p_name
+}
+
+entity Screw extends Part {
+    head_style
+}
+
+entity Supplier {
+    s_id key
+    s_name
+}
+
+relation Supplies(Project M, Part N!, Supplier P!) {
+    Quantity
+}
+
+entity Dependent depends on Dependent_of {
+    Dep_name pkey
+    Gender
+}
+
+relation Dependent_of(Employee 1, Dependent N!)
+```
+
+In the playground, this example will generate the following ER diagram (after adjusting some positions).
+<Image src={company} alt="complex company ER Diagram" style={{ backgroundColor: "#fff" }}/>
+Once you get familiar with the syntax, you'll find it much faster to create ER diagrams this way rather than using conventional, visual charting tools.
+
+-----
+The following ER document declares two entities and a relationship between them:
+
+```erdoc
+entity Student {
+  id key
+  name
+  age
+}
+
+entity University {
+  name 
+  address: [city, street, number]
+  university_id key
+}
+
+relation Studies_at(Student 1, University N!) {
+  enrollment_date
+}
+```
+And the ER diagram:
+<Image src={university} alt="university ER Diagram" style={{ backgroundColor: "#fff" }}/>
+
+<Callout>
+The ER Diagrams in this page use the (min, max) notation.
+</Callout>
+
+Read the next sections to learn more about ERdoc's syntax.
