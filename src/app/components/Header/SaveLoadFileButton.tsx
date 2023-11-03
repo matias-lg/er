@@ -11,8 +11,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChangeEventHandler, useRef } from "react";
-import { MdUpload } from "react-icons/md";
+import { LuFileJson } from "react-icons/lu";
 import { useJSON } from "./hooks/useJSON";
+import { Dropdown } from "./Dropdown";
+import { useTranslations } from "next-intl";
 
 const validate = (json: any): boolean => {
   if (!json.erDoc) return false;
@@ -37,7 +39,7 @@ const validate = (json: any): boolean => {
   return true;
 };
 
-const ImportJSONButton = ({
+const SaveLoadFileButton = ({
   title,
   modalTitle,
   modalDescription,
@@ -49,7 +51,8 @@ const ImportJSONButton = ({
   modalConfirm: string;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { importJSON } = useJSON();
+  const { importJSON, exportToJSON } = useJSON();
+  const t = useTranslations("home.header.saveLoad");
 
   let fileRef = useRef<HTMLInputElement | null>(null);
 
@@ -59,6 +62,13 @@ const ImportJSONButton = ({
     if (!files?.length) {
       return;
     }
+
+    // check if file is not a binary file
+    if (files[0].type !== "application/json") {
+      alert(t("invalidFile"));
+      return;
+    }
+
     fileReader.readAsText(files[0], "UTF-8");
     fileReader.onload = (e) => {
       if (e.target === null) return;
@@ -66,7 +76,7 @@ const ImportJSONButton = ({
       const json = JSON.parse(content as string);
       const isValid = validate(json);
       if (!isValid) {
-        alert("Invalid JSON");
+        alert(t("invalidJsonFile"));
         return;
       }
       importJSON(json);
@@ -76,9 +86,18 @@ const ImportJSONButton = ({
 
   return (
     <>
-      <button className="flex items-center" onClick={onOpen}>
-        <MdUpload size={25} /> <span className="pl-2">{title}</span>
-      </button>
+      <Dropdown
+        title={
+          <div className="flex items-center">
+            <LuFileJson size={25} /> <span className="pl-2">{title}</span>
+          </div>
+        }
+        items={[
+          ["Save file", exportToJSON],
+          ["Load JSON file", onOpen],
+        ]}
+      />
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -106,4 +125,4 @@ const ImportJSONButton = ({
   );
 };
 
-export default ImportJSONButton;
+export default SaveLoadFileButton;
