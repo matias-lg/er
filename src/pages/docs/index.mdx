@@ -67,7 +67,7 @@ entity Dependent depends on Dependent_of {
 relation Dependent_of(Employee 1, Dependent N!)
 ```
 
-In the playground, this example will generate the following ER diagram (after adjusting some positions).
+In the playground, this example will generate the following ER diagram (after adjusting some positions), here we are using _(min, max) notation_.
 <Image src={company} alt="complex company ER Diagram" style={{ backgroundColor: "#fff" }}/>
 Once you get familiar with the syntax, you'll find it much faster to create ER diagrams this way rather than using conventional, visual charting tools.
 
@@ -91,11 +91,7 @@ relation Studies_at(Student 1, University N!) {
   enrollment_date
 }
 ```
-And the ER diagram:
+And the ER diagram (using _Arrow notation_):
 <Image src={university} alt="university ER Diagram" style={{ backgroundColor: "#fff" }}/>
-
-<Callout>
-The ER Diagrams in this page use the (min, max) notation.
-</Callout>
 
 Read the next sections to learn more about ERdoc's syntax.
