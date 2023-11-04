@@ -9,6 +9,8 @@ interface ExamplesTableProps {
   onExampleClick: (newExample: string) => void;
 }
 
+const fetchedExamples: { [key: string]: string } = {};
+
 const ExamplesTable = ({ onExampleClick }: ExamplesTableProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const t = useTranslations("home.examples");
@@ -27,16 +29,15 @@ const ExamplesTable = ({ onExampleClick }: ExamplesTableProps) => {
   };
 
   const onExampleClickHandler = (exampleName: string) => {
-    const exampleKey = `example ${exampleName}`;
-    const storedExample = localStorage.getItem(exampleKey);
-    if (storedExample !== null) {
-      onExampleClick(storedExample);
+    const alreadyFetchedExample = fetchedExamples[exampleName];
+    if (alreadyFetchedExample !== undefined) {
+      onExampleClick(alreadyFetchedExample);
       return;
     }
     fetchExample(exampleName)
       .then((example) => {
         if (example) {
-          localStorage.setItem(`example ${exampleName}`, example);
+          fetchedExamples[exampleName] = example;
           onExampleClick(example);
         }
       })
@@ -60,7 +61,7 @@ const ExamplesTable = ({ onExampleClick }: ExamplesTableProps) => {
             {EXAMPLE_NAMES.map((exampleName) => (
               <Button
                 key={exampleName}
-                className="mr-1 bg-blue-500 text-white hover:bg-blue-600"
+                className="mr-1 mt-3 bg-blue-500 text-white hover:bg-blue-600"
                 onClick={() => onExampleClickHandler(exampleName)}
               >
                 {t(exampleName)}

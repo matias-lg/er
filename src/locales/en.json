@@ -41,7 +41,10 @@
       "_title": "Examples",
       "bank": "Bank",
       "company": "Company",
-      "large": "Very big example"
+      "subclass": "Subclass",
+      "aggregation": "Aggregation",
+      "roles": "Roles"
+
     },
 
     "erDiagram": {
