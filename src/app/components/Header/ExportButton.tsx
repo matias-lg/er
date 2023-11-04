@@ -58,7 +58,6 @@ const ExportButton = () => {
         items={[
           [t("asPDF"), () => exportToPDF(1920, 1080).catch(() => {})],
           [t("asSVG"), () => onItemClick(downloadFlow(toSvg, "svg"), true)],
-          [t("asJSON"), () => exportToJSON()],
           [t("asPNG"), () => onItemClick(downloadFlow(toPng, "png"), true)],
           [t("asJPEG"), () => onItemClick(downloadFlow(toJpeg, "jpeg"), false)],
         ]}

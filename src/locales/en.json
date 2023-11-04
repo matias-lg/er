@@ -8,7 +8,13 @@
 
     "header": {
       "documentation": "Documentation",
-      "import": "Import JSON",
+      "import": "Save/load file",
+      "saveLoad": {
+        "invalidFile": "Invalid file type",
+        "invalidJsonFile": "Invalid JSON",
+        "save": "Save file",
+        "load": "Load JSON file"
+      },
       "importModal": {
         "title": "Import JSON",
         "description": "Load an existing ER Diagram and ERDoc from a JSON file. This will replace the current ER Diagram.",
@@ -35,7 +41,10 @@
       "_title": "Examples",
       "bank": "Bank",
       "company": "Company",
-      "large": "Very big example"
+      "subclass": "Subclass",
+      "aggregation": "Aggregation",
+      "roles": "Roles"
+
     },
 
     "erDiagram": {

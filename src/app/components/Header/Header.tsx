@@ -4,10 +4,27 @@ import { useMemo } from "react";
 import { BiSolidBook } from "react-icons/bi";
 import { MdDownload } from "react-icons/md";
 import AutoLayoutSwitch from "./AutoLayoutSwitch";
-import { HeaderElement } from "./HeaderElement";
-import ImportJSONButton from "./ImportJSONButton";
+import SaveLoadFileButton from "./SaveLoadFileButton";
 
-const GITHUB_URL = "https://github.com/matias-lg/er";
+const PROJECT_GITHUB = "https://github.com/matias-lg/er";
+
+const HeaderElement = ({
+  children,
+  className = "",
+}: {
+  children: JSX.Element;
+  className: string;
+}) => (
+  <div
+    className={
+      "mx-0 flex items-center border-border px-4 py-2   text-center tracking-wide text-slate-200 " +
+      className
+    }
+  >
+    {children}
+  </div>
+);
+
 export const Header = () => {
   const t = useTranslations("home.header");
   const DynamicExportButton = useMemo(
@@ -35,8 +52,9 @@ export const Header = () => {
             <AutoLayoutSwitch title={t("autoLayout")} />
           </>
         </HeaderElement>
+
         <HeaderElement className="border-l-[1px]">
-          <ImportJSONButton
+          <SaveLoadFileButton
             title={t("import")}
             modalTitle={t("importModal.title")}
             modalDescription={t("importModal.description")}
@@ -64,7 +82,7 @@ const GitHubButton = () => {
   return (
     <a
       className="ml-6 block pr-6 text-slate-400  hover:text-slate-300"
-      href={GITHUB_URL}
+      href={PROJECT_GITHUB}
       target="_blank"
     >
       <svg
