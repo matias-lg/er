@@ -84,13 +84,6 @@ const getLayoutedElements = async (
   const elk = new ELK();
   const layoutOptions = { ...defaultOptions, ...elkOptions };
 
-  const aggregationSubGraphOptions = {
-    "elk.algorithm": "org.eclipse.elk.force",
-    "elk.force.temperature": "0.03",
-    "elk.spacing.nodeNode": "2.1",
-    "elk.force.iterations": "80",
-  };
-
   const subGraphOptions = {
     "elk.algorithm": "org.eclipse.elk.radial",
     // "org.eclipse.elk.radial.compactor": "WEDGE_COMPACTION",
@@ -128,9 +121,7 @@ const getLayoutedElements = async (
       isRelationship: parentNode.type === "relationship",
       represents: parentNode.id,
       layoutOptions:
-        parentNode.type === "aggregation"
-          ? aggregationSubGraphOptions
-          : subGraphOptions,
+        parentNode.type === "aggregation" ? defaultOptions : subGraphOptions,
       children: subGraphNodes,
       edges: childrenEdges,
     };
@@ -206,7 +197,8 @@ const getLayoutedElements = async (
     // @ts-ignore
     edges: notInSubGraphEdges.filter((n) => n.considered === undefined),
   };
-  debug(rootGraph);
+
+  //debug(rootGraph);
 
   // layout nodes
   let layout = await elk.layout(rootGraph as unknown as ElkNode);
@@ -252,6 +244,7 @@ const debug = (graph: any): any => {
     return asElk;
   };
   const str = JSON.stringify(recur(graph), null, 2);
+  // Visualize the resulting ELK graph in https://rtsys.informatik.uni-kiel.de/elklive/json.html using the logged object
   console.log("#####");
   console.log(str);
 };
