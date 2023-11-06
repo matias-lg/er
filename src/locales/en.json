@@ -8,11 +8,11 @@
 
     "header": {
       "documentation": "Documentation",
-      "import": "Save/load file",
+      "import": "Save/load File",
       "saveLoad": {
         "invalidFile": "Invalid file type",
         "invalidJsonFile": "Invalid JSON",
-        "save": "Save file",
+        "save": "Save JSON file",
         "load": "Load JSON file"
       },
       "importModal": {
@@ -52,7 +52,7 @@
       "arrowNotation": "Arrow notation",
       "minMaxNotation": "(Min, max) notation",
       "chenNotation": "Chen notation",
-      "layoutButton": "Layout",
+      "layoutButton": "layout",
       "fitViewButton": "Fit View",
       "fixErrorsToSync": "Fix errors to sync diagram!",
       "configPanel": {
