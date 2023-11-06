@@ -22,7 +22,7 @@ const ErrorTable = ({ errors }: ErrorTableProps) => {
           <span className="font-semibold">
             {t("errors")} {errors.length > 0 && ` (${errors.length})`}
           </span>
-          <span>{isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}</span>
+          <span>{isOpen ? <ChevronDownIcon /> : <ChevronUpIcon />}</span>
         </div>
       </button>
       {isOpen && (
