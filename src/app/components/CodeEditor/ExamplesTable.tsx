@@ -52,7 +52,7 @@ const ExamplesTable = ({ onExampleClick }: ExamplesTableProps) => {
       >
         <div className="flex items-center justify-between">
           <span className="font-semibold">{t("_title")}</span>
-          <span>{isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}</span>
+          <span>{isOpen ? <ChevronDownIcon /> : <ChevronUpIcon />}</span>
         </div>
       </button>
       {isOpen && (
