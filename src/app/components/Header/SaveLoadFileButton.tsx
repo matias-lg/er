@@ -93,8 +93,8 @@ const SaveLoadFileButton = ({
           </div>
         }
         items={[
-          ["Save file", exportToJSON],
-          ["Load JSON file", onOpen],
+          [t("save"), exportToJSON],
+          [t("load"), onOpen],
         ]}
       />
 
