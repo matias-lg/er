@@ -6,7 +6,9 @@ import Header from "../components/Header/Header";
 import { Context } from "../context";
 
 const Page = () => {
-  const [autoLayoutEnabled, setAutoLayoutEnabled] = useState<boolean>(false);
+  const [autoLayoutEnabled, setAutoLayoutEnabled] = useState<boolean | null>(
+    null,
+  );
   const [loadedDiagramFromOutside, setLoadedDiagramFromOutside] =
     useState<boolean>(false);
 

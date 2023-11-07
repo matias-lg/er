@@ -1,10 +1,10 @@
-import { createContext } from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
 type ContextProps = {
-  autoLayoutEnabled: boolean;
-  setAutoLayoutEnabled: (enabled: boolean) => void;
+  autoLayoutEnabled: boolean | null;
+  setAutoLayoutEnabled: Dispatch<SetStateAction<boolean | null>>;
   loadedDiagramFromOutside: boolean;
-  setLoadedDiagramFromOutside: (loaded: boolean) => void;
+  setLoadedDiagramFromOutside: Dispatch<SetStateAction<boolean>>;
 };
 
 const Context = createContext<ContextProps>({
