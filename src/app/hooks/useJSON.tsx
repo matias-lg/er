@@ -37,7 +37,7 @@ const exportObject = (object: any, filename: string) => {
 };
 
 export const useJSON = () => {
-  const { getNodes, getEdges, setNodes } = useReactFlow();
+  const { getNodes, getEdges, setNodes, fitView } = useReactFlow();
   const monaco = useMonaco();
   const { setAutoLayoutEnabled, setLoadedDiagramFromOutside } =
     useContext(Context);
@@ -71,6 +71,7 @@ export const useJSON = () => {
     // first, turn off auto layout
     setAutoLayoutEnabled(false);
     // set the text in monaco
+    setLoadedDiagramFromOutside(false);
     monaco?.editor.getModels()[0].setValue(editorText);
     // HACK: setting the editor value will trigger an OnChange event which will cause the
     // ER Diagram to be updated to the nodes with default positions, we need to wait for that
@@ -88,6 +89,7 @@ export const useJSON = () => {
           } else return node;
         });
       });
+      setTimeout(() => window.requestAnimationFrame(() => fitView()), 1);
     }, 1);
   };
 

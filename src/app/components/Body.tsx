@@ -13,19 +13,16 @@ const Body = () => {
   const [erDocHasError, setErDocHasError] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
 
-  const onErDocChange = useCallback(
-    (er: ER) => {
-      setErDoc((currentEr) => {
-        if (currentEr === null) return er;
-        const currentErNoLoc = erDocWithoutLocation(currentEr);
-        const newErNoLoc = erDocWithoutLocation(er);
-        const sameSemanticValue =
-          JSON.stringify(currentErNoLoc) === JSON.stringify(newErNoLoc);
-        return sameSemanticValue ? currentEr : er;
-      });
-    },
-    [setErDoc],
-  );
+  const onErDocChange = (er: ER) => {
+    setErDoc((currentEr) => {
+      if (currentEr === null) return er;
+      const currentErNoLoc = erDocWithoutLocation(currentEr);
+      const newErNoLoc = erDocWithoutLocation(er);
+      const sameSemanticValue =
+        JSON.stringify(currentErNoLoc) === JSON.stringify(newErNoLoc);
+      return sameSemanticValue ? currentEr : er;
+    });
+  };
 
   return (
     <PanelGroup direction="horizontal">

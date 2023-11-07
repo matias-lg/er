@@ -28,7 +28,7 @@ const nodesInitializedSelector = (state: ReactFlowState) =>
     (node) => node.width && node.height,
   );
 
-const useLayoutedElements = (shouldLayout: boolean) => {
+const useLayoutedElements = (shouldLayout: boolean | null) => {
   const { getNodes, setNodes, getEdges, setEdges, fitView } = useReactFlow();
   const nodeCount = useStore(nodeCountSelector);
   const edgeCount = useStore(edgeCountSelector);
