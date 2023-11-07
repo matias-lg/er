@@ -1,0 +1,177 @@
+{
+  "erDoc": "entity Library {\n  name key\n  address key\n}\n \nentity Book {\n  bid key\n  name\n  n_pages\n}\n \nentity Author {\n  id key\n  name\n  language\n}\n \nrelation Writes(Author 1, Book N!) {\n  took\n}\n \naggregation Book_written_by_Author(Writes)\n \nrelation Contains(Library 1, Book_written_by_Author)",
+  "nodes": [
+    {
+      "id": "0",
+      "position": {
+        "x": 32.36585037485054,
+        "y": 447.2057349528649
+      }
+    },
+    {
+      "id": "1",
+      "position": {
+        "x": 14.61686327382347,
+        "y": 62.367984949281094
+      }
+    },
+    {
+      "id": "2",
+      "position": {
+        "x": 6.883136726176531,
+        "y": -67.07424935572664
+      }
+    },
+    {
+      "id": "3",
+      "position": {
+        "x": 46.711718341138464,
+        "y": 238.25103340908083
+      }
+    },
+    {
+      "id": "4",
+      "position": {
+        "x": 23.16461723082125,
+        "y": 154.38836884622094
+      }
+    },
+    {
+      "id": "5",
+      "position": {
+        "x": 100.27678531173501,
+        "y": 155.00379767744164
+      }
+    },
+    {
+      "id": "6",
+      "position": {
+        "x": 51.93138209504258,
+        "y": 296.8411010812521
+      }
+    },
+    {
+      "id": "7",
+      "position": {
+        "x": 364.71424977355014,
+        "y": 238.98377124363685
+      }
+    },
+    {
+      "id": "8",
+      "position": {
+        "x": 408.12747248203254,
+        "y": 169.35329164303715
+      }
+    },
+    {
+      "id": "9",
+      "position": {
+        "x": 344.06582359605704,
+        "y": 169.870414375209
+      }
+    },
+    {
+      "id": "10",
+      "position": {
+        "x": 366,
+        "y": 301
+      }
+    },
+    {
+      "id": "11",
+      "position": {
+        "x": 192.94482087226294,
+        "y": 213.13881019103164
+      }
+    },
+    {
+      "id": "12",
+      "position": {
+        "x": 210.2451907197908,
+        "y": 132.855975654921
+      }
+    },
+    {
+      "id": "13",
+      "position": {
+        "x": 353.8573369137705,
+        "y": 219.5
+      }
+    },
+    {
+      "id": "14",
+      "position": {
+        "x": 196.75157897852614,
+        "y": 422.0118334728504
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "entity-attr: Library->name",
+      "source": "0",
+      "target": "1"
+    },
+    {
+      "id": "entity-attr: Library->address",
+      "source": "0",
+      "target": "2"
+    },
+    {
+      "id": "entity-attr: Book->bid",
+      "source": "3",
+      "target": "4"
+    },
+    {
+      "id": "entity-attr: Book->name",
+      "source": "3",
+      "target": "5"
+    },
+    {
+      "id": "entity-attr: Book->n_pages",
+      "source": "3",
+      "target": "6"
+    },
+    {
+      "id": "entity-attr: Author->id",
+      "source": "7",
+      "target": "8"
+    },
+    {
+      "id": "entity-attr: Author->name",
+      "source": "7",
+      "target": "9"
+    },
+    {
+      "id": "entity-attr: Author->language",
+      "source": "7",
+      "target": "10"
+    },
+    {
+      "id": "relationship-attr: Writes$Author$Book->took",
+      "source": "11",
+      "target": "12"
+    },
+    {
+      "id": "relationship-part: Writes$Author$Book->Author",
+      "source": "11",
+      "target": "7"
+    },
+    {
+      "id": "relationship-part: Writes$Author$Book->Book",
+      "source": "11",
+      "target": "3"
+    },
+    {
+      "id": "relationship-part: Contains$Book_written_by_Author$Library->Library",
+      "source": "14",
+      "target": "0"
+    },
+    {
+      "id": "relationship-part: Contains$Book_written_by_Author$Library->Book_written_by_Author",
+      "source": "14",
+      "target": "13"
+    }
+  ]
+}

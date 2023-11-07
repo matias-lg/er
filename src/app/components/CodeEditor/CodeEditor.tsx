@@ -2,7 +2,7 @@ import { Box, Spinner } from "@chakra-ui/react";
 import Editor, { OnMount, useMonaco } from "@monaco-editor/react";
 import { editor, languages } from "monaco-types";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { getERDoc } from "../../../ERDoc";
 import { ER } from "../../../ERDoc/types/parser/ER";
 import { ErrorMessage, MarkerSeverity } from "../../types/CodeEditor";
@@ -85,8 +85,6 @@ const CodeEditor = ({
   onErDocChange,
   onErrorChange,
 }: ErrorReportingEditorProps) => {
-  const [selectedExample, setSelectedExample] = useState<string | null>(null);
-
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const thisEditor = useMonaco();
 
@@ -161,21 +159,6 @@ const CodeEditor = ({
     m.editor.setTheme(DEFAULT_THEME);
   };
 
-  useEffect(() => {
-    if (editorRef.current && selectedExample !== null) {
-      // sets the editor content to the clicked example, making it ctrl+z-able
-      editorRef.current.pushUndoStop();
-      editorRef.current.executeEdits("replaced for example", [
-        {
-          range: editorRef.current.getModel()!.getFullModelRange(),
-          text: selectedExample,
-        },
-      ]);
-      editorRef.current.pushUndoStop();
-      setSelectedExample(null);
-    }
-  }, [selectedExample, editorRef]);
-
   return (
     <Box
       height={"full"}
@@ -223,7 +206,7 @@ const CodeEditor = ({
         maxHeight={"30%"}
         backgroundColor={colors.textEditorBackground}
       >
-        <ExamplesTable onExampleClick={(t) => setSelectedExample(t)} />
+        <ExamplesTable />
       </Box>
     </Box>
   );

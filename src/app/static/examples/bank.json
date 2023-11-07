@@ -1,0 +1,350 @@
+{
+  "erDoc": "entity bank {\n    code key\n    name\n    addr\n}\n\nentity bank_branch depends on has_branches {\n    addr\n    branch_no pkey\n}\n\nrelation has_branches(bank 1!, bank_branch N!)\n\nentity account {\n    acct_no key\n    balance\n    type\n}\n\nentity loan {\n    loan_no key\n    amount\n    type\n}\n\nrelation accts(Bank_With_Branches 1, account N!)\nrelation loans(Bank_With_Branches 1, loan N!)\n\nentity customer {\n    ssn key\n    name\n    addr\n    phone\n}\n\nentity premium_customer extends customer {\n    discount\n}\n\nrelation a_c(customer N, account M!)\nrelation l_c(customer N, loan M!)\n\naggregation Bank_With_Branches(has_branches)",
+  "nodes": [
+    {
+      "id": "0",
+      "position": {
+        "x": 197.70702704899713,
+        "y": 83.73311385439297
+      }
+    },
+    {
+      "id": "1",
+      "position": {
+        "x": 88.02281359630774,
+        "y": 83.81233121478567
+      }
+    },
+    {
+      "id": "2",
+      "position": {
+        "x": 212.9262058089115,
+        "y": 19.523345835947453
+      }
+    },
+    {
+      "id": "3",
+      "position": {
+        "x": 335.2392229651688,
+        "y": 83.80392992884504
+      }
+    },
+    {
+      "id": "4",
+      "position": {
+        "x": 183.27865426034987,
+        "y": 348.03479522321743
+      }
+    },
+    {
+      "id": "5",
+      "position": {
+        "x": 327.89651629664763,
+        "y": 350.97833173355355
+      }
+    },
+    {
+      "id": "6",
+      "position": {
+        "x": 62.40042294500995,
+        "y": 350.9100536044575
+      }
+    },
+    {
+      "id": "7",
+      "position": {
+        "x": 703.2180298817334,
+        "y": 142.75061023849884
+      }
+    },
+    {
+      "id": "8",
+      "position": {
+        "x": 134.60774529769014,
+        "y": 0.25316738533879857
+      }
+    },
+    {
+      "id": "9",
+      "position": {
+        "x": -54.36208961480611,
+        "y": -78.17560508755619
+      }
+    },
+    {
+      "id": "10",
+      "position": {
+        "x": 74.50141957476774,
+        "y": -80.59516777442335
+      }
+    },
+    {
+      "id": "11",
+      "position": {
+        "x": 29.063782165622456,
+        "y": 597.3114551997103
+      }
+    },
+    {
+      "id": "12",
+      "position": {
+        "x": -112.7231733981173,
+        "y": 69.72365191949325
+      }
+    },
+    {
+      "id": "13",
+      "position": {
+        "x": -97.94702496381046,
+        "y": -79.60267289295882
+      }
+    },
+    {
+      "id": "14",
+      "position": {
+        "x": -117.14443374783491,
+        "y": -2.0010840206185776
+      }
+    },
+    {
+      "id": "15",
+      "position": {
+        "x": -86.83249883828603,
+        "y": 142.89205409405594
+      }
+    },
+    {
+      "id": "16",
+      "position": {
+        "x": -55.21806522876375,
+        "y": -78.33814078974717
+      }
+    },
+    {
+      "id": "17",
+      "position": {
+        "x": 15.049083424262562,
+        "y": -84.59838863421658
+      }
+    },
+    {
+      "id": "18",
+      "position": {
+        "x": -86.59278440208061,
+        "y": -24.57182633112798
+      }
+    },
+    {
+      "id": "19",
+      "position": {
+        "x": -92.08669802382133,
+        "y": 38.82231277174927
+      }
+    },
+    {
+      "id": "20",
+      "position": {
+        "x": -120.60750468350261,
+        "y": 358.9017476249329
+      }
+    },
+    {
+      "id": "21",
+      "position": {
+        "x": -89.95363428276676,
+        "y": 254.48937909536988
+      }
+    },
+    {
+      "id": "22",
+      "position": {
+        "x": 38.70089711977994,
+        "y": 58.78984164582863
+      }
+    },
+    {
+      "id": "23",
+      "position": {
+        "x": 194.92594725558843,
+        "y": 205.2369473412915
+      }
+    },
+    {
+      "id": "24",
+      "position": {
+        "x": 498.4097595157482,
+        "y": 542.3470044916824
+      }
+    },
+    {
+      "id": "25",
+      "position": {
+        "x": 700.5055063073271,
+        "y": 279.2833362301775
+      }
+    },
+    {
+      "id": "26",
+      "position": {
+        "x": 271.55087017307756,
+        "y": 744.7786652216678
+      }
+    },
+    {
+      "id": "27",
+      "position": {
+        "x": 332.5762298209679,
+        "y": 115.96362766297219
+      }
+    },
+    {
+      "id": "28",
+      "position": {
+        "x": 271.2273196156441,
+        "y": 384.9408521453377
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "entity-attr: bank->code",
+      "source": "0",
+      "target": "1"
+    },
+    {
+      "id": "entity-attr: bank->name",
+      "source": "0",
+      "target": "2"
+    },
+    {
+      "id": "entity-attr: bank->addr",
+      "source": "0",
+      "target": "3"
+    },
+    {
+      "id": "entity-attr: bank_branch->addr",
+      "source": "4",
+      "target": "5"
+    },
+    {
+      "id": "entity-attr: bank_branch->branch_no",
+      "source": "4",
+      "target": "6"
+    },
+    {
+      "id": "entity-attr: account->acct_no",
+      "source": "7",
+      "target": "8"
+    },
+    {
+      "id": "entity-attr: account->balance",
+      "source": "7",
+      "target": "9"
+    },
+    {
+      "id": "entity-attr: account->type",
+      "source": "7",
+      "target": "10"
+    },
+    {
+      "id": "entity-attr: loan->loan_no",
+      "source": "11",
+      "target": "12"
+    },
+    {
+      "id": "entity-attr: loan->amount",
+      "source": "11",
+      "target": "13"
+    },
+    {
+      "id": "entity-attr: loan->type",
+      "source": "11",
+      "target": "14"
+    },
+    {
+      "id": "entity-attr: customer->ssn",
+      "source": "15",
+      "target": "16"
+    },
+    {
+      "id": "entity-attr: customer->name",
+      "source": "15",
+      "target": "17"
+    },
+    {
+      "id": "entity-attr: customer->addr",
+      "source": "15",
+      "target": "18"
+    },
+    {
+      "id": "entity-attr: customer->phone",
+      "source": "15",
+      "target": "19"
+    },
+    {
+      "id": "isA: entity: premium_customer|entity: customer",
+      "source": "21",
+      "target": "20"
+    },
+    {
+      "id": "isA: entity: customer|entity: premium_customer",
+      "source": "15",
+      "target": "21"
+    },
+    {
+      "id": "entity-attr: premium_customer->discount",
+      "source": "20",
+      "target": "22"
+    },
+    {
+      "id": "relationship-part: has_branches$bank$bank_branch->bank",
+      "source": "23",
+      "target": "0"
+    },
+    {
+      "id": "relationship-part: has_branches$bank$bank_branch->bank_branch",
+      "source": "23",
+      "target": "4"
+    },
+    {
+      "id": "relationship-part: accts$Bank_With_Branches$account->Bank_With_Branches",
+      "source": "25",
+      "target": "24"
+    },
+    {
+      "id": "relationship-part: accts$Bank_With_Branches$account->account",
+      "source": "25",
+      "target": "7"
+    },
+    {
+      "id": "relationship-part: loans$Bank_With_Branches$loan->Bank_With_Branches",
+      "source": "26",
+      "target": "24"
+    },
+    {
+      "id": "relationship-part: loans$Bank_With_Branches$loan->loan",
+      "source": "26",
+      "target": "11"
+    },
+    {
+      "id": "relationship-part: a_c$account$customer->customer",
+      "source": "27",
+      "target": "15"
+    },
+    {
+      "id": "relationship-part: a_c$account$customer->account",
+      "source": "27",
+      "target": "7"
+    },
+    {
+      "id": "relationship-part: l_c$customer$loan->customer",
+      "source": "28",
+      "target": "15"
+    },
+    {
+      "id": "relationship-part: l_c$customer$loan->loan",
+      "source": "28",
+      "target": "11"
+    }
+  ]
+}
