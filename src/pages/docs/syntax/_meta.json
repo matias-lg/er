@@ -1,6 +1,6 @@
 {
   "entity": "Entity",
-  "weak_entity": "Weak entity",
   "relationship": "Relationship",
+  "weak_entity": "Weak entity",
   "aggregation": "Aggregation"
 }
