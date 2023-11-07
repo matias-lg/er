@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Context } from "../../context";
 
 const AUTO_LAYOUT_LOCAL_STORAGE_KEY = "auto-layout";
-
+let didInit = false;
 const loadFromLocalStorage = () => {
   if (typeof window !== "undefined") {
     let storedState: null | boolean | string = localStorage.getItem(
@@ -17,21 +17,23 @@ const AutoLayoutSwitch = ({ title }: { title: string }) => {
   const { autoLayoutEnabled, setAutoLayoutEnabled } = useContext(Context);
 
   useEffect(() => {
+    if (didInit) return;
+    didInit = true;
     // load from localStorage in the client, default to true
     const storedState = loadFromLocalStorage();
-    if (storedState !== null) {
-      setAutoLayoutEnabled(storedState);
-    } else {
-      setAutoLayoutEnabled(true);
-    }
+    setAutoLayoutEnabled(storedState ?? true);
   }, []);
 
-  const handleCheckboxChange = () => {
+  useEffect(() => {
+    if (autoLayoutEnabled === null) return;
     localStorage.setItem(
       AUTO_LAYOUT_LOCAL_STORAGE_KEY,
-      JSON.stringify(!autoLayoutEnabled),
+      JSON.stringify(autoLayoutEnabled),
     );
-    setAutoLayoutEnabled(!autoLayoutEnabled);
+  }, [autoLayoutEnabled]);
+
+  const handleCheckboxChange = () => {
+    setAutoLayoutEnabled((prev) => !prev);
   };
 
   return (
