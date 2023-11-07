@@ -1,7 +1,15 @@
 # ERdoc Playground
+
+
+<h4 align="center">
+  <a href="https://erdoc.vercel.app">ERdoc Plaground</a> |
+  <a href="https://erdoc.vercel.app/docs">Documentation</a>
+</h4>
+
+
 ERdoc is a markup language for creating Entity-Relationship models through text (ER documents). The Playground is a web-based tool to visualize ER documents as ER diagrams using common notations.
 ![site](https://github.com/matias-lg/er/assets/76626234/211b5c08-9884-4ded-98f2-b5d9f6120eb8)
-Get started with the syntax by reading the [docs](https://erdoc.vercel.app/docs).
+Get started with the syntax by reading the documentation.
 
 ## Set up the project
 To install the project locally follow this steps:
