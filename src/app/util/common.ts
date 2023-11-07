@@ -77,7 +77,6 @@ export const exportToPDF = async (width: number, height: number) => {
   // Convert to SVG
   // @ts-ignore
   const svgContent = await toSvg(flow!);
-  console.log("Hello?");
   const svgElement = decodeURIComponent(
     svgContent.replace("data:image/svg+xml;charset=utf-8,", "").trim(),
   );
