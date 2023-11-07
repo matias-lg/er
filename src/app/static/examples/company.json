@@ -1,0 +1,360 @@
+{
+  "erDoc": "entity Employee {\n    e_id key\n    name\n}\n \nentity Department {\n    d_number key\n    d_name\n}\n \nrelation Manages(Department: [Management 1!, Research])\n \n \nrelation Works_for(Employee N, Department 1!)\n \nentity Project {\n    p_id key\n    p_name\n}\n \nrelation Controls(Department 1, Project N!)\n \nrelation Works_on(Employee M, Project N) {\n    hours\n}\n \nentity Part {\n    p_number key\n    p_name\n}\n \nentity Screw extends Part {\n    head_style\n}\n \nentity Supplier {\n    s_id key\n    s_name\n}\n \nrelation Supplies(Project M, Part N!, Supplier P!) {\n    Quantity\n}\n \nentity Dependent depends on Dependent_of {\n    Dep_name pkey\n    Gender\n}\n \nrelation Dependent_of(Employee 1, Dependent N!)",
+  "nodes": [
+    {
+      "id": "0",
+      "position": {
+        "x": 360.0145434814897,
+        "y": 681.0705474422087
+      }
+    },
+    {
+      "id": "2",
+      "position": {
+        "x": -76,
+        "y": 17.079176886241044
+      }
+    },
+    {
+      "id": "1",
+      "position": {
+        "x": -77,
+        "y": -44.079176886241044
+      }
+    },
+    {
+      "id": "3",
+      "position": {
+        "x": 838.6188254451579,
+        "y": 832.6551260451728
+      }
+    },
+    {
+      "id": "4",
+      "position": {
+        "x": 8.22279570635078,
+        "y": 94.77642541868215
+      }
+    },
+    {
+      "id": "5",
+      "position": {
+        "x": 12.815982829527456,
+        "y": -95.8037704712699
+      }
+    },
+    {
+      "id": "6",
+      "position": {
+        "x": 593.3305114068555,
+        "y": 428.21844659662577
+      }
+    },
+    {
+      "id": "7",
+      "position": {
+        "x": 117.1888118528608,
+        "y": 34.181130959702614
+      }
+    },
+    {
+      "id": "8",
+      "position": {
+        "x": 110.51039256867432,
+        "y": -34.126440854527175
+      }
+    },
+    {
+      "id": "9",
+      "position": {
+        "x": 808.6995085158828,
+        "y": 220.44105052041272
+      }
+    },
+    {
+      "id": "10",
+      "position": {
+        "x": 140.24253916231442,
+        "y": 31.397315175854374
+      }
+    },
+    {
+      "id": "11",
+      "position": {
+        "x": 144.01975318913492,
+        "y": -42.86004318911657
+      }
+    },
+    {
+      "id": "15",
+      "position": {
+        "x": 349.4884892693649,
+        "y": 220.12313741669251
+      }
+    },
+    {
+      "id": "16",
+      "position": {
+        "x": 15.235656493160207,
+        "y": 89.23372279977158
+      }
+    },
+    {
+      "id": "17",
+      "position": {
+        "x": 6.26434350683968,
+        "y": -77.73372279977158
+      }
+    },
+    {
+      "id": "18",
+      "position": {
+        "x": 190.28640808785508,
+        "y": 868.1635816769551
+      }
+    },
+    {
+      "id": "19",
+      "position": {
+        "x": 2.66271296806633,
+        "y": 70.79687383976454
+      }
+    },
+    {
+      "id": "20",
+      "position": {
+        "x": 15.837287031933556,
+        "y": -66.74218373458916
+      }
+    },
+    {
+      "id": "22",
+      "position": {
+        "x": 619.8847275095093,
+        "y": 891.7274824504539
+      }
+    },
+    {
+      "id": "23",
+      "position": {
+        "x": 591.1914595931663,
+        "y": 655.4921421100883
+      }
+    },
+    {
+      "id": "24",
+      "position": {
+        "x": 357.6904576488055,
+        "y": 402.93617286335393
+      }
+    },
+    {
+      "id": "25",
+      "position": {
+        "x": -97.50527580850667,
+        "y": 25.6542014118707
+      }
+    },
+    {
+      "id": "26",
+      "position": {
+        "x": 590.4880615572795,
+        "y": 194.7855596969921
+      }
+    },
+    {
+      "id": "27",
+      "position": {
+        "x": 7.661442399195153,
+        "y": -81.46929207551
+      }
+    },
+    {
+      "id": "28",
+      "position": {
+        "x": 358.3633556508248,
+        "y": 845.9748715289247
+      }
+    },
+    {
+      "id": "12",
+      "position": {
+        "x": 809.0170661332463,
+        "y": 406.40264012677017
+      }
+    },
+    {
+      "id": "13",
+      "position": {
+        "x": 805.9308725225139,
+        "y": 299.5427272591328
+      }
+    },
+    {
+      "id": "14",
+      "position": {
+        "x": 116.98708998435916,
+        "y": 0
+      }
+    },
+    {
+      "id": "21",
+      "position": {
+        "x": 1125.2679877262203,
+        "y": 810.0831536068118
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "entity-attr: Employee->name",
+      "source": "0",
+      "target": "2"
+    },
+    {
+      "id": "entity-attr: Employee->e_id",
+      "source": "0",
+      "target": "1"
+    },
+    {
+      "id": "entity-attr: Department->d_number",
+      "source": "3",
+      "target": "4"
+    },
+    {
+      "id": "entity-attr: Department->d_name",
+      "source": "3",
+      "target": "5"
+    },
+    {
+      "id": "entity-attr: Project->p_id",
+      "source": "6",
+      "target": "7"
+    },
+    {
+      "id": "entity-attr: Project->p_name",
+      "source": "6",
+      "target": "8"
+    },
+    {
+      "id": "entity-attr: Part->p_number",
+      "source": "9",
+      "target": "10"
+    },
+    {
+      "id": "entity-attr: Part->p_name",
+      "source": "9",
+      "target": "11"
+    },
+    {
+      "id": "entity-attr: Supplier->s_id",
+      "source": "15",
+      "target": "16"
+    },
+    {
+      "id": "entity-attr: Supplier->s_name",
+      "source": "15",
+      "target": "17"
+    },
+    {
+      "id": "entity-attr: Dependent->Dep_name",
+      "source": "18",
+      "target": "19"
+    },
+    {
+      "id": "entity-attr: Dependent->Gender",
+      "source": "18",
+      "target": "20"
+    },
+    {
+      "id": "relationship-part: Works_for$Department$Employee->Employee",
+      "source": "22",
+      "target": "0"
+    },
+    {
+      "id": "relationship-part: Works_for$Department$Employee->Department",
+      "source": "22",
+      "target": "3"
+    },
+    {
+      "id": "relationship-part: Controls$Department$Project->Department",
+      "source": "23",
+      "target": "3"
+    },
+    {
+      "id": "relationship-part: Controls$Department$Project->Project",
+      "source": "23",
+      "target": "6"
+    },
+    {
+      "id": "relationship-attr: Works_on$Employee$Project->hours",
+      "source": "24",
+      "target": "25"
+    },
+    {
+      "id": "relationship-part: Works_on$Employee$Project->Employee",
+      "source": "24",
+      "target": "0"
+    },
+    {
+      "id": "relationship-part: Works_on$Employee$Project->Project",
+      "source": "24",
+      "target": "6"
+    },
+    {
+      "id": "relationship-attr: Supplies$Part$Project$Supplier->Quantity",
+      "source": "26",
+      "target": "27"
+    },
+    {
+      "id": "relationship-part: Supplies$Part$Project$Supplier->Project",
+      "source": "26",
+      "target": "6"
+    },
+    {
+      "id": "relationship-part: Supplies$Part$Project$Supplier->Part",
+      "source": "26",
+      "target": "9"
+    },
+    {
+      "id": "relationship-part: Supplies$Part$Project$Supplier->Supplier",
+      "source": "26",
+      "target": "15"
+    },
+    {
+      "id": "relationship-part: Dependent_of$Dependent$Employee->Employee",
+      "source": "28",
+      "target": "0"
+    },
+    {
+      "id": "relationship-part: Dependent_of$Dependent$Employee->Dependent",
+      "source": "28",
+      "target": "18"
+    },
+    {
+      "id": "isA: entity: Screw|entity: Part",
+      "source": "13",
+      "target": "12"
+    },
+    {
+      "id": "isA: entity: Part|entity: Screw",
+      "source": "9",
+      "target": "13"
+    },
+    {
+      "id": "entity-attr: Screw->head_style",
+      "source": "12",
+      "target": "14"
+    },
+    {
+      "id": "1relationship-part: Manages$Department->Department->Management",
+      "source": "21",
+      "target": "3"
+    },
+    {
+      "id": "4relationship-part: Manages$Department->Department->Research",
+      "source": "21",
+      "target": "3"
+    }
+  ]
+}

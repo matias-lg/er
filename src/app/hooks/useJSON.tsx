@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { useReactFlow } from "reactflow";
 import { Context } from "../context";
 
-export type ValidJSON = {
+export type ErJSON = {
   erDoc: string;
 
   nodes: {
@@ -37,7 +37,7 @@ const exportObject = (object: any, filename: string) => {
 };
 
 export const useJSON = () => {
-  const { getNodes, getEdges, setNodes, fitView } = useReactFlow();
+  const { getNodes, getEdges, setNodes } = useReactFlow();
   const monaco = useMonaco();
   const { setAutoLayoutEnabled, setLoadedDiagramFromOutside } =
     useContext(Context);
@@ -57,7 +57,7 @@ export const useJSON = () => {
     }));
     const editorValue = monaco?.editor.getModels()[0].getValue();
 
-    const json: ValidJSON = {
+    const json: ErJSON = {
       erDoc: editorValue!,
       nodes,
       edges,
@@ -66,7 +66,7 @@ export const useJSON = () => {
     exportObject(json, filename);
   };
 
-  const importJSON = (json: ValidJSON) => {
+  const importJSON = (json: ErJSON) => {
     const editorText = json.erDoc;
     // first, turn off auto layout
     setAutoLayoutEnabled(false);

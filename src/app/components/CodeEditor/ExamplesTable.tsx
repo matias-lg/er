@@ -3,16 +3,19 @@ import { List } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { EXAMPLE_NAMES } from "../../util/ErdocExamples";
+import { ErJSON, useJSON } from "../../hooks/useJSON";
 
-interface ExamplesTableProps {
-  onExampleClick: (newExample: string) => void;
-}
+// TODO: refactor, should request this from server?
+const EXAMPLE_NAMES = ["bank", "company", "subclass", "aggregation", "roles"];
 
-const fetchedExamples: { [key: string]: string } = {};
-
-const ExamplesTable = ({ onExampleClick }: ExamplesTableProps) => {
+const ExamplesTable = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [cachedExample, setCachedExample] = useState<{
+    name: string;
+    data: ErJSON;
+  } | null>(null);
+
+  const { importJSON } = useJSON();
   const t = useTranslations("home.examples");
 
   const fetchExample = async (exampleName: string) => {
@@ -21,24 +24,24 @@ const ExamplesTable = ({ onExampleClick }: ExamplesTableProps) => {
     if (res.status === 404) {
       return null;
     } else {
-      const data: { example: string } = await (res.json() as Promise<{
-        example: string;
+      const data: { example: ErJSON } = await (res.json() as Promise<{
+        example: ErJSON;
       }>);
       return data.example;
     }
   };
 
   const onExampleClickHandler = (exampleName: string) => {
-    const alreadyFetchedExample = fetchedExamples[exampleName];
-    if (alreadyFetchedExample !== undefined) {
-      onExampleClick(alreadyFetchedExample);
+    if (cachedExample !== null && cachedExample.name === exampleName) {
+      importJSON(cachedExample.data);
       return;
     }
+
     fetchExample(exampleName)
       .then((example) => {
         if (example) {
-          fetchedExamples[exampleName] = example;
-          onExampleClick(example);
+          setCachedExample({ name: exampleName, data: example });
+          importJSON(example);
         }
       })
       .catch((err) => console.error(err));

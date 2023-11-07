@@ -1,0 +1,254 @@
+{
+  "erDoc": "entity Employee {\n  name\n  id key\n  bday\n}\n \nentity Management_Employee extends Employee {}\nentity Manager extends Management_Employee {}\nentity CEO extends Management_Employee {}\nentity Engineer extends Employee {}\nentity Senior_Engineer extends Engineer {}\nentity Team_Leader extends Senior_Engineer {}\nentity Intern extends Engineer {}\nentity Secretary extends Employee {\n  typing_speed\n}",
+  "nodes": [
+    {
+      "id": "0",
+      "position": {
+        "x": 530.8284488108739,
+        "y": 161.5371349771056
+      }
+    },
+    {
+      "id": "1",
+      "position": {
+        "x": 66.03958844312052,
+        "y": 87.53713497710555
+      }
+    },
+    {
+      "id": "2",
+      "position": {
+        "x": -85.57917688624102,
+        "y": 1.4210854715202004e-14
+      }
+    },
+    {
+      "id": "3",
+      "position": {
+        "x": 66.03958844312044,
+        "y": -87.53713497710561
+      }
+    },
+    {
+      "id": "4",
+      "position": {
+        "x": 513.463345921654,
+        "y": 435.07426995421116
+      }
+    },
+    {
+      "id": "5",
+      "position": {
+        "x": 561.963345921654,
+        "y": 335.07426995421116
+      }
+    },
+    {
+      "id": "6",
+      "position": {
+        "x": 481.13001258832065,
+        "y": 591.0742699542111
+      }
+    },
+    {
+      "id": "7",
+      "position": {
+        "x": 478.13001258832065,
+        "y": 507.07426995421116
+      }
+    },
+    {
+      "id": "8",
+      "position": {
+        "x": 597.1300125883206,
+        "y": 591.0742699542111
+      }
+    },
+    {
+      "id": "9",
+      "position": {
+        "x": 594.1300125883206,
+        "y": 507.07426995421116
+      }
+    },
+    {
+      "id": "10",
+      "position": {
+        "x": 331.63001258832065,
+        "y": 435.07426995421116
+      }
+    },
+    {
+      "id": "11",
+      "position": {
+        "x": 328.63001258832065,
+        "y": 335.07426995421116
+      }
+    },
+    {
+      "id": "12",
+      "position": {
+        "x": 322.13001258832065,
+        "y": 591.0742699542111
+      }
+    },
+    {
+      "id": "13",
+      "position": {
+        "x": 343.63001258832065,
+        "y": 507.07426995421116
+      }
+    },
+    {
+      "id": "14",
+      "position": {
+        "x": 332.63001258832065,
+        "y": 739.0742699542111
+      }
+    },
+    {
+      "id": "15",
+      "position": {
+        "x": 343.63001258832065,
+        "y": 655.0742699542111
+      }
+    },
+    {
+      "id": "16",
+      "position": {
+        "x": 212.13001258832065,
+        "y": 591.0742699542111
+      }
+    },
+    {
+      "id": "17",
+      "position": {
+        "x": 209.13001258832065,
+        "y": 507.07426995421116
+      }
+    },
+    {
+      "id": "18",
+      "position": {
+        "x": 209.63001258832065,
+        "y": 431.07426995421116
+      }
+    },
+    {
+      "id": "19",
+      "position": {
+        "x": 138.8150062941603,
+        "y": 335.07426995421116
+      }
+    },
+    {
+      "id": "20",
+      "position": {
+        "x": -135.63001258832065,
+        "y": 1.4210854715202004e-14
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "entity-attr: Employee->name",
+      "source": "0",
+      "target": "1"
+    },
+    {
+      "id": "entity-attr: Employee->id",
+      "source": "0",
+      "target": "2"
+    },
+    {
+      "id": "entity-attr: Employee->bday",
+      "source": "0",
+      "target": "3"
+    },
+    {
+      "id": "isA: entity: Management_Employee|entity: Employee",
+      "source": "5",
+      "target": "4"
+    },
+    {
+      "id": "isA: entity: Employee|entity: Management_Employee",
+      "source": "0",
+      "target": "5"
+    },
+    {
+      "id": "isA: entity: Manager|entity: Management_Employee",
+      "source": "7",
+      "target": "6"
+    },
+    {
+      "id": "isA: entity: Management_Employee|entity: Manager",
+      "source": "4",
+      "target": "7"
+    },
+    {
+      "id": "isA: entity: CEO|entity: Management_Employee",
+      "source": "9",
+      "target": "8"
+    },
+    {
+      "id": "isA: entity: Management_Employee|entity: CEO",
+      "source": "4",
+      "target": "9"
+    },
+    {
+      "id": "isA: entity: Engineer|entity: Employee",
+      "source": "11",
+      "target": "10"
+    },
+    {
+      "id": "isA: entity: Employee|entity: Engineer",
+      "source": "0",
+      "target": "11"
+    },
+    {
+      "id": "isA: entity: Senior_Engineer|entity: Engineer",
+      "source": "13",
+      "target": "12"
+    },
+    {
+      "id": "isA: entity: Engineer|entity: Senior_Engineer",
+      "source": "10",
+      "target": "13"
+    },
+    {
+      "id": "isA: entity: Team_Leader|entity: Senior_Engineer",
+      "source": "15",
+      "target": "14"
+    },
+    {
+      "id": "isA: entity: Senior_Engineer|entity: Team_Leader",
+      "source": "12",
+      "target": "15"
+    },
+    {
+      "id": "isA: entity: Intern|entity: Engineer",
+      "source": "17",
+      "target": "16"
+    },
+    {
+      "id": "isA: entity: Engineer|entity: Intern",
+      "source": "10",
+      "target": "17"
+    },
+    {
+      "id": "isA: entity: Secretary|entity: Employee",
+      "source": "19",
+      "target": "18"
+    },
+    {
+      "id": "isA: entity: Employee|entity: Secretary",
+      "source": "0",
+      "target": "19"
+    },
+    {
+      "id": "entity-attr: Secretary->typing_speed",
+      "source": "18",
+      "target": "20"
+    }
+  ]
+}

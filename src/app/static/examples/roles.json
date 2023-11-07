@@ -1,0 +1,67 @@
+{
+  "erDoc": "entity Employee {\n  id key\n  name\n  age\n}\n \nrelation Manages(Employee: [Intern, Manager 1])",
+  "nodes": [
+    {
+      "id": "0",
+      "position": {
+        "x": 147.57917688624104,
+        "y": 149.5371349771056
+      }
+    },
+    {
+      "id": "1",
+      "position": {
+        "x": 15.539588443120522,
+        "y": 62.53713497710555
+      }
+    },
+    {
+      "id": "2",
+      "position": {
+        "x": -75.07917688624104,
+        "y": 0
+      }
+    },
+    {
+      "id": "3",
+      "position": {
+        "x": 15.539588443120465,
+        "y": -67.03713497710561
+      }
+    },
+    {
+      "id": "4",
+      "position": {
+        "x": 373.6786369480476,
+        "y": 127.50092343151792
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "entity-attr: Employee->id",
+      "source": "0",
+      "target": "1"
+    },
+    {
+      "id": "entity-attr: Employee->name",
+      "source": "0",
+      "target": "2"
+    },
+    {
+      "id": "entity-attr: Employee->age",
+      "source": "0",
+      "target": "3"
+    },
+    {
+      "id": "1relationship-part: Manages$Employee->Employee->Intern",
+      "source": "4",
+      "target": "0"
+    },
+    {
+      "id": "4relationship-part: Manages$Employee->Employee->Manager",
+      "source": "4",
+      "target": "0"
+    }
+  ]
+}
