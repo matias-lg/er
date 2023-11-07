@@ -1,6 +1,6 @@
 import { useCallback, useContext, useState } from "react";
 import { ReactFlowInstance, useReactFlow } from "reactflow";
-import { Context } from "../../../context";
+import { Context } from "../context";
 
 const LOCAL_STORAGE_FLOW_KEY = "er-flow";
 

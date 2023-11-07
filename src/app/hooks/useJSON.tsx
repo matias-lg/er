@@ -1,7 +1,7 @@
 import { useMonaco } from "@monaco-editor/react";
 import { useContext } from "react";
 import { useReactFlow } from "reactflow";
-import { Context } from "../../../context";
+import { Context } from "../context";
 
 export type ValidJSON = {
   erDoc: string;

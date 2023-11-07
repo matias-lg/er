@@ -1,7 +1,7 @@
 import ELK, { ElkExtendedEdge, ElkNode } from "elkjs/lib/elk.bundled.js";
 import { useEffect } from "react";
 import { Edge, Node, ReactFlowState, useReactFlow, useStore } from "reactflow";
-import { AggregationNode, ErNode } from "../../../types/ErDiagram";
+import { AggregationNode, ErNode } from "../types/ErDiagram";
 
 type LayoutNode = Partial<
   ElkNode &

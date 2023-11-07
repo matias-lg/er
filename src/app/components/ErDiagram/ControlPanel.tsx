@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { HiSparkles } from "react-icons/hi2";
 import { ControlButton, Controls, useReactFlow } from "reactflow";
 import { colors } from "../../util/colors";
-import { getLayoutedElements } from "./hooks/useLayoutedElements";
+import { getLayoutedElements } from "../../hooks/useLayoutedElements";
 
 type ControlPanelProps = {
   onLayoutClick: () => void;

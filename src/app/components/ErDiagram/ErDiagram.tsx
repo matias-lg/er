@@ -19,9 +19,9 @@ import { erToReactflowElements } from "../../util/erToReactflowElements";
 import { ConfigPanel } from "./ConfigPanel";
 import { ControlPanel } from "./ControlPanel";
 import EdgeCustomSVGs from "./EdgeCustomSVGs";
-import { useAlignmentGuide } from "./hooks/useAlignmentGuide";
-import { useDiagramToLocalStorage } from "./hooks/useDiagramToLocalStorage";
-import { useLayoutedElements } from "./hooks/useLayoutedElements";
+import { useAlignmentGuide } from "../../hooks/useAlignmentGuide";
+import { useDiagramToLocalStorage } from "../../hooks/useDiagramToLocalStorage";
+import { useLayoutedElements } from "../../hooks/useLayoutedElements";
 import ErNotation from "./notations/DefaultNotation";
 import { useTranslations } from "next-intl";
 

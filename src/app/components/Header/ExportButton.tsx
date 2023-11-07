@@ -8,7 +8,7 @@ import { getRectOfNodes, useReactFlow } from "reactflow";
 import { DownloadFunc, downloadImage, exportToPDF } from "../../util/common";
 import { Dropdown } from "./Dropdown";
 import { ExportImageModal } from "./ExportModal";
-import { useJSON } from "./hooks/useJSON";
+import { useJSON } from "../../hooks/useJSON";
 
 const ExportButton = () => {
   const flow = document.querySelector(".react-flow__viewport");

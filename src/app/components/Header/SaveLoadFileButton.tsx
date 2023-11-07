@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEventHandler, useRef } from "react";
 import { LuFileJson } from "react-icons/lu";
-import { useJSON } from "./hooks/useJSON";
+import { useJSON } from "../../hooks/useJSON";
 import { Dropdown } from "./Dropdown";
 import { useTranslations } from "next-intl";
 
