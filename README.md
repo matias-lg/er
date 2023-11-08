@@ -56,3 +56,17 @@ npm run start
 1. [Install Docker](https://docs.docker.com/get-docker/) on your machine.
 2. Build the container: `docker build -t er-docker .`.
 3. Run the container: `docker run -p 3000:3000 er-docker`.
+
+### With pm2
+#### Install pm2
+```bash
+npm install pm2 -g
+```
+#### Build the Next.js app
+```bash
+npm run build:next
+```
+#### Start the node.js server with pm2
+```
+pm2 start pm2.config.js
+```
