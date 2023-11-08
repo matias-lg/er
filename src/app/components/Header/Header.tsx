@@ -5,6 +5,7 @@ import { BiSolidBook } from "react-icons/bi";
 import { MdDownload } from "react-icons/md";
 import AutoLayoutSwitch from "./AutoLayoutSwitch";
 import SaveLoadFileButton from "./SaveLoadFileButton";
+import NewDiagramButton from "./NewDiagramButton";
 
 const PROJECT_GITHUB = "https://github.com/matias-lg/er";
 
@@ -43,14 +44,16 @@ export const Header = () => {
 
   return (
     <>
-      <div className="flex h-full w-[65%]  items-center pl-6  text-slate-200">
+      <div className="flex h-full w-[63%]  items-center pl-6  text-slate-200">
         ERdoc Playground
       </div>
       <div className=" flex h-full w-[90%] items-center pl-2 text-slate-200">
         <HeaderElement className="border-l-[1px]">
-          <>
-            <AutoLayoutSwitch title={t("autoLayout")} />
-          </>
+          <AutoLayoutSwitch title={t("autoLayout")} />
+        </HeaderElement>
+
+        <HeaderElement className="border-l-[1px]">
+          <NewDiagramButton />
         </HeaderElement>
 
         <HeaderElement className="border-l-[1px]">
