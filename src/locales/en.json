@@ -20,6 +20,14 @@
         "description": "Load an existing ER Diagram and ERDoc from a JSON file. This will replace the current ER Diagram.",
         "upload": "Upload JSON file"
       },
+
+      "newDiagram": {
+        "title": "New Diagram",
+        "modalTitle": "Create a new ER diagram",
+        "modalDescription": "Start a new ER diagram from scratch. This will delete the current diagram",
+        "modalConfirm": "Confirm"
+      },
+
       "autoLayout": "Auto Layout",
       "exportDiagram": "Export Diagram",
       "asJSON": "Export as JSON",
@@ -44,7 +52,6 @@
       "subclass": "Subclass",
       "aggregation": "Aggregation",
       "roles": "Roles"
-
     },
 
     "erDiagram": {
