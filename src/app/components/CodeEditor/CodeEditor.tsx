@@ -90,15 +90,15 @@ const CodeEditor = ({
 
   const semanticErrT = useTranslations("home.codeEditor.semanticErrorMessages");
 
-  const [semanticErrorMessages, setSemanticErrorMessages] = useState<
-    ErrorMessage[]
-  >([]);
+  const [errorMessages, setErrorMessages] = useState<ErrorMessage[]>([]);
 
   const setEditorErrors = (
     errorMessages: ErrorMessage[],
     severity: MarkerSeverity,
+    monacoInstance: ReturnType<typeof useMonaco>,
   ) => {
     if (!editorRef.current) return;
+    console.log("Setting editor errors", errorMessages);
 
     const errors: editor.IMarkerData[] = errorMessages.map((err) => ({
       startLineNumber: err.location.start.line,
@@ -108,15 +108,17 @@ const CodeEditor = ({
       message: err.errorMessage,
       severity,
     }));
-
-    thisEditor?.editor.setModelMarkers(
+    monacoInstance?.editor.setModelMarkers(
       editorRef.current.getModel()!,
       "semanticErrors",
       errors,
     );
   };
 
-  const handleEditorContent = (content: string) => {
+  const handleEditorContent = (
+    content: string,
+    monacoInstance = thisEditor,
+  ) => {
     try {
       localStorage.setItem(LOCAL_STORAGE_EDITOR_CONTENT_KEY, content);
       const [erDoc, errors] = getERDoc(content);
@@ -126,37 +128,38 @@ const CodeEditor = ({
         errorMessage: getErrorMessage(semanticErrT, err),
         location: err.location,
       }));
-      setEditorErrors(errorMsgs, MarkerSeverity.Error);
-      setSemanticErrorMessages(errorMsgs);
+      setEditorErrors(errorMsgs, MarkerSeverity.Error, monacoInstance);
+      setErrorMessages(errorMsgs);
     } catch (e) {
       onErrorChange(true);
+      const syntaxErrorMessage = {
+        errorMessage: e.message,
+        location: e.location,
+      };
+      setErrorMessages([syntaxErrorMessage]);
       setEditorErrors(
-        [
-          {
-            errorMessage: e.message,
-            location: e.location,
-          },
-        ],
+        [syntaxErrorMessage],
         MarkerSeverity.Error,
+        monacoInstance,
       );
     }
   };
 
-  const handleEditorMount: OnMount = (editor, m) => {
+  const handleEditorMount: OnMount = (editor, monacoInstance) => {
     editorRef.current = editor;
     const prevContent = localStorage.getItem(LOCAL_STORAGE_EDITOR_CONTENT_KEY);
     const initialContent = prevContent ?? DEFAULT_CONTENT;
     editor.setValue(initialContent);
-    handleEditorContent(initialContent);
+    handleEditorContent(initialContent, monacoInstance);
     // mount erdoc language
-    m.languages.register({ id: "erdoc" });
-    m.languages.setMonarchTokensProvider("erdoc", erdocTokenizer);
-    m.languages.setLanguageConfiguration("erdoc", erdocConfig);
+    monacoInstance.languages.register({ id: "erdoc" });
+    monacoInstance.languages.setMonarchTokensProvider("erdoc", erdocTokenizer);
+    monacoInstance.languages.setLanguageConfiguration("erdoc", erdocConfig);
     // custom themes
     for (const [themeName, theme] of editorThemes) {
-      m.editor.defineTheme(themeName, theme);
+      monacoInstance.editor.defineTheme(themeName, theme);
     }
-    m.editor.setTheme(DEFAULT_THEME);
+    monacoInstance.editor.setTheme(DEFAULT_THEME);
   };
 
   return (
@@ -199,7 +202,7 @@ const CodeEditor = ({
         maxHeight={"30%"}
         backgroundColor={colors.textEditorBackground}
       >
-        <ErrorTable errors={semanticErrorMessages} />
+        <ErrorTable errors={errorMessages} />
       </Box>
       <Box
         height={"max-content"}
