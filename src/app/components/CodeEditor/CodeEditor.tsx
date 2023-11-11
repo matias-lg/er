@@ -98,7 +98,6 @@ const CodeEditor = ({
     monacoInstance: ReturnType<typeof useMonaco>,
   ) => {
     if (!editorRef.current) return;
-    console.log("Setting editor errors", errorMessages);
 
     const errors: editor.IMarkerData[] = errorMessages.map((err) => ({
       startLineNumber: err.location.start.line,

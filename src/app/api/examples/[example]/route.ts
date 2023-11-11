@@ -7,7 +7,6 @@ export async function GET(
   { params }: { params: { example: string } },
 ) {
   const exampleFilename = params.example + ".json";
-  console.log(process.cwd());
   try {
     const data = await fs.readFile(
       process.cwd() + EXAMPLES_JSON_DIR + exampleFilename,
