@@ -1,12 +1,10 @@
 "use client";
-import { PanelGroup, Panel } from "react-resizable-panels";
-import CodeEditor from "./CodeEditor/CodeEditor";
-import { PanelResizeHandle } from "react-resizable-panels";
-import { ErDiagram } from "./ErDiagram/ErDiagram";
-import { Box } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { ER } from "../../ERDoc/types/parser/ER";
 import { erDocWithoutLocation } from "../util/common";
+import CodeEditor from "./CodeEditor/CodeEditor";
+import { ErDiagram } from "./ErDiagram/ErDiagram";
 
 const Body = () => {
   const [erDoc, setErDoc] = useState<ER | null>(null);
@@ -27,18 +25,12 @@ const Body = () => {
   return (
     <PanelGroup direction="horizontal">
       <Panel defaultSize={40} minSize={25}>
-        <Box
-          height={"full"}
-          width={"full"}
-          display={"flex"}
-          flexDir={"column"}
-          overflow={"hidden"}
-        >
+        <div className="flex h-full w-full flex-col overflow-hidden">
           <CodeEditor
             onErDocChange={onErDocChange}
             onErrorChange={setErDocHasError}
           />
-        </Box>
+        </div>
       </Panel>
       <PanelResizeHandle
         className={`relative w-1 ${dragging ? "bg-secondary" : "bg-primary"}`}
@@ -49,9 +41,9 @@ const Body = () => {
         <div className="h-full w-1 bg-primary hover:bg-secondary"></div>
       </PanelResizeHandle>
       <Panel defaultSize={60}>
-        <Box pt={1} height="full">
+        <div className="h-full pt-1">
           <ErDiagram erDoc={erDoc!} erDocHasError={erDocHasError} />
-        </Box>
+        </div>
       </Panel>
     </PanelGroup>
   );

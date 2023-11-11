@@ -44,10 +44,11 @@ export const Header = () => {
 
   return (
     <>
-      <div className="flex h-full w-[63%]  items-center pl-6  text-slate-200">
-        ERdoc Playground
+      <div className="flex w-[200px] items-center pl-6 text-slate-200 min-[1340px]:w-[400px] min-[1800px]:w-[770px]">
+        <span>ERdoc Playground</span>
       </div>
-      <div className=" flex h-full w-[90%] items-center pl-2 text-slate-200">
+
+      <div className="flex h-full w-auto text-slate-200">
         <HeaderElement className="border-l-[1px]">
           <AutoLayoutSwitch title={t("autoLayout")} />
         </HeaderElement>
@@ -68,13 +69,14 @@ export const Header = () => {
         <HeaderElement className="cursor-pointer border-l-[1px] border-r-[1px]">
           <DynamicExportButton />
         </HeaderElement>
+
         <HeaderElement className="border-r-[1px]">
           <a className="flex items-center" href="/docs" target="_blank">
             <BiSolidBook /> <span className="pl-2">{t("documentation")}</span>
           </a>
         </HeaderElement>
       </div>
-      <div className=" flex h-full items-center pl-2 text-slate-200">
+      <div className="ml-auto mr-0 flex h-full items-center text-slate-200">
         <GitHubButton />
       </div>
     </>

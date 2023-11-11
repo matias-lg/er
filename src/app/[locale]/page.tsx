@@ -1,5 +1,4 @@
 "use client";
-import { Grid, GridItem } from "@chakra-ui/react";
 import { useState } from "react";
 import Body from "../components/Body";
 import Header from "../components/Header/Header";
@@ -21,37 +20,14 @@ const Page = () => {
         setLoadedDiagramFromOutside,
       }}
     >
-      <Grid
-        templateAreas={`
-     "header"
-     "main"
-    `}
-        gridTemplateRows={"5% auto"}
-        h="100%"
-        gap="0"
-      >
-        <GridItem
-          mb={0}
-          display={"flex"}
-          backgroundColor={"#232730"}
-          borderBottom={"1px"}
-          borderBottomColor={"rgb(248 250 252 / 0.16)"}
-          area="header"
-        >
+      <div className="flex h-screen w-screen flex-col">
+        <div className="flex  h-[10%] justify-between border-b border-b-border  bg-[#232730] min-[1340px]:h-[5%]">
           <Header />
-        </GridItem>
-
-        <GridItem
-          overflow={"hidden"}
-          area={"main"}
-          display={"flex"}
-          w={"100%"}
-          flexDir={"row"}
-          justifyContent={"space-between"}
-        >
+        </div>
+        <div className="h-[90%] min-[1340px]:h-[95%]">
           <Body />
-        </GridItem>
-      </Grid>
+        </div>
+      </div>
     </Context.Provider>
   );
 };
