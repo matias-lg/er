@@ -2,8 +2,8 @@
 
 
 <h4 align="center">
-  <a href="https://erdoc.vercel.app">ERdoc Plaground</a> |
-  <a href="https://erdoc.vercel.app/docs">Documentation</a>
+  <a href="https://erdoc.dcc.uchile.cl/">ERdoc Plaground</a> |
+  <a href="https://erdoc.dcc.uchile.cl/docs">Documentation</a>
 </h4>
 
 
