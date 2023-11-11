@@ -2,6 +2,12 @@ import { ER } from "../../../src/ERDoc/types/parser/ER";
 import { parse } from "../../../src/ERDoc/parser";
 
 describe("Parses ER Models with multiple elements", () => {
+  it("parses an ERdoc with windows-style newlines", () => {
+    const ER = `entity Windows\r\n{\r\nVersion\r\nid key\r\n}`;
+    expect(() => parse(`\r\n`)).not.toThrowError();
+    expect(() => parse(ER)).not.toThrowError();
+  });
+
   it("parses a simple ER Model", () => {
     const simpleERModel = `
         entity Student {

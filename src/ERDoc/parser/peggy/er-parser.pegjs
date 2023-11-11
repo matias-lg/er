@@ -36,7 +36,7 @@ weakEntity =
     Lcurly _0
         attributes:(
              head:(_0 e:WeakEntityAttribute {return e})
-		     tail:( '\n' _0 e:WeakEntityAttribute  {return e})*
+		     tail:( newline _0 e:WeakEntityAttribute  {return e})*
              {return [head, ...tail]}
        	)|0..1|
 	    _0
@@ -78,7 +78,7 @@ entity =
     Lcurly _0
         attributes:(
              head:(_0 e:entityAttribute {return e})
-		     tail:( '\n' _0 e:entityAttribute {return e})*
+		     tail:( newline _0 e:entityAttribute {return e})*
              {return [head, ...tail]}
        	)|0..1|
 	    _0
@@ -134,7 +134,7 @@ relationship
 	= declaration:(declareRelationship _ identifier:relationshipIdentifier { return { identifier, location: getLocation(location)}}) _0 participants:listOfParticipants attributes:(_0 Lcurly _0
         attribList:(
              head:(_0 e:relationShipAttribute{return e})
-		     tail:( '\n' _0 e:relationShipAttribute{return e})*
+		     tail:( newline _0 e:relationShipAttribute{return e})*
              {return [head, ...tail]}
        	)?
     _0
@@ -251,8 +251,11 @@ declareRelationship = "relation"i
 declareAggregation = "aggregation"i
 dependsOn = "depends on"i
 
-_ "1 or more whitespaces" = [ \t\n]+
-_0 "0 or more whitespaces" = [ \t\n]*
+newline = ("\n"/"\r\n")
+
+whitespace = [ \t\n]/"\r\n"
+_ "1 or more whitespaces"  = whitespace+
+_0 "0 or more whitespaces" = whitespace*
 
 
 through = "through"i
