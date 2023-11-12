@@ -57,16 +57,18 @@ npm run start
 2. Build the container: `docker build -t er-docker .`.
 3. Run the container: `docker run -p 3000:3000 er-docker`.
 
-### With pm2
+### Deploy to remote server with pm2
+First make sure to add your credentials in a `.env` file.
 #### Install pm2
 ```bash
 npm install pm2 -g
 ```
-#### Build the Next.js app
+#### Setup remote
 ```bash
-npm run build:next
+pm2 deploy pm2.config.js production setup
 ```
-#### Start the node.js server with pm2
-```
-pm2 start pm2.config.js
+
+#### Deploy
+```bash
+pm2 deploy pm2.config.js production
 ```
