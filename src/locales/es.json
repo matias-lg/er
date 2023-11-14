@@ -1,69 +1,118 @@
 {
   "home": {
-    "title": "Hello world!",
 
     "errorsTable": {
-      "errors": "Errors"
+      "errors": "Errores"
+    },
+
+    "header": {
+      "documentation": "Documentación",
+      "import": "Guardar/Cargar Archivo",
+      "saveLoad": {
+        "invalidFile": "Tipo de archivo no válido",
+        "invalidJsonFile": "JSON no válido",
+        "save": "Guardar archivo JSON",
+        "load": "Cargar archivo JSON"
+      },
+      "importModal": {
+        "title": "Importar JSON",
+        "description": "Cargue un diagrama ER desde un archivo JSON. Esto reemplazará el diagrama ER actual.",
+        "upload": "Cargar archivo JSON"
+      },
+
+      "newDiagram": {
+        "title": "Nuevo Diagrama",
+        "modalTitle": "Crear un nuevo diagrama ER",
+        "modalDescription": "Comience un nuevo diagrama ER desde cero. Esto eliminará el diagrama actual",
+        "modalConfirm": "Confirmar"
+      },
+
+      "autoLayout": "Auto Layout",
+      "exportDiagram": "Exportar Diagrama",
+      "asJSON": "Exportar como JSON",
+      "asPDF": "Exportar como PDF",
+      "asPNG": "Exportar como PNG",
+      "asSVG": "Exportar como SVG",
+      "asJPEG": "Exportar como JPEG"
+    },
+
+    "exportModal": {
+      "title": "Exportar Diagrama",
+      "imageWidth": "Ancho de la imagen",
+      "imageHeight": "Altura de la imagen",
+      "export": "Exportar",
+      "transparent": "Fondo transparente"
     },
 
     "examples": {
-      "_title": "Examples",
-      "bank": "Bank",
-      "company": "Company",
-      "large": "Very big example"
+      "_title": "Ejemplos",
+      "bank": "Banco",
+      "company": "Empresa",
+      "subclass": "Subclases",
+      "aggregation": "Agregación",
+      "roles": "Roles"
     },
 
     "erDiagram": {
-      "notationButton": "Notation",
-      "arrowNotation": "Arrow notation",
-      "minMaxNotation": "(Min, max) notation",
-      "layoutButton": "Layout",
-      "fitViewButton": "Fit View"
+      "notationButton": "Notación",
+      "arrowNotation": "Notación de flechas",
+      "minMaxNotation": "Notación (Mín, máx)",
+      "chenNotation": "Notación de Chen",
+      "layoutButton": "layout",
+      "fitViewButton": "Ajustar zoom",
+      "fixErrorsToSync": "Para sincronizar el diagrama corrija los errores",
+      "configPanel": {
+        "title": "Configuración del diagrama",
+        "edgeRouting": "Enrutamiento de aristas",
+        "orthogonal": "Ortogonal",
+        "orthogonalDisabled": "La opción ortogonal solo está disponible para la notación de flechas",
+        "straight": "Recto"
+      }
     },
 
     "codeEditor": {
-      "syntaxError": "Syntax error",
+      "syntaxError": "Error de sintaxis",
       "semanticErrorMessages": {
-        "ENTITY_DUPLICATE": "Entity \"{entityName}\" is duplicate",
+        "ENTITY_DUPLICATE": "La entidad \"{entityName}\" está duplicada",
 
-        "ENTITY_HAS_NO_KEY": "Entity \"{entityName}\" has no key",
+        "ENTITY_HAS_NO_KEY": "La entidad \"{entityName}\" no tiene clave",
 
-        "ENTITY_DUPLICATE_ATTRIBUTE": "Entity \"{entityName}\" has duplicate attribute \"{attributeName}\"",
+        "ENTITY_DUPLICATE_ATTRIBUTE": "La entidad \"{entityName}\" tiene un atributo duplicado: \"{attributeName}\"",
 
-        "ENTITY_EXTENDS_NON_EXISTENT_ENTITY": "Entity \"{entityName}\" extends non-existent entity \"{extendsEntityName}\"",
+        "ENTITY_EXTENDS_NON_EXISTENT_ENTITY": "La entidad \"{entityName}\" extiende una entidad no existente: \"{extendsEntityName}\"",
 
-        "ENTITY_EXTENDS_CHILD_ENTITY": "Entity \"{parentEntityName}\" extends child entity \"{childEntityName}\"",
+        "ENTITY_EXTENDS_CHILD_ENTITY": "La entidad \"{parentEntityName}\" extiende su subclase \"{childEntityName}\"",
 
-        "WEAK_ENTITY_NOT_IN_RELATIONSHIP": "Weak entity \"{entityName}\" depends on relationship \"{relationshipName}\", but it doesn't participate in it",
+        "WEAK_ENTITY_NOT_IN_RELATIONSHIP": "La entidad débil \"{entityName}\" depende de la relación \"{relationshipName}\", pero no participa en ella",
 
-        "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION": "Weak entity \"{entityName}\" doesn't have total participation in relationship \"{relationshipName}\"",
+        "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION": "La entidad débil \"{entityName}\" no tiene participación total en la relación \"{relationshipName}\"",
 
-        "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP": "Weak entity \"{entityName}\" depends on non-existent relationship \"{relationshipName}\"",
+        "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP": "La entidad débil \"{entityName}\" depende de la relación \"{relationshipName}\", que no existe",
 
-        "CHILD_ENTITY_HAS_KEY": "Child entity \"{entityName}\" has identifying key",
+        "CHILD_ENTITY_HAS_KEY": "La subclase \"{entityName}\" tiene una llave",
 
-        "RELATIONSHIP_DUPLICATE": "Relationship \"{relationshipName}\" is duplicate",
+        "RELATIONSHIP_DUPLICATE": "La relación \"{relationshipName}\" está duplicada",
 
-        "RELATIONSHIP_DUPLICATE_ATTRIBUTE": "Relationship \"{relationshipName}\" has duplicate attribute \"{attributeName}\"",
+        "RELATIONSHIP_DUPLICATE_ATTRIBUTE": "La relación \"{relationshipName}\" tiene un atributo duplicado: \"{attributeName}\"",
 
-        "RELATIONSHIP_DUPLICATE_PARTICIPANT": "Relationship \"{relationshipName}\" has duplicate participant \"{entityName}\"",
+        "RELATIONSHIP_DUPLICATE_PARTICIPANT": "La relación \"{relationshipName}\" tiene un participante duplicado: \"{entityName}\"",
 
-        "RELATIONSHIP_PARTICIPATING_ENTITY_NOT_EXISTS": "Relationship \"{relationshipName}\" has non-existent participating entity \"{entityName}\"",
+        "RELATIONSHIP_PARTICIPATING_ENTITY_NOT_EXISTS": "La relación \"{relationshipName}\" tiene un participante que no existe: \"{entityName}\"",
 
-        "RELATIONSHIP_LESS_THAN_TWO_PARTICIPATING_ENTITIES": "Relationship \"{relationshipName}\" has less than two participating entities",
+        "RELATIONSHIP_LESS_THAN_TWO_PARTICIPATING_ENTITIES": "La relación \"{relationshipName}\" tiene menos de dos participantes",
 
-        "AGGREGATION_USES_ENTITY_NAME": "Entity with name \"{aggregationName}\" already exists",
+        "AGGREGATION_USES_ENTITY_NAME": "Ya existe una entidad con el nombre \"{aggregationName}\"",
 
-        "AGGREGATION_DUPLICATE": "Aggregation \"{aggregationName}\" is duplicate",
+        "AGGREGATION_DUPLICATE": "La agregación \"{aggregationName}\" está duplicada",
 
-        "AGGREGATION_RELATIONSHIP_NOT_EXISTS": "Aggregation \"{aggregationName}\" encapsulates non-existent relationship \"{relationshipName}\"",
+        "AGGREGATION_RELATIONSHIP_NOT_EXISTS": "La agregación \"{aggregationName}\" encapsula una relación no existente: \"{relationshipName}\"",
 
-        "AGGREGATION_RELATIONSHIP_ALREADY_USED": "Aggregation \"{aggregationName}\" encapsulates relationship \"{relationshipName}\", which is already used"
+        "AGGREGATION_RELATIONSHIP_ALREADY_USED": "La agregación \"{aggregationName}\" encapsula la relación \"{relationshipName}\", que ya se está utilizando por otra agregación"
       },
       "editorHeader": {
-        "copy": "Copy code",
-        "undo": "Undo (Ctrl+Z)",
-        "redo": "Redo (Ctrl+Y)"
+        "copy": "Copiar código",
+        "undo": "Deshacer (Ctrl+Z)",
+        "redo": "Rehacer (Ctrl+Y)"
       }
     }
   }
