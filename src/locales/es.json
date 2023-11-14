@@ -16,14 +16,14 @@
       },
       "importModal": {
         "title": "Importar JSON",
-        "description": "Cargue un diagrama ER desde un archivo JSON. Esto reemplazará el diagrama ER actual.",
+        "description": "Cargar un diagrama ER desde un archivo JSON. Esto reemplazará el diagrama ER actual.",
         "upload": "Cargar archivo JSON"
       },
 
       "newDiagram": {
         "title": "Nuevo Diagrama",
         "modalTitle": "Crear un nuevo diagrama ER",
-        "modalDescription": "Comience un nuevo diagrama ER desde cero. Esto eliminará el diagrama actual",
+        "modalDescription": "Comenzar un nuevo diagrama ER desde cero. Esto eliminará el diagrama actual.",
         "modalConfirm": "Confirmar"
       },
 

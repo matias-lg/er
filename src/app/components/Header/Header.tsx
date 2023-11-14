@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import { BiSolidBook } from "react-icons/bi";
@@ -6,6 +6,7 @@ import { MdDownload } from "react-icons/md";
 import AutoLayoutSwitch from "./AutoLayoutSwitch";
 import SaveLoadFileButton from "./SaveLoadFileButton";
 import NewDiagramButton from "./NewDiagramButton";
+import LocaleSwitcher from "./LocaleSwitcher";
 
 const PROJECT_GITHUB = "https://github.com/matias-lg/er";
 
@@ -28,6 +29,9 @@ const HeaderElement = ({
 
 export const Header = () => {
   const t = useTranslations("home.header");
+  const locale = useLocale();
+  const isSpanish = locale === "es";
+
   const DynamicExportButton = useMemo(
     () =>
       dynamic(() => import("./ExportButton"), {
@@ -44,7 +48,14 @@ export const Header = () => {
 
   return (
     <>
-      <div className="flex w-[200px] items-center pl-6 text-slate-200 min-[1340px]:w-[400px] min-[1800px]:w-[770px]">
+      <div
+        className={`flex ${
+          // text in spanish is longer
+          isSpanish
+            ? "w-[200px] min-[1573px]:w-[400px] min-[1820px]:w-[700px]"
+            : "w-[200px] min-[1400px]:w-[400px] min-[1800px]:w-[770px]"
+        } items-center pl-6 text-slate-200 `}
+      >
         <span>ERdoc Playground</span>
       </div>
 
@@ -75,6 +86,8 @@ export const Header = () => {
             <BiSolidBook /> <span className="pl-2">{t("documentation")}</span>
           </a>
         </HeaderElement>
+
+        <LocaleSwitcher />
       </div>
       <div className="ml-auto mr-0 flex h-full items-center text-slate-200">
         <GitHubButton />
