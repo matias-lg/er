@@ -32,24 +32,7 @@ const inheritanceToReactflowElements = (
   const isANode: IsANode = {
     id: isANodeId,
     type: "isA",
-    data: {
-      constraints: [
-        {
-          type: "inequality",
-          axis: "y",
-          left: parentEntityNodeId,
-          right: isANodeId,
-          gap: 50,
-        },
-        {
-          type: "inequality",
-          axis: "y",
-          left: isANodeId,
-          right: childEntityNodeId,
-          gap: 50,
-        },
-      ],
-    },
+    data: {},
     position: { x: 0, y: 0 },
   };
 
@@ -476,19 +459,6 @@ const renameIdsToNumeric = (nodes: ErNode[], edges: Edge[]) => {
   for (const node of nodes) {
     if (node.parentNode) {
       node.parentNode = id2index.get(node.parentNode)!;
-    }
-    if (node.data.constraints) {
-      for (const con of node.data.constraints) {
-        if (con.type === "alignment") {
-          for (const offset of con.offsets) {
-            offset.node = id2index.get(offset.node)!;
-          }
-        }
-        if (con.type === "inequality") {
-          con.left = id2index.get(con.left)!;
-          con.right = id2index.get(con.right)!;
-        }
-      }
     }
   }
 

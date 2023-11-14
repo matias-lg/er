@@ -2,26 +2,10 @@ import { CSSProperties, ComponentType } from "react";
 import { EdgeMarkerType, EdgeTypes, NodeProps } from "reactflow";
 import { Node, Edge } from "reactflow";
 
-export type NodeConstraints = (
-  | {
-      type: "alignment";
-      axis: "x" | "y";
-      offsets: { node: string; offset: string }[];
-    }
-  | {
-      type: "inequality";
-      axis: "x" | "y";
-      left: string;
-      right: string;
-      gap: number;
-    }
-)[];
-
 export type EntityNode = Node<
   {
     label: string;
     isWeak: boolean;
-    constraints?: NodeConstraints;
     erId?: string;
   },
   "entity"
@@ -32,7 +16,6 @@ export type EntityAttributeNode = Node<
     label: string;
     isKey: boolean;
     entityIsWeak: boolean;
-    constraints?: NodeConstraints;
     erId?: string;
   },
   "entity-attribute"
@@ -41,7 +24,6 @@ export type EntityAttributeNode = Node<
 export type CompositeAttributeNode = Node<
   {
     label: string;
-    constraints?: NodeConstraints;
     erId?: string;
   },
   "composite-attribute"
@@ -51,7 +33,6 @@ export type RelationshipNode = Node<
   {
     label: string;
     hasDependant: boolean;
-    constraints?: NodeConstraints;
     erId?: string;
   },
   "relationship"
@@ -60,7 +41,6 @@ export type RelationshipNode = Node<
 export type RelationshipAttributeNode = Node<
   {
     label: string;
-    constraints?: NodeConstraints;
     erId?: string;
   },
   "relationship-attribute"
@@ -71,7 +51,6 @@ export type AggregationNode = Node<
     label: string;
     width?: number;
     height?: number;
-    constraints?: NodeConstraints;
     erId?: string;
   },
   "aggregation"
@@ -79,7 +58,6 @@ export type AggregationNode = Node<
 
 export type IsANode = Node<
   {
-    constraints?: NodeConstraints;
     erId?: string;
   },
   "isA"
@@ -88,7 +66,6 @@ export type IsANode = Node<
 export type EntityEdge = Edge<{
   cardinality: string;
   isTotalParticipation: boolean;
-  constraints?: NodeConstraints;
   erId?: string;
 }>;
 
