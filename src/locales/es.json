@@ -80,7 +80,7 @@
       "semanticErrorMessages": {
         "ENTITY_DUPLICATE": "La entidad \"{entityName}\" está duplicada",
 
-        "ENTITY_HAS_NO_KEY": "La entidad \"{entityName}\" no tiene clave",
+        "ENTITY_HAS_NO_KEY": "La entidad \"{entityName}\" no tiene llave",
 
         "ENTITY_DUPLICATE_ATTRIBUTE": "La entidad \"{entityName}\" tiene un atributo duplicado: \"{attributeName}\"",
 
