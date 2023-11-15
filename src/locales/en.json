@@ -34,7 +34,13 @@
       "asPDF": "Export as PDF",
       "asPNG": "Export as PNG",
       "asSVG": "Export as SVG",
-      "asJPEG": "Export as JPEG"
+      "asJPEG": "Export as JPEG",
+
+      "localeSwitcher": {
+        "label": "Language",
+        "en": "English",
+        "es": "Spanish"
+      }
     },
 
     "exportModal": {

@@ -87,7 +87,9 @@ export const Header = () => {
           </a>
         </HeaderElement>
 
-        <LocaleSwitcher />
+        <HeaderElement className="border-r-[1px]">
+          <LocaleSwitcher />
+        </HeaderElement>
       </div>
       <div className="ml-auto mr-0 flex h-full items-center text-slate-200">
         <GitHubButton />

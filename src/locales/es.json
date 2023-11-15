@@ -1,6 +1,5 @@
 {
   "home": {
-
     "errorsTable": {
       "errors": "Errores"
     },
@@ -33,7 +32,13 @@
       "asPDF": "Exportar como PDF",
       "asPNG": "Exportar como PNG",
       "asSVG": "Exportar como SVG",
-      "asJPEG": "Exportar como JPEG"
+      "asJPEG": "Exportar como JPEG",
+
+      "localeSwitcher": {
+        "label": "Idioma",
+        "en": "Inglés",
+        "es": "Español"
+      }
     },
 
     "exportModal": {
