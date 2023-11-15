@@ -21,10 +21,10 @@ const Page = () => {
       }}
     >
       <div className="flex h-screen w-screen flex-col">
-        <div className="flex  h-[10%] justify-between border-b border-b-border  bg-[#232730] min-[1340px]:h-[5%]">
+        <div className="flex h-[10%] w-full justify-between border-b border-b-border  bg-[#232730] min-[1340px]:h-[5%]">
           <Header />
         </div>
-        <div className="h-[90%] min-[1340px]:h-[95%]">
+        <div className="h-[90%] w-full min-[1340px]:h-[95%]">
           <Body />
         </div>
       </div>
