@@ -76,9 +76,7 @@ export const useJSON = () => {
     // set the text in monaco
     setLoadedDiagramFromOutside(false);
     const codeEditor = monaco?.editor.getModels()[0];
-    console.log("editor is", codeEditor);
     if (monacoInstance) {
-      console.log("passed in monaco instance", monacoInstance);
       monacoInstance.editor.getModels()[0].setValue(editorText);
     } else {
       monaco?.editor.getModels()[0].setValue(editorText);
