@@ -64,6 +64,7 @@ const ExamplesTable = () => {
             {EXAMPLE_NAMES.map((exampleName) => (
               <Button
                 key={exampleName}
+                colorScheme="blue"
                 className="mr-1 mt-3 bg-blue-500 text-white hover:bg-blue-600"
                 onClick={() => onExampleClickHandler(exampleName)}
               >

@@ -12,8 +12,8 @@ const Body = () => {
   const [erDocHasError, setErDocHasError] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
 
-  const { width: viewportWidth } = useWindowDimensions();
-  const lg = viewportWidth >= 1024;
+  const { width } = useWindowDimensions();
+  const lg = (width ?? Infinity) >= 1024;
 
   const onErDocChange = (er: ER) => {
     setErDoc((currentEr) => {
