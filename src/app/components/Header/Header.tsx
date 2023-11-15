@@ -56,7 +56,7 @@ export const Header = () => {
             : "w-[200px] min-[1400px]:w-[400px] min-[1800px]:w-[770px]"
         } items-center pl-6 text-slate-200 `}
       >
-        <span>ERdoc Playground</span>
+        <span className="font-sans font-bold ">ERdoc Playground</span>
       </div>
 
       <div className="flex h-full w-auto text-slate-200">
