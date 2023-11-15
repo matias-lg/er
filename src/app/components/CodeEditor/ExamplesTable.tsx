@@ -4,6 +4,7 @@ import { Button } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ErJSON, useJSON } from "../../hooks/useJSON";
+import { fetchExample } from "../../util/common";
 
 // TODO: refactor, should request this from server?
 const EXAMPLE_NAMES = ["bank", "company", "subclass", "aggregation", "roles"];
@@ -17,19 +18,6 @@ const ExamplesTable = () => {
 
   const { importJSON } = useJSON();
   const t = useTranslations("home.examples");
-
-  const fetchExample = async (exampleName: string) => {
-    const res = await fetch(`/api/examples/${exampleName}`);
-    // if res is 404, then the example doesn't exist
-    if (res.status === 404) {
-      return null;
-    } else {
-      const data: { example: ErJSON } = await (res.json() as Promise<{
-        example: ErJSON;
-      }>);
-      return data.example;
-    }
-  };
 
   const onExampleClickHandler = (exampleName: string) => {
     if (cachedExample !== null && cachedExample.name === exampleName) {

@@ -11,6 +11,10 @@ import getErrorMessage from "../../util/errorMessages";
 import { EditorHeader } from "./EditorHeader";
 import ExamplesTable from "./ExamplesTable";
 import ErrorTable from "./ErrorTable";
+import { fetchExample } from "../../util/common";
+import { useJSON } from "../../hooks/useJSON";
+
+const DEFAULT_EXAMPLE = "company";
 
 type ErrorReportingEditorProps = {
   onErDocChange: (er: ER) => void;
@@ -87,10 +91,9 @@ const CodeEditor = ({
 }: ErrorReportingEditorProps) => {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const thisEditor = useMonaco();
-
   const semanticErrT = useTranslations("home.codeEditor.semanticErrorMessages");
-
   const [errorMessages, setErrorMessages] = useState<ErrorMessage[]>([]);
+  const { importJSON } = useJSON();
 
   const setEditorErrors = (
     errorMessages: ErrorMessage[],
@@ -147,9 +150,19 @@ const CodeEditor = ({
   const handleEditorMount: OnMount = (editor, monacoInstance) => {
     editorRef.current = editor;
     const prevContent = localStorage.getItem(LOCAL_STORAGE_EDITOR_CONTENT_KEY);
-    const initialContent = prevContent ?? DEFAULT_CONTENT;
-    editor.setValue(initialContent);
-    handleEditorContent(initialContent, monacoInstance);
+    if (prevContent === null) {
+      // load an example from api
+      fetchExample(DEFAULT_EXAMPLE)
+        .then((example) => {
+          if (example) {
+            importJSON(example, monacoInstance);
+          }
+        })
+        .catch((err) => console.error(err));
+    } else {
+      editor.setValue(prevContent);
+      handleEditorContent(prevContent, monacoInstance);
+    }
     // mount erdoc language
     monacoInstance.languages.register({ id: "erdoc" });
     monacoInstance.languages.setMonarchTokensProvider("erdoc", erdocTokenizer);
@@ -215,47 +228,3 @@ const CodeEditor = ({
 };
 
 export default CodeEditor;
-
-const DEFAULT_CONTENT = `entity bank {
-    code key
-    name
-    addr
-}
-
-entity bank_branch depends on has_branches {
-    addr
-    branch_no pkey
-}
-
-relation has_branches(bank 1!, bank_branch N!)
-
-entity account {
-    acct_no key
-    balance
-    type
-}
-
-entity loan {
-    loan_no key
-    amount
-    type
-}
-
-relation accts(Bank_With_Branches 1, account N!)
-relation loans(Bank_With_Branches 1, loan N!)
-
-entity customer {
-    ssn key
-    name
-    addr
-    phone
-}
-
-entity premium_customer extends customer {
-    discount
-}
-
-relation a_c(customer N, account M!)
-relation l_c(customer N, loan M!)
-
-aggregation Bank_With_Branches(has_branches)`;
