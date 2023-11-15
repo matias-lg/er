@@ -5,6 +5,7 @@ import MinMaxNotation from "../components/ErDiagram/notations/MinMaxNotation/Min
 import { toSvg } from "html-to-image";
 import ChenNotation from "../components/ErDiagram/notations/ChenNotation/ChenNotation";
 import { ER } from "../../ERDoc/types/parser/ER";
+import { ErJSON } from "../hooks/useJSON";
 
 export const createRelationshipId = (relationship: Relationship): string => {
   // relationships are identified by their name and attributes, so we need all this info to generate a unique ID.
@@ -163,4 +164,17 @@ export const erDocWithoutLocation = (erDoc: ER) => {
       location: undefined,
     })),
   };
+};
+
+export const fetchExample = async (exampleName: string) => {
+  const res = await fetch(`/api/examples/${exampleName}`);
+  // if res is 404, then the example doesn't exist
+  if (res.status === 404) {
+    return null;
+  } else {
+    const data: { example: ErJSON } = await (res.json() as Promise<{
+      example: ErJSON;
+    }>);
+    return data.example;
+  }
 };

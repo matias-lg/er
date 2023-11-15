@@ -21,7 +21,8 @@ const AutoLayoutSwitch = ({ title }: { title: string }) => {
     didInit = true;
     // load from localStorage in the client, default to true
     const storedState = loadFromLocalStorage();
-    setAutoLayoutEnabled(storedState ?? true);
+    // by default, auto layout is disabled
+    setAutoLayoutEnabled(storedState ?? false);
   }, []);
 
   useEffect(() => {

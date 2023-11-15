@@ -66,13 +66,23 @@ export const useJSON = () => {
     exportObject(json, filename);
   };
 
-  const importJSON = (json: ErJSON) => {
+  const importJSON = (
+    json: ErJSON,
+    monacoInstance?: ReturnType<typeof useMonaco>,
+  ) => {
     const editorText = json.erDoc;
     // first, turn off auto layout
     setAutoLayoutEnabled(false);
     // set the text in monaco
     setLoadedDiagramFromOutside(false);
-    monaco?.editor.getModels()[0].setValue(editorText);
+    const codeEditor = monaco?.editor.getModels()[0];
+    console.log("editor is", codeEditor);
+    if (monacoInstance) {
+      console.log("passed in monaco instance", monacoInstance);
+      monacoInstance.editor.getModels()[0].setValue(editorText);
+    } else {
+      monaco?.editor.getModels()[0].setValue(editorText);
+    }
     // HACK: setting the editor value will trigger an OnChange event which will cause the
     // ER Diagram to be updated to the nodes with default positions, we need to wait for that
     // to happen and then update the positions. There's probably a better way to do this.
