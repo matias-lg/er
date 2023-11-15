@@ -5,11 +5,15 @@ import { ER } from "../../ERDoc/types/parser/ER";
 import { erDocWithoutLocation } from "../util/common";
 import CodeEditor from "./CodeEditor/CodeEditor";
 import { ErDiagram } from "./ErDiagram/ErDiagram";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const Body = () => {
   const [erDoc, setErDoc] = useState<ER | null>(null);
   const [erDocHasError, setErDocHasError] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
+
+  const { width: viewportWidth } = useWindowDimensions();
+  const lg = viewportWidth >= 1024;
 
   const onErDocChange = (er: ER) => {
     setErDoc((currentEr) => {
@@ -23,15 +27,20 @@ const Body = () => {
   };
 
   return (
-    <PanelGroup direction="horizontal">
+    <PanelGroup direction={lg ? "horizontal" : "vertical"}>
       <Panel defaultSize={40} minSize={25}>
-        <div className="flex h-full w-full flex-col overflow-hidden">
+        <div
+          className={`flex h-full w-full flex-col  ${
+            lg ? "overflow-hidden" : ""
+          }`}
+        >
           <CodeEditor
             onErDocChange={onErDocChange}
             onErrorChange={setErDocHasError}
           />
         </div>
       </Panel>
+
       <PanelResizeHandle
         className={`relative w-1 ${dragging ? "bg-secondary" : "bg-primary"}`}
         onDragging={(isDragging) => {
@@ -40,7 +49,8 @@ const Body = () => {
       >
         <div className="h-full w-1 bg-primary hover:bg-secondary"></div>
       </PanelResizeHandle>
-      <Panel defaultSize={60}>
+
+      <Panel defaultSize={60} className={`${!lg ? "float-left" : ""}`}>
         <div className="h-full pt-1">
           <ErDiagram erDoc={erDoc!} erDocHasError={erDocHasError} />
         </div>

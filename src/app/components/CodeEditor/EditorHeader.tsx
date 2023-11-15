@@ -20,7 +20,7 @@ export const EditorHeader = ({
       bg={colors.textEditorBackground}
       borderBottom={"1px"}
       borderBottomColor={"rgb(248 250 252 / 0.16)"}
-      className=" flex w-full flex-row items-center justify-end"
+      className=" flex h-[26px] w-full flex-row items-center justify-end"
     >
       <div className="flex">
         <EditorButton
