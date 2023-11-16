@@ -5,18 +5,23 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ErJSON, useJSON } from "../../hooks/useJSON";
 import { fetchExample } from "../../util/common";
+import { ErDocChangeEvent } from "../../types/CodeEditor";
+
+type ExamplesTableProps = {
+  onErDocChange: (evt: ErDocChangeEvent) => void;
+};
 
 // TODO: refactor, should request this from server?
 const EXAMPLE_NAMES = ["bank", "company", "subclass", "aggregation", "roles"];
 
-const ExamplesTable = () => {
+const ExamplesTable = ({ onErDocChange }: ExamplesTableProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [cachedExample, setCachedExample] = useState<{
     name: string;
     data: ErJSON;
   } | null>(null);
 
-  const { importJSON } = useJSON();
+  const { importJSON } = useJSON(onErDocChange);
   const t = useTranslations("home.examples");
 
   const onExampleClickHandler = (exampleName: string) => {

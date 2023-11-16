@@ -8,7 +8,6 @@ import { getRectOfNodes, useReactFlow } from "reactflow";
 import { DownloadFunc, downloadImage, exportToPDF } from "../../util/common";
 import { Dropdown } from "./Dropdown";
 import { ExportImageModal } from "./ExportModal";
-import { useJSON } from "../../hooks/useJSON";
 
 const ExportButton = () => {
   const flow = document.querySelector(".react-flow__viewport");
@@ -36,7 +35,6 @@ const ExportButton = () => {
     };
 
   const t = useTranslations("home.header");
-  const { exportToJSON } = useJSON();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [exportFunc, setExportFunc] = useState<DownloadFunc>(() => {});
   const [allowTransparent, setAllowTransparent] = useState<boolean>(true);

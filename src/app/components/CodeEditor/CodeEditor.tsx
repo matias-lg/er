@@ -4,8 +4,11 @@ import { editor, languages } from "monaco-types";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { getERDoc } from "../../../ERDoc";
-import { ER } from "../../../ERDoc/types/parser/ER";
-import { ErrorMessage, MarkerSeverity } from "../../types/CodeEditor";
+import {
+  ErrorMessage,
+  MarkerSeverity,
+  ErDocChangeEvent,
+} from "../../types/CodeEditor";
 import { colors } from "../../util/colors";
 import getErrorMessage from "../../util/errorMessages";
 import { EditorHeader } from "./EditorHeader";
@@ -17,7 +20,7 @@ import { useJSON } from "../../hooks/useJSON";
 const DEFAULT_EXAMPLE = "company";
 
 type ErrorReportingEditorProps = {
-  onErDocChange: (er: ER) => void;
+  onErDocChange: (evt: ErDocChangeEvent) => void;
   onErrorChange: (hasError: boolean) => void;
 };
 
@@ -93,7 +96,7 @@ const CodeEditor = ({
   const thisEditor = useMonaco();
   const semanticErrT = useTranslations("home.codeEditor.semanticErrorMessages");
   const [errorMessages, setErrorMessages] = useState<ErrorMessage[]>([]);
-  const { importJSON } = useJSON();
+  const { importJSON } = useJSON(onErDocChange);
 
   const setEditorErrors = (
     errorMessages: ErrorMessage[],
@@ -125,7 +128,7 @@ const CodeEditor = ({
       localStorage.setItem(LOCAL_STORAGE_EDITOR_CONTENT_KEY, content);
       const [erDoc, errors] = getERDoc(content);
       onErrorChange(errors.length > 0);
-      onErDocChange(erDoc);
+      onErDocChange({ er: erDoc, type: "userInput" });
       const errorMsgs: ErrorMessage[] = errors.map((err) => ({
         errorMessage: getErrorMessage(semanticErrT, err),
         location: err.location,
@@ -221,7 +224,7 @@ const CodeEditor = ({
         maxHeight={"30%"}
         backgroundColor={colors.textEditorBackground}
       >
-        <ExamplesTable />
+        <ExamplesTable onErDocChange={onErDocChange} />
       </Box>
     </Box>
   );

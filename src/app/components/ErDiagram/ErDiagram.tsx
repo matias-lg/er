@@ -24,12 +24,14 @@ import { useDiagramToLocalStorage } from "../../hooks/useDiagramToLocalStorage";
 import { useLayoutedElements } from "../../hooks/useLayoutedElements";
 import ErNotation from "./notations/DefaultNotation";
 import { useTranslations } from "next-intl";
+import { DiagramChange } from "../../types/CodeEditor";
 
 type ErDiagramProps = {
   erDoc: ER;
   erDocHasError: boolean;
   notation: ErNotation;
   notationType: NotationTypes;
+  lastChange: DiagramChange | null;
   setEdgesOrthogonal: (isOrthogonal: boolean) => void;
   onNotationChange: (newNotationType: NotationTypes) => void;
   erEdgeNotation: ErNotation["edgeMarkers"];
@@ -38,8 +40,10 @@ type ErDiagramProps = {
 const NotationSelectorErDiagramWrapper = ({
   erDoc,
   erDocHasError,
+  lastChange,
 }: {
   erDoc: ER;
+  lastChange: DiagramChange | null;
   erDocHasError: boolean;
 }) => {
   const [edgesOrthogonal, setEdgesOrthogonal] = useState<boolean>(false);
@@ -54,6 +58,7 @@ const NotationSelectorErDiagramWrapper = ({
       erDoc={erDoc}
       erDocHasError={erDocHasError}
       notation={notation}
+      lastChange={lastChange}
       erEdgeNotation={notation.edgeMarkers}
       notationType={notationType}
       onNotationChange={(newNotationType) => setNotationType(newNotationType)}
@@ -67,6 +72,7 @@ const ErDiagram = ({
   erDocHasError,
   notation,
   notationType,
+  lastChange,
   onNotationChange,
   setEdgesOrthogonal,
 }: ErDiagramProps) => {
@@ -80,96 +86,104 @@ const ErDiagram = ({
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const { fitView } = useReactFlow();
-  const {
-    autoLayoutEnabled,
-    loadedDiagramFromOutside,
-    setLoadedDiagramFromOutside,
-  } = useContext(Context);
+  const { autoLayoutEnabled } = useContext(Context);
 
   const { onNodeDrag, onNodeDragStart, onNodeDragStop } = useAlignmentGuide();
   const { saveToLocalStorage, loadFromLocalStorage, setRfInstance } =
     useDiagramToLocalStorage();
   useLayoutedElements(autoLayoutEnabled);
 
-  if (!erDocHasError && erDoc !== prevErDoc) {
-    setPrevErDoc(erDoc);
-    // don't update the diagram if it was loaded from json or localstorage
-    if (loadedDiagramFromOutside) {
-      setLoadedDiagramFromOutside(false);
-      saveToLocalStorage();
-    } else {
-      const [fromErNodes, fromErEdges] = erToReactflowElements(
-        erDoc,
-        erEdgeNotation,
-      );
-      const renaming =
-        nodes.length === fromErNodes.length &&
-        edges.length === fromErEdges.length;
-      const hideItems = !renaming && autoLayoutEnabled;
-      // @ts-ignore
+  useEffect(() => {
+    if (lastChange?.type === "json" || lastChange?.type === "localStorage") {
+      console.log("Loading from", lastChange.type);
+      const nodePositions = lastChange.positions.nodes;
       setNodes((nodes) => {
-        const alreadyExists: string[] = [];
-        return (
-          nodes
-            // if the node already exists, keep its position
-            .map((oldNode) => {
-              let newNode = fromErNodes.find(
-                (newNode) => newNode.data.erId === oldNode.data.erId,
-              );
-              if (!newNode && renaming) {
-                newNode = fromErNodes.find(
-                  (newNode) => newNode.id === oldNode.id,
-                );
-              }
-              if (newNode) {
-                alreadyExists.push(newNode.id);
-                newNode.position = oldNode.position;
-                // for aggregations, don't modify its size
-                if (newNode.type === "aggregation") {
-                  newNode.data.height = (
-                    oldNode as AggregationNode
-                  ).data.height;
-                  newNode.data.width = (oldNode as AggregationNode).data.width;
-                }
-                return newNode;
-              }
-              return undefined;
-            })
-            .filter((n) => n !== undefined)
-            // hide the new nodes and add them
-            .concat(
-              fromErNodes
-                .filter((nn) => !alreadyExists.includes(nn.id))
-                .map((newNode) => ({
-                  ...newNode,
-                  style: { ...newNode.style, opacity: hideItems ? 0 : 1 },
-                })),
-            )
-        );
-      });
-
-      setEdges((oldEdges) => {
-        const alreadyExists: string[] = [];
-        return oldEdges
-          .map((oldEdge) => {
-            const updatedEdge = fromErEdges.find((ne) => ne.id === oldEdge.id);
-            if (updatedEdge) alreadyExists.push(updatedEdge.id);
-            return updatedEdge;
-          })
-          .concat(
-            fromErEdges
-              .filter((ne) => !alreadyExists.includes(ne.id))
-              .map((e) => ({ ...e, hidden: hideItems ? true : false })),
-          )
-          .filter((e) => e !== undefined) as Edge[];
+        return nodes.map((node) => {
+          const savedNode = nodePositions.find((n) => n.id === node.id);
+          if (savedNode) {
+            return {
+              ...node,
+              position: savedNode.position,
+            };
+          } else return node;
+        });
       });
       setTimeout(saveToLocalStorage, 100);
     }
+  }, [lastChange, saveToLocalStorage, setNodes, fitView]);
+
+  if (!erDocHasError && erDoc !== prevErDoc) {
+    setPrevErDoc(erDoc);
+    const [fromErNodes, fromErEdges] = erToReactflowElements(
+      erDoc,
+      erEdgeNotation,
+    );
+    const renaming =
+      nodes.length === fromErNodes.length &&
+      edges.length === fromErEdges.length;
+    const hideItems = !renaming && autoLayoutEnabled;
+    // @ts-ignore
+    setNodes((nodes) => {
+      const alreadyExists: string[] = [];
+      return (
+        nodes
+          // if the node already exists, keep its position
+          .map((oldNode) => {
+            let newNode = fromErNodes.find(
+              (newNode) => newNode.data.erId === oldNode.data.erId,
+            );
+            if (!newNode && renaming) {
+              newNode = fromErNodes.find(
+                (newNode) => newNode.id === oldNode.id,
+              );
+            }
+            if (newNode) {
+              alreadyExists.push(newNode.id);
+              newNode.position = oldNode.position;
+              // for aggregations, don't modify its size
+              if (newNode.type === "aggregation") {
+                newNode.data.height = (oldNode as AggregationNode).data.height;
+                newNode.data.width = (oldNode as AggregationNode).data.width;
+              }
+              return newNode;
+            }
+            return undefined;
+          })
+          .filter((n) => n !== undefined)
+          // hide the new nodes and add them
+          .concat(
+            fromErNodes
+              .filter((nn) => !alreadyExists.includes(nn.id))
+              .map((newNode) => ({
+                ...newNode,
+                style: { ...newNode.style, opacity: hideItems ? 0 : 1 },
+              })),
+          )
+      );
+    });
+
+    setEdges((oldEdges) => {
+      const alreadyExists: string[] = [];
+      return oldEdges
+        .map((oldEdge) => {
+          const updatedEdge = fromErEdges.find((ne) => ne.id === oldEdge.id);
+          if (updatedEdge) alreadyExists.push(updatedEdge.id);
+          return updatedEdge;
+        })
+        .concat(
+          fromErEdges
+            .filter((ne) => !alreadyExists.includes(ne.id))
+            .map((e) => ({ ...e, hidden: hideItems ? true : false })),
+        )
+        .filter((e) => e !== undefined) as Edge[];
+    });
+    setTimeout(saveToLocalStorage, 100);
   }
 
   useEffect(() => {
     if (!autoLayoutEnabled) {
-      setTimeout(() => window.requestAnimationFrame(() => fitView()), 0);
+      console.log("Setting the view from old");
+      setTimeout(() => window.requestAnimationFrame(() => fitView()), 10);
     }
   }, [nodes.length, autoLayoutEnabled, fitView]);
 

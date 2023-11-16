@@ -1,6 +1,5 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 import { ReactFlowInstance, useReactFlow } from "reactflow";
-import { Context } from "../context";
 
 const LOCAL_STORAGE_FLOW_KEY = "er-flow";
 
@@ -15,14 +14,11 @@ export const useDiagramToLocalStorage = () => {
     }
   }, [rfInstance]);
 
-  const { setLoadedDiagramFromOutside } = useContext(Context);
-
   const loadFromLocalStorage = () => {
     const storedFlow = localStorage.getItem(LOCAL_STORAGE_FLOW_KEY);
     if (storedFlow) {
       const flow = JSON.parse(storedFlow);
       const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-      setLoadedDiagramFromOutside(true);
       setNodes(() => {
         return flow.nodes || [];
       });
