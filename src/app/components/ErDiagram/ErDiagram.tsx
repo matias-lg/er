@@ -182,7 +182,6 @@ const ErDiagram = ({
 
   useEffect(() => {
     if (!autoLayoutEnabled) {
-      console.log("Setting the view from old");
       setTimeout(() => window.requestAnimationFrame(() => fitView()), 10);
     }
   }, [nodes.length, autoLayoutEnabled, fitView]);
