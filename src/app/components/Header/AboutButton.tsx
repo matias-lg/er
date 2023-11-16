@@ -18,7 +18,10 @@ const AboutButton = () => {
 
   return (
     <>
-      <button className="flex items-center" onClick={onOpen}>
+      <button
+        className="flex items-center text-slate-400  hover:text-slate-300"
+        onClick={onOpen}
+      >
         <MdInfoOutline size={25} />
       </button>
 
