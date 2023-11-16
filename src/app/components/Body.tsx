@@ -3,16 +3,17 @@ import { useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { ER } from "../../ERDoc/types/parser/ER";
 import useWindowDimensions from "../hooks/useWindowDimensions";
-import { ErDocChangeEvent } from "../types/CodeEditor";
+import { DiagramChange, ErDocChangeEvent } from "../types/CodeEditor";
 import CodeEditor from "./CodeEditor/CodeEditor";
 import { ErDiagram } from "./ErDiagram/ErDiagram";
 
 type BodyProps = {
   erDoc: ER | null;
   onErDocChange: (evt: ErDocChangeEvent) => void;
+  lastChange: DiagramChange | null;
 };
 
-const Body = ({ erDoc, onErDocChange }: BodyProps) => {
+const Body = ({ erDoc, lastChange, onErDocChange }: BodyProps) => {
   const [erDocHasError, setErDocHasError] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
   const { width } = useWindowDimensions();
@@ -44,7 +45,11 @@ const Body = ({ erDoc, onErDocChange }: BodyProps) => {
 
       <Panel defaultSize={60} className={`${!lg ? "float-left" : ""}`}>
         <div className="h-full pt-1">
-          <ErDiagram erDoc={erDoc!} erDocHasError={erDocHasError} />
+          <ErDiagram
+            erDoc={erDoc!}
+            erDocHasError={erDocHasError}
+            lastChange={lastChange}
+          />
         </div>
       </Panel>
     </PanelGroup>

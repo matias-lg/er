@@ -4,25 +4,32 @@ import Body from "../components/Body";
 import Header from "../components/Header/Header";
 import { Context } from "../context";
 import { erDocWithoutLocation } from "../util/common";
-import { ErDocChangeEvent } from "../types/CodeEditor";
+import { DiagramChange, ErDocChangeEvent } from "../types/CodeEditor";
 import { ER } from "../../ERDoc/types/parser/ER";
 
 const Page = () => {
   const [autoLayoutEnabled, setAutoLayoutEnabled] = useState<boolean | null>(
     null,
   );
-  const [loadedDiagramFromOutside, setLoadedDiagramFromOutside] =
-    useState<boolean>(false);
 
   const [erDoc, setErDoc] = useState<ER | null>(null);
+  const [lastChange, setLastChange] = useState<DiagramChange | null>(null);
 
   const onErDocChange = (evt: ErDocChangeEvent) => {
     switch (evt.type) {
       case "json": {
+        setLastChange({
+          type: "json",
+          positions: evt.positions,
+        });
         return;
       }
 
       case "localStorage": {
+        setLastChange({
+          type: "localStorage",
+          positions: evt.positions,
+        });
         return;
       }
 
@@ -51,8 +58,6 @@ const Page = () => {
       value={{
         autoLayoutEnabled,
         setAutoLayoutEnabled,
-        loadedDiagramFromOutside,
-        setLoadedDiagramFromOutside,
       }}
     >
       <div className="flex h-screen w-screen flex-col">
@@ -60,7 +65,11 @@ const Page = () => {
           <Header onErDocChange={onErDocChange} />
         </div>
         <div className="h-[90%] w-full min-[1340px]:h-[95%]">
-          <Body erDoc={erDoc} onErDocChange={onErDocChange} />
+          <Body
+            erDoc={erDoc}
+            lastChange={lastChange}
+            onErDocChange={onErDocChange}
+          />
         </div>
       </div>
     </Context.Provider>

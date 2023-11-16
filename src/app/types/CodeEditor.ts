@@ -33,3 +33,16 @@ export type ErDocChangeEvent =
       type: "localStorage";
       positions: ErEventPositions;
     };
+
+export type DiagramChange =
+  | {
+      type: "userInput";
+    }
+  | {
+      type: "json";
+      positions: ErEventPositions;
+    }
+  | {
+      type: "localStorage";
+      positions: ErEventPositions;
+    };
