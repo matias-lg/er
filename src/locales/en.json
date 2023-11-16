@@ -40,6 +40,13 @@
         "label": "Language",
         "en": "English",
         "es": "Spanish"
+      },
+
+      "about": {
+        "title": "About",
+        "developedBy": "Developed by",
+        "during": "as part of the graduation project at",
+        "license": "ERdoc Playground © 2023 is licensed under the MIT license."
       }
     },
 
