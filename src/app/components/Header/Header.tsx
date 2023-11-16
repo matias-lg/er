@@ -8,6 +8,7 @@ import SaveLoadFileButton from "./SaveLoadFileButton";
 import NewDiagramButton from "./NewDiagramButton";
 import LocaleSwitcher from "./LocaleSwitcher";
 import { ErDocChangeEvent } from "../../types/CodeEditor";
+import AboutButton from "./AboutButton";
 
 const PROJECT_GITHUB = "https://github.com/matias-lg/er";
 
@@ -57,8 +58,8 @@ export const Header = ({ onErDocChange }: HeaderProps) => {
         className={`flex ${
           // text in spanish is longer
           isSpanish
-            ? "w-[200px] min-[1573px]:w-[400px] min-[1820px]:w-[700px]"
-            : "w-[200px] min-[1400px]:w-[400px] min-[1800px]:w-[770px]"
+            ? "w-[200px] min-[1600px]:w-[400px] min-[1900px]:w-[700px]"
+            : "w-[200px] min-[1510px]:w-[400px] min-[1875px]:w-[770px]"
         } items-center pl-6 text-slate-200 `}
       >
         <span className="font-sans font-bold ">ERdoc Playground</span>
@@ -97,7 +98,9 @@ export const Header = ({ onErDocChange }: HeaderProps) => {
           <LocaleSwitcher />
         </HeaderElement>
       </div>
-      <div className="ml-auto mr-0 flex h-full items-center text-slate-200">
+
+      <div className="ml-auto mr-0 flex h-full items-center text-slate-400 hover:text-slate-300">
+        <AboutButton />
         <GitHubButton />
       </div>
     </>
