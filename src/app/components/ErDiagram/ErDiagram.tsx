@@ -95,6 +95,7 @@ const ErDiagram = ({
 
   useEffect(() => {
     if (lastChange?.type === "json" || lastChange?.type === "localStorage") {
+      console.log("Loading from", lastChange.type);
       const nodePositions = lastChange.positions.nodes;
       setNodes((nodes) => {
         return nodes.map((node) => {
@@ -107,8 +108,7 @@ const ErDiagram = ({
           } else return node;
         });
       });
-      saveToLocalStorage();
-      setTimeout(() => window.requestAnimationFrame(() => fitView()), 3);
+      setTimeout(saveToLocalStorage, 100);
     }
   }, [lastChange, saveToLocalStorage, setNodes, fitView]);
 
@@ -182,7 +182,8 @@ const ErDiagram = ({
 
   useEffect(() => {
     if (!autoLayoutEnabled) {
-      setTimeout(() => window.requestAnimationFrame(() => fitView()), 0);
+      console.log("Setting the view from old");
+      setTimeout(() => window.requestAnimationFrame(() => fitView()), 10);
     }
   }, [nodes.length, autoLayoutEnabled, fitView]);
 

@@ -40,8 +40,7 @@ const exportObject = (object: any, filename: string) => {
 export const useJSON = (onErDocChange: (evt: ErDocChangeEvent) => void) => {
   const { getNodes, getEdges } = useReactFlow();
   const monaco = useMonaco();
-  const { setAutoLayoutEnabled, setLoadedDiagramFromOutside } =
-    useContext(Context);
+  const { setAutoLayoutEnabled } = useContext(Context);
 
   const exportToJSON = () => {
     const filename = "er-diagram.json";
@@ -75,13 +74,11 @@ export const useJSON = (onErDocChange: (evt: ErDocChangeEvent) => void) => {
     // first, turn off auto layout
     setAutoLayoutEnabled(false);
     // set the text in monaco
-    setLoadedDiagramFromOutside(false);
     if (monacoInstance) {
       monacoInstance.editor.getModels()[0].setValue(editorText);
     } else {
       monaco?.editor.getModels()[0].setValue(editorText);
     }
-
     onErDocChange({
       type: "json",
       positions: {
@@ -89,25 +86,6 @@ export const useJSON = (onErDocChange: (evt: ErDocChangeEvent) => void) => {
         edges: json.edges,
       },
     });
-
-    // HACK: setting the editor value will trigger an OnChange event which will cause the
-    // ER Diagram to be updated to the nodes with default positions, we need to wait for that
-    // to happen and then update the positions. There's probably a better way to do this.
-    // setTimeout(() => {
-    //   setLoadedDiagramFromOutside(true);
-    //   setNodes((nodes) => {
-    //     return nodes.map((node) => {
-    //       const savedNode = json.nodes.find((n) => n.id === node.id);
-    //       if (savedNode) {
-    //         return {
-    //           ...node,
-    //           position: savedNode.position,
-    //         };
-    //       } else return node;
-    //     });
-    //   });
-    //   setTimeout(() => window.requestAnimationFrame(() => fitView()), 1);
-    // }, 1);
   };
 
   return { exportToJSON, importJSON };

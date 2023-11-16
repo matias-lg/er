@@ -10,9 +10,7 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Context } from "../../context";
 import { useMonaco } from "@monaco-editor/react";
-import { useContext } from "react";
 import { useTranslations } from "next-intl";
 import { LuFilePlus } from "react-icons/lu";
 import { ErDocChangeEvent } from "../../types/CodeEditor";
@@ -23,7 +21,6 @@ type NewDiagramButtonProps = {
 
 const NewDiagramButton = ({ onErDocChange }: NewDiagramButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { setLoadedDiagramFromOutside } = useContext(Context);
   const monaco = useMonaco();
   const t = useTranslations("home.header.newDiagram");
 
