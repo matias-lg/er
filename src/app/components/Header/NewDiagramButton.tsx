@@ -15,18 +15,29 @@ import { useMonaco } from "@monaco-editor/react";
 import { useContext } from "react";
 import { useTranslations } from "next-intl";
 import { LuFilePlus } from "react-icons/lu";
+import { ErDocChangeEvent } from "../../types/CodeEditor";
 
-const NewDiagramButton = () => {
+type NewDiagramButtonProps = {
+  onErDocChange: (evt: ErDocChangeEvent) => void;
+};
+
+const NewDiagramButton = ({ onErDocChange }: NewDiagramButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { setLoadedDiagramFromOutside } = useContext(Context);
   const monaco = useMonaco();
   const t = useTranslations("home.header.newDiagram");
 
   const onModalButtonClick = () => {
-    // we want to trigger a diagram update event in this case
-    setLoadedDiagramFromOutside(false);
     const codeEditorModel = monaco?.editor.getModels()[0];
     codeEditorModel?.setValue("");
+    onErDocChange({
+      er: {
+        aggregations: [],
+        entities: [],
+        relationships: [],
+      },
+      type: "userInput",
+    });
     onClose();
   };
 

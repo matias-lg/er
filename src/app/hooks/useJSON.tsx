@@ -2,6 +2,7 @@ import { useMonaco } from "@monaco-editor/react";
 import { useContext } from "react";
 import { useReactFlow } from "reactflow";
 import { Context } from "../context";
+import { ErDocChangeEvent } from "../types/CodeEditor";
 
 export type ErJSON = {
   erDoc: string;
@@ -36,8 +37,8 @@ const exportObject = (object: any, filename: string) => {
   document.body.removeChild(a);
 };
 
-export const useJSON = () => {
-  const { getNodes, getEdges, setNodes, fitView } = useReactFlow();
+export const useJSON = (onErDocChange: (evt: ErDocChangeEvent) => void) => {
+  const { getNodes, getEdges } = useReactFlow();
   const monaco = useMonaco();
   const { setAutoLayoutEnabled, setLoadedDiagramFromOutside } =
     useContext(Context);
@@ -75,30 +76,38 @@ export const useJSON = () => {
     setAutoLayoutEnabled(false);
     // set the text in monaco
     setLoadedDiagramFromOutside(false);
-    const codeEditor = monaco?.editor.getModels()[0];
     if (monacoInstance) {
       monacoInstance.editor.getModels()[0].setValue(editorText);
     } else {
       monaco?.editor.getModels()[0].setValue(editorText);
     }
+
+    onErDocChange({
+      type: "json",
+      positions: {
+        nodes: json.nodes,
+        edges: json.edges,
+      },
+    });
+
     // HACK: setting the editor value will trigger an OnChange event which will cause the
     // ER Diagram to be updated to the nodes with default positions, we need to wait for that
     // to happen and then update the positions. There's probably a better way to do this.
-    setTimeout(() => {
-      setLoadedDiagramFromOutside(true);
-      setNodes((nodes) => {
-        return nodes.map((node) => {
-          const savedNode = json.nodes.find((n) => n.id === node.id);
-          if (savedNode) {
-            return {
-              ...node,
-              position: savedNode.position,
-            };
-          } else return node;
-        });
-      });
-      setTimeout(() => window.requestAnimationFrame(() => fitView()), 1);
-    }, 1);
+    // setTimeout(() => {
+    //   setLoadedDiagramFromOutside(true);
+    //   setNodes((nodes) => {
+    //     return nodes.map((node) => {
+    //       const savedNode = json.nodes.find((n) => n.id === node.id);
+    //       if (savedNode) {
+    //         return {
+    //           ...node,
+    //           position: savedNode.position,
+    //         };
+    //       } else return node;
+    //     });
+    //   });
+    //   setTimeout(() => window.requestAnimationFrame(() => fitView()), 1);
+    // }, 1);
   };
 
   return { exportToJSON, importJSON };

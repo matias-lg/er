@@ -2,29 +2,21 @@
 import { useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { ER } from "../../ERDoc/types/parser/ER";
-import { erDocWithoutLocation } from "../util/common";
+import useWindowDimensions from "../hooks/useWindowDimensions";
+import { ErDocChangeEvent } from "../types/CodeEditor";
 import CodeEditor from "./CodeEditor/CodeEditor";
 import { ErDiagram } from "./ErDiagram/ErDiagram";
-import useWindowDimensions from "../hooks/useWindowDimensions";
 
-const Body = () => {
-  const [erDoc, setErDoc] = useState<ER | null>(null);
+type BodyProps = {
+  erDoc: ER | null;
+  onErDocChange: (evt: ErDocChangeEvent) => void;
+};
+
+const Body = ({ erDoc, onErDocChange }: BodyProps) => {
   const [erDocHasError, setErDocHasError] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
-
   const { width } = useWindowDimensions();
   const lg = (width ?? Infinity) >= 1024;
-
-  const onErDocChange = (er: ER) => {
-    setErDoc((currentEr) => {
-      if (currentEr === null) return er;
-      const currentErNoLoc = erDocWithoutLocation(currentEr);
-      const newErNoLoc = erDocWithoutLocation(er);
-      const sameSemanticValue =
-        JSON.stringify(currentErNoLoc) === JSON.stringify(newErNoLoc);
-      return sameSemanticValue ? currentEr : er;
-    });
-  };
 
   return (
     <PanelGroup direction={lg ? "horizontal" : "vertical"}>

@@ -15,6 +15,7 @@ import { LuFileJson } from "react-icons/lu";
 import { useJSON } from "../../hooks/useJSON";
 import { Dropdown } from "./Dropdown";
 import { useTranslations } from "next-intl";
+import { ErDocChangeEvent } from "../../types/CodeEditor";
 
 const validate = (json: any): boolean => {
   if (!json.erDoc) return false;
@@ -44,14 +45,16 @@ const SaveLoadFileButton = ({
   modalTitle,
   modalDescription,
   modalConfirm,
+  onErDocChange,
 }: {
   title: string;
   modalTitle: string;
   modalDescription: string;
   modalConfirm: string;
+  onErDocChange: (evt: ErDocChangeEvent) => void;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { importJSON, exportToJSON } = useJSON();
+  const { importJSON, exportToJSON } = useJSON(onErDocChange);
   const t = useTranslations("home.header.saveLoad");
 
   let fileRef = useRef<HTMLInputElement | null>(null);

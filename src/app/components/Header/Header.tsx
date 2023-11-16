@@ -1,12 +1,13 @@
 import { useLocale, useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 import { BiSolidBook } from "react-icons/bi";
 import { MdDownload } from "react-icons/md";
 import AutoLayoutSwitch from "./AutoLayoutSwitch";
 import SaveLoadFileButton from "./SaveLoadFileButton";
 import NewDiagramButton from "./NewDiagramButton";
 import LocaleSwitcher from "./LocaleSwitcher";
+import { ErDocChangeEvent } from "../../types/CodeEditor";
 
 const PROJECT_GITHUB = "https://github.com/matias-lg/er";
 
@@ -27,7 +28,11 @@ const HeaderElement = ({
   </div>
 );
 
-export const Header = () => {
+type HeaderProps = {
+  onErDocChange: (evt: ErDocChangeEvent) => void;
+};
+
+export const Header = ({ onErDocChange }: HeaderProps) => {
   const t = useTranslations("home.header");
   const locale = useLocale();
   const isSpanish = locale === "es";
@@ -65,7 +70,7 @@ export const Header = () => {
         </HeaderElement>
 
         <HeaderElement className="border-l-[1px]">
-          <NewDiagramButton />
+          <NewDiagramButton onErDocChange={onErDocChange} />
         </HeaderElement>
 
         <HeaderElement className="border-l-[1px]">
@@ -74,6 +79,7 @@ export const Header = () => {
             modalTitle={t("importModal.title")}
             modalDescription={t("importModal.description")}
             modalConfirm={t("importModal.upload")}
+            onErDocChange={onErDocChange}
           />
         </HeaderElement>
 
@@ -117,4 +123,4 @@ const GitHubButton = () => {
   );
 };
 
-export default Header;
+export default memo(Header);
