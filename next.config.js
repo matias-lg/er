@@ -2,7 +2,7 @@ const { getHighlighter, BUNDLED_LANGUAGES } = require("shiki");
 
 const withNextra = require("nextra")({
   theme: "nextra-theme-docs",
-  themeConfig: "./src/pages/docs.config.tsx",
+  themeConfig: "./docs.config.tsx",
   mdxOptions: {
     rehypePrettyCodeOptions: {
       getHighlighter: (options) =>

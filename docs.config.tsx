@@ -1,12 +1,6 @@
-import { ThemeConfig } from "nextra";
 import React from "react";
 
-const DocsConfig: ThemeConfig = {
-  head: (
-    <>
-      <meta property="og:title" content="ERdoc Docs" />
-    </>
-  ),
+const DocsConfig = {
   project: {
     link: "https://github.com/matias-lg/er",
   },
