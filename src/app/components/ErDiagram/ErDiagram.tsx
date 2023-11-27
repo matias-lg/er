@@ -95,7 +95,6 @@ const ErDiagram = ({
 
   useEffect(() => {
     if (lastChange?.type === "json" || lastChange?.type === "localStorage") {
-      console.log("Loading from", lastChange.type);
       const nodePositions = lastChange.positions.nodes;
       setNodes((nodes) => {
         return nodes.map((node) => {

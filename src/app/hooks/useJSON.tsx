@@ -74,11 +74,7 @@ export const useJSON = (onErDocChange: (evt: ErDocChangeEvent) => void) => {
     // first, turn off auto layout
     setAutoLayoutEnabled(false);
     // set the text in monaco
-    if (monacoInstance) {
-      monacoInstance.editor.getModels()[0].setValue(editorText);
-    } else {
-      monaco?.editor.getModels()[0].setValue(editorText);
-    }
+    setModelValue(monacoInstance ?? monaco, editorText);
     onErDocChange({
       type: "json",
       positions: {
@@ -89,4 +85,22 @@ export const useJSON = (onErDocChange: (evt: ErDocChangeEvent) => void) => {
   };
 
   return { exportToJSON, importJSON };
+};
+
+const setModelValue = (
+  monacoInstance: ReturnType<typeof useMonaco>,
+  editorText: string,
+) => {
+  const model = monacoInstance?.editor.getModels()[0];
+  if (!model) return;
+  model.pushEditOperations(
+    [],
+    [
+      {
+        range: model.getFullModelRange(),
+        text: editorText,
+      },
+    ],
+    () => null,
+  );
 };
