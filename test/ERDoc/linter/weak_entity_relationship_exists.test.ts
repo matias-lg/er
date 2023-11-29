@@ -15,9 +15,9 @@ describe("Checks weak entities depend on existing relationships", () => {
         column: 1,
       },
       end: {
-        offset: 78,
-        line: 5,
-        column: 2,
+        offset: 10,
+        line: 1,
+        column: 11,
       },
     });
   });
@@ -25,6 +25,16 @@ describe("Checks weak entities depend on existing relationships", () => {
   it("Detects no errors when relationship is present", () => {
     const errors = checkWeakEntityRelationshipExists(correctER);
     expect(errors.length).toBe(0);
+  });
+
+  it("Detects multiple errors when multiple dependencies are missing", () => {
+    const errors = checkWeakEntityRelationshipExists(missing2Deps);
+    expect(errors.length).toBe(2);
+  });
+
+  it("Detects 1 error when 1 out of 3 dependencies is missing", () => {
+    const errors = checkWeakEntityRelationshipExists(missing1Dep);
+    expect(errors.length).toBe(1);
   });
 });
 
@@ -35,6 +45,21 @@ const missingRelationshipER: ER = parse(`entity Car depends on Drives {
 }
 
 relation Makes(Car, Company)`);
+
+const missing2Deps = parse(`
+  entity Dog depends on Feeds, PlaysWith {
+    id pkey
+  }
+`);
+
+const missing1Dep = parse(`
+  entity Dog depends on Feeds, PlaysWith, Chases {
+    id pkey
+  }
+
+  relation Feeds(Dog, Human)
+  relation PlaysWith(Dog, Human)
+`);
 
 const correctER: ER = parse(`entity Car depends on Drives {
     Max_speed pkey

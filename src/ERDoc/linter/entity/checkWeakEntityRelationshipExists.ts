@@ -12,17 +12,15 @@ export const checkWeakEntityRelationshipExists = (
   const errors: WeakEntityDependsOnNonExistentRelationshipError[] = [];
   for (const entity of er.entities) {
     if (!entity.hasDependencies) continue;
-    if (
-      er.relationships.filter(
-        (rel) => rel.name === entity.dependsOn?.relationshipName,
-      ).length === 0
-    )
-      errors.push({
-        type: "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP",
-        entityName: entity.name,
-        relationshipName: entity.dependsOn!.relationshipName,
-        location: entity.location,
-      });
+    for (const dep of entity.dependsOn!.relationshipName) {
+      if (er.relationships.filter((rel) => rel.name === dep).length === 0)
+        errors.push({
+          type: "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP",
+          entityName: entity.name,
+          relationshipName: dep,
+          location: entity.location,
+        });
+    }
   }
   return errors;
 };
