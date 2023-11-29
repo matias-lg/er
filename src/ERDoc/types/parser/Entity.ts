@@ -16,7 +16,7 @@ export type Entity = {
   parentName: string | null;
   hasDependencies: boolean;
   dependsOn: {
-    relationshipName: string;
+    relationshipName: string[];
   } | null;
   location: TokenLocation;
 };
