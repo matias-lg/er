@@ -101,7 +101,7 @@
 
         "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION": "Weak entity \"{entityName}\" doesn't have total participation in relationship \"{relationshipName}\"",
 
-        "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP": "Weak entity \"{entityName}\" depends on non-existent relationship \"{relationshipName}\"",
+        "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP": "Weak entity \"{entityName}\" depends on non-existent relationship \"{relationshipName}\"\n Hint: weak entities depend on relationships, not entities",
 
         "CHILD_ENTITY_HAS_KEY": "Child entity \"{entityName}\" has identifying key",
 
