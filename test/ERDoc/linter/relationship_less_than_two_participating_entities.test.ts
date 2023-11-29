@@ -1,5 +1,6 @@
 import { ER } from "../../../src/ERDoc/types/parser/ER";
 import { checkRelationshipLessThanTwoParticipatingEntities } from "../../../src/ERDoc/linter/relationship/checkRelationshipLessThanTwoParticipatingEntities";
+import { parse } from "../../../src/ERDoc/parser";
 
 describe("Linter detects relationships with less than two participating entities", () => {
   it("Returns error when there's only one partipating entity", () => {
@@ -16,9 +17,9 @@ describe("Linter detects relationships with less than two participating entities
         column: 1,
       },
       end: {
-        offset: 32,
+        offset: 18,
         line: 1,
-        column: 33,
+        column: 19,
       },
     });
   });
@@ -37,9 +38,9 @@ describe("Linter detects relationships with less than two participating entities
         column: 1,
       },
       end: {
-        offset: 45,
+        offset: 19,
         line: 1,
-        column: 46,
+        column: 20,
       },
     });
   });
@@ -56,280 +57,14 @@ describe("Linter detects relationships with less than two participating entities
   });
 });
 
-/*
-relation works_for(department){}
-*/
-const wrongER: ER = {
-  entities: [],
-  relationships: [
-    {
-      type: "relationship",
-      name: "works_for",
-      participantEntities: [
-        {
-          entityName: "department",
-          isComposite: false,
-          cardinality: "N",
-          participation: "partial",
-          location: {
-            start: {
-              offset: 19,
-              line: 1,
-              column: 20,
-            },
-            end: {
-              offset: 29,
-              line: 1,
-              column: 30,
-            },
-          },
-        },
-      ],
-      attributes: [],
-      location: {
-        start: {
-          offset: 0,
-          line: 1,
-          column: 1,
-        },
-        end: {
-          offset: 32,
-          line: 1,
-          column: 33,
-        },
-      },
-    },
-  ],
-  aggregations: [],
-};
+const wrongER: ER = parse(`relation works_for(department){}`);
 
-/*
-relation supervises(employee: [supervisor]){}
-*/
-const wrongER2: ER = {
-  entities: [],
-  relationships: [
-    {
-      type: "relationship",
-      name: "supervises",
-      participantEntities: [
-        {
-          entityName: "employee",
-          isComposite: true,
-          childParticipants: [
-            {
-              entityName: "supervisor",
-              isComposite: false,
-              cardinality: "N",
-              participation: "partial",
-              location: {
-                start: {
-                  offset: 31,
-                  line: 1,
-                  column: 32,
-                },
-                end: {
-                  offset: 41,
-                  line: 1,
-                  column: 42,
-                },
-              },
-            },
-          ],
-          location: {
-            start: {
-              offset: 20,
-              line: 1,
-              column: 21,
-            },
-            end: {
-              offset: 42,
-              line: 1,
-              column: 43,
-            },
-          },
-        },
-      ],
-      attributes: [],
-      location: {
-        start: {
-          offset: 0,
-          line: 1,
-          column: 1,
-        },
-        end: {
-          offset: 45,
-          line: 1,
-          column: 46,
-        },
-      },
-    },
-  ],
-  aggregations: [],
-};
+const wrongER2: ER = parse(`relation supervises(employee: [supervisor]){}`);
 
-/*
-relation supervises(employee: [supervisor, supervisee])
-*/
-const correctER: ER = {
-  entities: [],
-  relationships: [
-    {
-      type: "relationship",
-      name: "supervises",
-      participantEntities: [
-        {
-          entityName: "employee",
-          isComposite: true,
-          childParticipants: [
-            {
-              entityName: "supervisor",
-              isComposite: false,
-              cardinality: "N",
-              participation: "partial",
-              location: {
-                start: {
-                  offset: 31,
-                  line: 1,
-                  column: 32,
-                },
-                end: {
-                  offset: 41,
-                  line: 1,
-                  column: 42,
-                },
-              },
-            },
-            {
-              entityName: "supervisee",
-              isComposite: false,
-              cardinality: "N",
-              participation: "partial",
-              location: {
-                start: {
-                  offset: 43,
-                  line: 1,
-                  column: 44,
-                },
-                end: {
-                  offset: 53,
-                  line: 1,
-                  column: 54,
-                },
-              },
-            },
-          ],
-          location: {
-            start: {
-              offset: 20,
-              line: 1,
-              column: 21,
-            },
-            end: {
-              offset: 54,
-              line: 1,
-              column: 55,
-            },
-          },
-        },
-      ],
-      attributes: [],
-      location: {
-        start: {
-          offset: 0,
-          line: 1,
-          column: 1,
-        },
-        end: {
-          offset: 55,
-          line: 1,
-          column: 56,
-        },
-      },
-    },
-  ],
-  aggregations: [],
-};
+const correctER: ER = parse(
+  `relation supervises(employee: [supervisor, supervisee])`,
+);
 
-/*
-relation supervises(supervisor, supervisee, company)
-*/
-const correctER2: ER = {
-  entities: [],
-  relationships: [
-    {
-      type: "relationship",
-      name: "supervises",
-      participantEntities: [
-        {
-          entityName: "supervisor",
-          isComposite: false,
-          cardinality: "N",
-          participation: "partial",
-          location: {
-            start: {
-              offset: 20,
-              line: 1,
-              column: 21,
-            },
-            end: {
-              offset: 30,
-              line: 1,
-              column: 31,
-            },
-          },
-        },
-        {
-          entityName: "supervisee",
-          isComposite: false,
-          cardinality: "N",
-          participation: "partial",
-          location: {
-            start: {
-              offset: 32,
-              line: 1,
-              column: 33,
-            },
-            end: {
-              offset: 42,
-              line: 1,
-              column: 43,
-            },
-          },
-        },
-        {
-          entityName: "company",
-          isComposite: false,
-          cardinality: "N",
-          participation: "partial",
-          location: {
-            start: {
-              offset: 44,
-              line: 1,
-              column: 45,
-            },
-            end: {
-              offset: 51,
-              line: 1,
-              column: 52,
-            },
-          },
-        },
-      ],
-      attributes: [],
-      location: {
-        start: {
-          offset: 0,
-          line: 1,
-          column: 1,
-        },
-        end: {
-          offset: 52,
-          line: 1,
-          column: 53,
-        },
-      },
-    },
-  ],
-  aggregations: [],
-};
+const correctER2: ER = parse(
+  `relation supervises(supervisor, supervisee, company)`,
+);

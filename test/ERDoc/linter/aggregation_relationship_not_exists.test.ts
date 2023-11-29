@@ -1,4 +1,5 @@
 import { checkAggregationRelationshipNotExists } from "../../../src/ERDoc/linter/aggregation/checkAggregationRelationshipNotExists";
+import { parse } from "../../../src/ERDoc/parser";
 import { ER } from "../../../src/ERDoc/types/parser/ER";
 
 describe("Linter detects aggregation that use a non existent relationship", () => {
@@ -36,129 +37,7 @@ describe("Linter detects aggregation that use a non existent relationship", () =
   });
 });
 
-/*aggregation RelatesToEntity(Relates)*/
-const wrongER: ER = {
-  entities: [],
-  relationships: [],
-  aggregations: [
-    {
-      type: "aggregation",
-      name: "RelatesToEntity",
-      aggregatedRelationshipName: "Relates",
-      location: {
-        start: {
-          offset: 0,
-          line: 1,
-          column: 1,
-        },
-        end: {
-          offset: 36,
-          line: 1,
-          column: 37,
-        },
-      },
-    },
-  ],
-};
+const wrongER: ER = parse(`aggregation RelatesToEntity(Relates)`);
 
-/*
-relation Relates(Entity: [weak, normal])
-aggregation RelatesToEntity(Relates)
-*/
-const correctER: ER = {
-  entities: [],
-  relationships: [
-    {
-      type: "relationship",
-      name: "Relates",
-      participantEntities: [
-        {
-          entityName: "Entity",
-          isComposite: true,
-          childParticipants: [
-            {
-              entityName: "weak",
-              isComposite: false,
-              cardinality: "N",
-              participation: "partial",
-              location: {
-                start: {
-                  offset: 26,
-                  line: 1,
-                  column: 27,
-                },
-                end: {
-                  offset: 30,
-                  line: 1,
-                  column: 31,
-                },
-              },
-            },
-            {
-              entityName: "normal",
-              isComposite: false,
-              cardinality: "N",
-              participation: "partial",
-              location: {
-                start: {
-                  offset: 32,
-                  line: 1,
-                  column: 33,
-                },
-                end: {
-                  offset: 38,
-                  line: 1,
-                  column: 39,
-                },
-              },
-            },
-          ],
-          location: {
-            start: {
-              offset: 17,
-              line: 1,
-              column: 18,
-            },
-            end: {
-              offset: 39,
-              line: 1,
-              column: 40,
-            },
-          },
-        },
-      ],
-      attributes: [],
-      location: {
-        start: {
-          offset: 0,
-          line: 1,
-          column: 1,
-        },
-        end: {
-          offset: 40,
-          line: 1,
-          column: 41,
-        },
-      },
-    },
-  ],
-  aggregations: [
-    {
-      type: "aggregation",
-      name: "RelatesToEntity",
-      aggregatedRelationshipName: "Relates",
-      location: {
-        start: {
-          offset: 41,
-          line: 2,
-          column: 1,
-        },
-        end: {
-          offset: 77,
-          line: 2,
-          column: 37,
-        },
-      },
-    },
-  ],
-};
+const correctER: ER = parse(`relation Relates(SomeEntity: [weak, normal])
+aggregation RelatesToEntity(Relates)`);

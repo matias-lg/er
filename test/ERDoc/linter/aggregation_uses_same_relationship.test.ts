@@ -1,5 +1,6 @@
 import { ER } from "../../../src/ERDoc/types/parser/ER";
 import { checkAggregationUsesSameRelationship } from "../../../src/ERDoc/linter/aggregation/checkAggregationUsesSameRelationship";
+import { parse } from "../../../src/ERDoc/parser";
 
 describe("Linter detects when two aggregations use the same relationship", () => {
   it("return an error when two aggregations use the same relationship", () => {
@@ -32,119 +33,10 @@ describe("Linter detects when two aggregations use the same relationship", () =>
   });
 });
 
-/*
-aggregation Linter_checks_errors(Executes)
-aggregation Parser_parses_string(Executes)
-*/
-const wrongER: ER = {
-  entities: [],
-  relationships: [],
-  aggregations: [
-    {
-      type: "aggregation",
-      name: "Linter_checks_errors",
-      aggregatedRelationshipName: "Executes",
-      location: {
-        start: {
-          offset: 0,
-          line: 1,
-          column: 1,
-        },
-        end: {
-          offset: 42,
-          line: 1,
-          column: 43,
-        },
-      },
-    },
-    {
-      type: "aggregation",
-      name: "Parser_parses_string",
-      aggregatedRelationshipName: "Executes",
-      location: {
-        start: {
-          offset: 43,
-          line: 2,
-          column: 1,
-        },
-        end: {
-          offset: 85,
-          line: 2,
-          column: 43,
-        },
-      },
-    },
-  ],
-};
+const wrongER: ER = parse(`aggregation Linter_checks_errors(Executes)
+aggregation Parser_parses_string(Executes)`);
 
-/*
-aggregation Linter_checks_errors(Lints)
-aggregation Parser_parses_string(Parses)
-*/
-const correctER: ER = {
-  entities: [],
-  relationships: [],
-  aggregations: [
-    {
-      type: "aggregation",
-      name: "Linter_checks_errors",
-      aggregatedRelationshipName: "Lints",
-      location: {
-        start: {
-          offset: 0,
-          line: 1,
-          column: 1,
-        },
-        end: {
-          offset: 39,
-          line: 1,
-          column: 40,
-        },
-      },
-    },
-    {
-      type: "aggregation",
-      name: "Parser_parses_string",
-      aggregatedRelationshipName: "Parses",
-      location: {
-        start: {
-          offset: 40,
-          line: 2,
-          column: 1,
-        },
-        end: {
-          offset: 80,
-          line: 2,
-          column: 41,
-        },
-      },
-    },
-  ],
-};
+const correctER: ER = parse(`aggregation Linter_checks_errors(Lints)
+aggregation Parser_parses_string(Parses)`);
 
-/*
-aggregation Linter_checks_errors(Executes)
-*/
-const singleAggER: ER = {
-  entities: [],
-  relationships: [],
-  aggregations: [
-    {
-      type: "aggregation",
-      name: "Linter_checks_errors",
-      aggregatedRelationshipName: "Executes",
-      location: {
-        start: {
-          offset: 0,
-          line: 1,
-          column: 1,
-        },
-        end: {
-          offset: 42,
-          line: 1,
-          column: 43,
-        },
-      },
-    },
-  ],
-};
+const singleAggER: ER = parse(`aggregation Linter_checks_errors(Executes)`);
