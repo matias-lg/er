@@ -12,20 +12,20 @@ export const checkWeakEntityInRelationship = (
   const errors: WeakEntityNotInRelationshipError[] = [];
   for (const entity of er.entities) {
     if (!entity.hasDependencies) continue;
-    const relationship = er.relationships.find(
-      (r) => r.name === entity.dependsOn!.relationshipName,
-    );
-    if (relationship === undefined) continue;
-    const relationshipParticipants = relationship.participantEntities.map(
-      (p) => p.entityName,
-    );
-    if (relationshipParticipants.find((p) => p === entity.name) === undefined)
-      errors.push({
-        type: "WEAK_ENTITY_NOT_IN_RELATIONSHIP",
-        entityName: entity.name,
-        relationshipName: entity.dependsOn!.relationshipName,
-        location: entity.location,
-      });
+    for (const dep of entity.dependsOn!.relationshipName) {
+      const relationship = er.relationships.find((r) => r.name === dep);
+      if (relationship === undefined) continue;
+      const relationshipParticipants = relationship.participantEntities.map(
+        (p) => p.entityName,
+      );
+      if (relationshipParticipants.find((p) => p === entity.name) === undefined)
+        errors.push({
+          type: "WEAK_ENTITY_NOT_IN_RELATIONSHIP",
+          entityName: entity.name,
+          relationshipName: dep,
+          location: entity.location,
+        });
+    }
   }
   return errors;
 };
