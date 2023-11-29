@@ -315,8 +315,9 @@ const relationshipsWithDependantsFromEr = (erDoc: ER): Relationship[] => {
   return erDoc.relationships.filter((rel) =>
     rel.participantEntities.some(
       (part) =>
-        erDoc.entities.find((e) => e.name === part.entityName)?.dependsOn
-          ?.relationshipName === rel.name,
+        erDoc.entities
+          .find((e) => e.name === part.entityName)
+          ?.dependsOn?.relationshipName.some((name) => name === rel.name),
     ),
   );
 };
