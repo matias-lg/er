@@ -66,7 +66,7 @@ WeakEntityAttribute =
         return attribute
     }
     
-listOfDeps = deps:(head:( (","[ \t]*)? d:validWord {return d})
+listOfDeps = deps:(head:(d:validWord {return d})
 				   tail:((","[ \t]*) d:validWord {return d})*
                    {return [head, ...tail]}
                    )
