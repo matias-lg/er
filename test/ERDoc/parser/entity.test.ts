@@ -117,6 +117,9 @@ const badEntities = [
         language
    }
     `,
+  `entity Diagram depends on ,Draw {
+      id pkey
+    }`,
 ];
 
 const emptyEntity = `entity Void {}`;
