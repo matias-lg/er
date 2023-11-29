@@ -13,37 +13,39 @@ export const checkWeakEntityHasTotalParticipation = (
   for (const entity of er.entities) {
     if (!entity.hasDependencies) continue;
     // check if relationship exists
-    const identifyingRelationship = er.relationships.find(
-      (rel) => rel.name === entity.dependsOn!.relationshipName,
-    );
-    if (identifyingRelationship === undefined) continue;
-
-    // check if entity is in relationship
-    const entityInRelationship =
-      identifyingRelationship.participantEntities.find(
-        (part) => part.entityName === entity.name,
+    for (const dep of entity.dependsOn!.relationshipName) {
+      const identifyingRelationship = er.relationships.find(
+        (rel) => rel.name === dep,
       );
-    if (entityInRelationship === undefined) continue;
+      if (identifyingRelationship === undefined) continue;
 
-    // finally check if entity has total participation
-    if (
-      /* entity is composite,at least 1 child has total participation */
-      (entityInRelationship.isComposite &&
-        entityInRelationship.childParticipants.some(
-          (child) => child.participation === "total",
-        )) ||
-      /* entity is not composite and has total participation */
-      (!entityInRelationship.isComposite &&
-        entityInRelationship.participation === "total")
-    )
-      continue;
+      // check if entity is in relationship
+      const entityInRelationship =
+        identifyingRelationship.participantEntities.find(
+          (part) => part.entityName === entity.name,
+        );
+      if (entityInRelationship === undefined) continue;
 
-    errors.push({
-      type: "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION",
-      entityName: entity.name,
-      relationshipName: identifyingRelationship.name,
-      location: entityInRelationship.location,
-    });
+      // finally check if entity has total participation
+      if (
+        /* entity is composite,at least 1 child has total participation */
+        (entityInRelationship.isComposite &&
+          entityInRelationship.childParticipants.some(
+            (child) => child.participation === "total",
+          )) ||
+        /* entity is not composite and has total participation */
+        (!entityInRelationship.isComposite &&
+          entityInRelationship.participation === "total")
+      )
+        continue;
+
+      errors.push({
+        type: "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION",
+        entityName: entity.name,
+        relationshipName: identifyingRelationship.name,
+        location: entityInRelationship.location,
+      });
+    }
   }
   return errors;
 };

@@ -52,6 +52,16 @@ describe("Linter detects that a weak entity must have total participation in its
       expect(checkWeakEntityHasTotalParticipation(er).length).toBe(0);
     }
   });
+
+  it("Returns 3 errors when a weak entity doesn't have total participation in 3 dependencies", () => {
+    const errors = checkWeakEntityHasTotalParticipation(wrongIn3Deps);
+    expect(errors.length).toBe(3);
+  });
+
+  it("Returns 2 errors when a weak entity doesn't have total participation in 2 out of 3 dependencies", () => {
+    const errors = checkWeakEntityHasTotalParticipation(wrongIn2Deps);
+    expect(errors.length).toBe(2);
+  });
 });
 
 const implicitWrongER: ER = parse(`entity Sun depends on BelongsTo {
@@ -88,6 +98,26 @@ entity Earth depends on BelongsTo {
 }
 
 relation BelongsTo(Earth, Sun)`);
+
+const wrongIn3Deps = parse(`
+  entity Pizza depends on Prepares, Delivers, Has {
+    brand pkey
+  } 
+
+  relation Prepares(Chef, Pizza)
+  relation Delivers(DeliveryDriver, Pizza)
+  relation Has(Pizzeria, Pizza)
+`);
+
+const wrongIn2Deps = parse(`
+  entity Pizza depends on Prepares, Delivers, Has {
+    brand pkey
+  } 
+
+  relation Prepares(Chef, Pizza)
+  relation Delivers(DeliveryDriver, Pizza N!)
+  relation Has(Pizzeria, Pizza)
+  `);
 
 const noErrorsERs: ER[] = [
   parse(`
