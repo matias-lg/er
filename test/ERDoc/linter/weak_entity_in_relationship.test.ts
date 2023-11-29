@@ -15,9 +15,9 @@ describe("Linter detects that a weak entity must participate in its identifying 
         column: 1,
       },
       end: {
-        offset: 63,
-        line: 4,
-        column: 2,
+        offset: 10,
+        line: 1,
+        column: 11,
       },
     });
   });
@@ -31,10 +31,20 @@ describe("Linter detects that a weak entity must participate in its identifying 
     const errors = checkWeakEntityInRelationship(correctER);
     expect(errors.length).toBe(0);
   });
+
+  it("Finds multiple errors when multiple dependencies are missing", () => {
+    const errors = checkWeakEntityInRelationship(
+      missingInMultipleRelationshipER,
+    );
+    expect(errors.length).toBe(3);
+  });
+
+  it("Finds 2 errors when 2 out of 3 dependencies is missing", () => {
+    const errors = checkWeakEntityInRelationship(twoMissingER);
+    expect(errors.length).toBe(2);
+  });
 });
 
-/*
- */
 const missingWeakEntER: ER = parse(`entity Sun depends on BelongsTo {
     id pkey
     temperature
@@ -53,3 +63,25 @@ const correctER: ER = parse(`entity Sun depends on BelongsTo {
 }
 
 relation BelongsTo(Earth, Sun)`);
+
+const missingInMultipleRelationshipER: ER =
+  parse(`entity Sun depends on BelongsTo, Has, StudiedBy {
+    id pkey
+    temperature
+}
+
+relation BelongsTo(Earth, MilkyWay)
+relation Has(Earth, MilkyWay)
+relation StudiedBy(Earth, Scientist)
+`);
+
+const twoMissingER: ER =
+  parse(`entity Sun depends on BelongsTo, Has, StudiedBy {
+    id pkey
+    temperature
+}
+
+relation BelongsTo(Earth, Sun)
+relation Has(Earth, MilkyWay)
+relation StudiedBy(Earth, Scientist)
+`);
