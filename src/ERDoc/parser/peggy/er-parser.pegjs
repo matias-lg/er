@@ -66,7 +66,12 @@ WeakEntityAttribute =
         return attribute
     }
     
-declareWeak = dependsOn [ \t]+ relationshipName:relationshipDependencyIdentifier
+listOfDeps = deps:(head:( (","[ \t]*)? d:validWord {return d})
+				   tail:((","[ \t]*) d:validWord {return d})*
+                   {return [head, ...tail]}
+                   )
+  
+declareWeak = dependsOn [ \t]+ relationshipName:listOfDeps
 { return {relationshipName}}
 // END WEAK ENTITY
 
@@ -259,7 +264,7 @@ _0 "0 or more whitespaces" = whitespace*
 
 
 through = "through"i
-relationshipDependencyIdentifier "relationship identifier" = validWord
+WeakEntityDependency "weak relationship identifier" = validWord
 entityIdentifier "entity identifier" = validWord
 attributeIdentifier "attribute identifier" = validWord
 parentIdentifier "parent identifier" = validWord
