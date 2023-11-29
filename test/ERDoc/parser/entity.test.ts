@@ -47,6 +47,24 @@ const entityWithDependencies = `
    }
 `;
 
+const entityWith2Deps = `
+   entity Program depends on Compiles,Parses {
+        language
+        version
+        file_extension
+        filename pkey
+   }
+`;
+
+const entityWith3Deps = `
+   entity Program depends on Compiles, Parses, Lints {
+        language
+        version
+        file_extension
+        filename pkey
+   }
+`;
+
 const entityWithTildeAndÑ = `
 Entity Curso {
   codigo key
@@ -405,7 +423,7 @@ describe("Parses Entities", () => {
         parentName: null,
         hasDependencies: true,
         dependsOn: {
-          relationshipName: "Compiles",
+          relationshipName: ["Compiles"],
         },
         attributes: [
           {
@@ -495,6 +513,22 @@ describe("Parses Entities", () => {
         },
       },
     ]);
+  });
+
+  it("Parses a weak entity with 2 dependencies", () => {
+    const er: ER = parse(entityWith2Deps);
+    const entity = er.entities[0];
+    expect(entity.dependsOn).toStrictEqual({
+      relationshipName: ["Compiles", "Parses"],
+    });
+  });
+
+  it("Parses a weak entity with 3 dependencies", () => {
+    const er: ER = parse(entityWith3Deps);
+    const entity = er.entities[0];
+    expect(entity.dependsOn).toStrictEqual({
+      relationshipName: ["Compiles", "Parses", "Lints"],
+    });
   });
 
   it("Parses an entity written inline", () => {

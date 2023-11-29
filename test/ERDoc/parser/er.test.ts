@@ -423,7 +423,7 @@ describe("Parses ER Models with multiple elements", () => {
           parentName: null,
           hasDependencies: true,
           dependsOn: {
-            relationshipName: "Uses",
+            relationshipName: ["Uses"],
           },
           location: {
             start: {
