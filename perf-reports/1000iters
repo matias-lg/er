@@ -1,0 +1,10 @@
+--- START ---                                                                                   │~                                                                                              
+parser: 0.20ms ± 0.08ms                                                                         │~                                                                                              
+Linter: 0.05ms ± 0.03ms                                                                         │~                                                                                              
+ER2Graph: 0.04ms ± 0.04ms                                                                       │~                                                                                              
+Parse + Errors + ToGraph: 0.22ms ± 0.06ms                                                       │~                                                                                              
+Elk2.5k: 1196.27ms ± 16.15ms                                                                    │~                                                                                              
+Elk5k: 2361.70ms ± 25.15ms                                                                      │~                                                                                              
+WebCola: 113.75ms ± 5.35ms                                                                      │~                                                                                              
+UltimateLayout: 18.01ms ± 2.80ms   
+--- END ---

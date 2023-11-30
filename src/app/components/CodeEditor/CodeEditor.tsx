@@ -126,6 +126,7 @@ const CodeEditor = ({
   ) => {
     try {
       localStorage.setItem(LOCAL_STORAGE_EDITOR_CONTENT_KEY, content);
+      const start = performance.now();
       const [erDoc, errors] = getERDoc(content);
       onErrorChange(errors.length > 0);
       onErDocChange({ er: erDoc, type: "userInput" });
