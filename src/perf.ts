@@ -7,71 +7,17 @@ import { erToReactflowElements } from "./app/util/erToReactflowElements";
 import ArrowNotation from "./app/components/ErDiagram/notations/ArrowNotation/ArrowNotation";
 import { getSemanticErrors } from "./ERDoc/linter";
 import { performance } from "perf_hooks";
-
-const notation = new ArrowNotation(false);
-
-const ITERATIONS = 10;
-const ERDOC = `
-entity Employee {
-    e_id key
-    name
-}
- 
-entity Department {
-    d_number key
-    d_name
-}
- 
-relation Manages(Department: [Management 1!, Research])
- 
- 
-relation Works_for(Employee N, Department 1!)
- 
-entity Project extends Screw {
-    p_id 
-    p_name
-}
- 
-relation Controls(Department 1, Project N!)
- 
-relation Works_on(Employee M, Project N) {
-    hours
-}
- 
-entity Part extends Project {
-    a
-}
- 
-entity Screw extends Part {
-    head_style
-}
- 
-entity Supplier {
-    s_id key
-    s_name
-}
- 
-relation Supplies(Project M, Part N!, Supplier P!) {
-    Quantity
-}
- 
-entity Dependent depends on Dependent_of {
-    Dep_name pkey
-    Gender
-}
- 
-relation Dependent_of(Employee 1, Dependent N)
-
-entity Dependent depends on Dependent_of {
-    Dep_name pkey
-    Gender
-}
-`;
-
+import { veryLarge, withSemanticErrors } from "./perf-examples";
 const erdocToGraph = (str: string) => {
   const [erDoc, _errors] = getERDoc(str);
   return erToReactflowElements(erDoc, notation.edgeMarkers);
 };
+
+const notation = new ArrowNotation(false);
+const ITERATIONS = 10;
+const ERDOC = veryLarge;
+const er = parse(ERDOC);
+const [nodes, edges] = erdocToGraph(ERDOC);
 
 const eval_fun = async (
   fun: (() => void) | (() => Promise<void>),
@@ -147,9 +93,6 @@ async function logLayoutFuncs(
   const [took, std] = await eval_layout_fun(fun, getArgs, isAsync);
   console.log(`${fun_name}: ${took.toFixed(2)}ms ± ${std.toFixed(2)}ms`);
 }
-
-const er = parse(ERDOC);
-const [nodes, edges] = erdocToGraph(ERDOC);
 
 const doExperiment = () => {
   const layouts = [
