@@ -7,17 +7,17 @@ import { erToReactflowElements } from "./app/util/erToReactflowElements";
 import ArrowNotation from "./app/components/ErDiagram/notations/ArrowNotation/ArrowNotation";
 import { getSemanticErrors } from "./ERDoc/linter";
 import { performance } from "perf_hooks";
-import { veryLarge, withSemanticErrors } from "./perf-examples";
+import { veryLarge, company, generated } from "./perf-examples";
+import { ErNode } from "./app/types/ErDiagram";
+import { Edge } from "reactflow";
+const notation = new ArrowNotation(false);
 const erdocToGraph = (str: string) => {
   const [erDoc, _errors] = getERDoc(str);
   return erToReactflowElements(erDoc, notation.edgeMarkers);
 };
 
-const notation = new ArrowNotation(false);
-const ITERATIONS = 10;
-const ERDOC = veryLarge;
-const er = parse(ERDOC);
-const [nodes, edges] = erdocToGraph(ERDOC);
+const ITERATIONS = 1;
+const LAYOUT_ITERATIONS = 1;
 
 const eval_fun = async (
   fun: (() => void) | (() => Promise<void>),
@@ -61,7 +61,7 @@ const eval_layout_fun = async (
   isAsync: boolean = false,
 ) => {
   const measures: number[] = [];
-  for (let i = 0; i < ITERATIONS; i++) {
+  for (let i = 0; i < LAYOUT_ITERATIONS; i++) {
     let start: number, took: number;
     const [nodes, edges] = getArgs();
     if (isAsync) {
@@ -85,8 +85,8 @@ const eval_layout_fun = async (
 };
 
 async function logLayoutFuncs(
-  fun: (nds: typeof nodes, eds: typeof edges) => void,
-  getArgs: () => [typeof nodes, typeof edges],
+  fun: (nds: ErNode[], eds: Edge[]) => void,
+  getArgs: () => [ErNode[], Edge[]],
   fun_name: string,
   isAsync: boolean = false,
 ) {
@@ -96,35 +96,36 @@ async function logLayoutFuncs(
 
 const doExperiment = () => {
   const layouts = [
-    [
-      async (nds: typeof nodes, eds: typeof edges) => {
-        await oldElkLayout(nds, eds);
-      },
-      "Elk DFL 2.5k iter",
-      true,
-    ],
+    // [
+    //   async (nds: ErNode[], eds: Edge[]) => {
+    //     await oldElkLayout(nds, eds);
+    //   },
+    //   "Elk DFL 2.5k iter",
+    //   true,
+    // ],
+    //
+    // [
+    //   async (nds: ErNode[], eds: Edge[]) => {
+    //     await oldElkLayout(nds, eds, {
+    //       "elk.force.iterations": "5000",
+    //     });
+    //   },
+    //   "DFL 5k iter",
+    //   true,
+    // ],
+    //
+
+    // [
+    //   (nds: ErNode[], eds: Edge[]) => {
+    //     // @ts-ignore
+    //     getColaLayout(nds, eds);
+    //   },
+    //   "WebCola",
+    //   false,
+    // ],
 
     [
-      async (nds: typeof nodes, eds: typeof edges) => {
-        await oldElkLayout(nds, eds, {
-          "elk.force.iterations": "5000",
-        });
-      },
-      "DFL 5k iter",
-      true,
-    ],
-
-    [
-      (nds: typeof nodes, eds: typeof edges) => {
-        // @ts-ignore
-        getColaLayout(nds, eds);
-      },
-      "WebCola",
-      false,
-    ],
-
-    [
-      async (nds: typeof nodes, eds: typeof edges) => {
+      async (nds: ErNode[], eds: Edge[]) => {
         await getLayoutedElements(nds, eds);
       },
       "Multi-Layout",
@@ -133,32 +134,37 @@ const doExperiment = () => {
   ] as const;
 
   async function start() {
-    console.log("\n\n--- START ---");
+    const testcases = [generated];
+    console.log(`Running ${ITERATIONS} iterations for processing functions`)
+    console.log(`Running ${LAYOUT_ITERATIONS} iterations for layout functions`)
 
-    const WARMUPS = 10;
-    for (let i = 0; i < WARMUPS; i++) {
-      parse(ERDOC);
-      getSemanticErrors(er);
-      erToReactflowElements(er, notation.edgeMarkers);
-    }
-
-    await logProcessingFuncs(() => parse(ERDOC), "parser");
-    await logProcessingFuncs(() => getSemanticErrors(er), "Linter");
-    await logProcessingFuncs(
-      () => erToReactflowElements(er, notation.edgeMarkers),
-      "ER2Graph",
-    );
-
-    await logProcessingFuncs(() => {
-      erdocToGraph(ERDOC);
-    }, "Parse + Errors + ToGraph");
-    for (const [layoutFun, funName, isAsync] of layouts) {
-      await logLayoutFuncs(
-        layoutFun,
-        () => [nodes.map((n) => ({ ...n })), edges.map((e) => ({ ...e }))],
-        funName,
-        isAsync,
+    for (const erdoc of testcases) {
+      const er = parse(erdoc);
+      const [nodes, edges] = erdocToGraph(erdoc);
+      console.log("\n\n--- START ---");
+      console.log(
+        `Er Document with ${er.entities.length} entities, ${er.relationships.length} relationships and ${er.aggregations.length} aggregations`,
       );
+      console.log(`Graph with ${nodes.length} nodes and ${edges.length} edges`);
+
+      await logProcessingFuncs(() => parse(erdoc), "parser");
+      await logProcessingFuncs(() => getSemanticErrors(er), "Linter");
+      await logProcessingFuncs(
+        () => erToReactflowElements(er, notation.edgeMarkers),
+        "ER2Graph",
+      );
+
+      await logProcessingFuncs(() => {
+        erdocToGraph(erdoc);
+      }, "Parse + Errors + ToGraph");
+      for (const [layoutFun, funName, isAsync] of layouts) {
+        await logLayoutFuncs(
+          layoutFun,
+          () => [nodes.map((n) => ({ ...n })), edges.map((e) => ({ ...e }))],
+          funName,
+          isAsync,
+        );
+      }
     }
   }
 
