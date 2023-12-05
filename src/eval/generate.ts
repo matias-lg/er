@@ -1,8 +1,9 @@
+import * as crypto from "crypto";
+import * as fs from "fs";
+
 const N_ENTITIES = 1000;
 const N_RELATIONS = 500;
 const N_AGGREGATIONS = 100;
-
-import * as crypto from "crypto";
 
 const gen = () => crypto.randomBytes(5).toString("hex");
 
@@ -90,5 +91,12 @@ for (let i = 0; i < N_AGGREGATIONS; i++) {
     }
   }
 }
+
+const filename = process.argv[2];
+if (!filename) {
+  console.error("need filename");
+  process.exit(1);
+}
+fs.writeFileSync(filename, erDocument);
 
 console.log(erDocument);

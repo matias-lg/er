@@ -1,15 +1,13 @@
-import { oldElkLayout } from "./app/hooks/useOldElkLayout";
-import { colaLayout as getColaLayout } from "./app/hooks/useColaLayout";
-import { getLayoutedElements } from "./app/hooks/useLayoutedElements";
-import { parse } from "./ERDoc/parser";
-import { getERDoc } from "./ERDoc";
-import { erToReactflowElements } from "./app/util/erToReactflowElements";
-import ArrowNotation from "./app/components/ErDiagram/notations/ArrowNotation/ArrowNotation";
-import { getSemanticErrors } from "./ERDoc/linter";
 import { performance } from "perf_hooks";
-import { veryLarge, company, generated } from "./perf-examples";
-import { ErNode } from "./app/types/ErDiagram";
 import { Edge } from "reactflow";
+import { getERDoc } from "../ERDoc";
+import { getSemanticErrors } from "../ERDoc/linter";
+import { parse } from "../ERDoc/parser";
+import ArrowNotation from "../app/components/ErDiagram/notations/ArrowNotation/ArrowNotation";
+import { getLayoutedElements } from "../app/hooks/useLayoutedElements";
+import { ErNode } from "../app/types/ErDiagram";
+import { erToReactflowElements } from "../app/util/erToReactflowElements";
+import { generated } from "../perf-examples";
 const notation = new ArrowNotation(false);
 const erdocToGraph = (str: string) => {
   const [erDoc, _errors] = getERDoc(str);
@@ -135,8 +133,8 @@ const doExperiment = () => {
 
   async function start() {
     const testcases = [generated];
-    console.log(`Running ${ITERATIONS} iterations for processing functions`)
-    console.log(`Running ${LAYOUT_ITERATIONS} iterations for layout functions`)
+    console.log(`Running ${ITERATIONS} iterations for processing functions`);
+    console.log(`Running ${LAYOUT_ITERATIONS} iterations for layout functions`);
 
     for (const erdoc of testcases) {
       const er = parse(erdoc);
