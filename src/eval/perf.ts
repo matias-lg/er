@@ -7,15 +7,19 @@ import ArrowNotation from "../app/components/ErDiagram/notations/ArrowNotation/A
 import { getLayoutedElements } from "../app/hooks/useLayoutedElements";
 import { ErNode } from "../app/types/ErDiagram";
 import { erToReactflowElements } from "../app/util/erToReactflowElements";
-import { generated } from "../perf-examples";
+import { generated } from "./perf-examples";
+import { oldElkLayout } from "../app/hooks/useOldElkLayout";
+import { colaLayout as getColaLayout } from "../app/hooks/useColaLayout";
+import * as fs from "fs";
+
 const notation = new ArrowNotation(false);
 const erdocToGraph = (str: string) => {
   const [erDoc, _errors] = getERDoc(str);
   return erToReactflowElements(erDoc, notation.edgeMarkers);
 };
 
-const ITERATIONS = 1;
-const LAYOUT_ITERATIONS = 1;
+const ITERATIONS = 100;
+const LAYOUT_ITERATIONS = 10;
 
 const eval_fun = async (
   fun: (() => void) | (() => Promise<void>),
@@ -51,6 +55,7 @@ async function logProcessingFuncs(
 ) {
   const [took, std] = await eval_fun(fun, isAsync);
   console.log(`${fun_name}: ${took.toFixed(2)}ms ± ${std.toFixed(2)}ms`);
+  return [took, std];
 }
 
 const eval_layout_fun = async (
@@ -90,80 +95,190 @@ async function logLayoutFuncs(
 ) {
   const [took, std] = await eval_layout_fun(fun, getArgs, isAsync);
   console.log(`${fun_name}: ${took.toFixed(2)}ms ± ${std.toFixed(2)}ms`);
+  return [took, std];
 }
 
 const doExperiment = () => {
   const layouts = [
-    // [
-    //   async (nds: ErNode[], eds: Edge[]) => {
-    //     await oldElkLayout(nds, eds);
-    //   },
-    //   "Elk DFL 2.5k iter",
-    //   true,
-    // ],
-    //
-    // [
-    //   async (nds: ErNode[], eds: Edge[]) => {
-    //     await oldElkLayout(nds, eds, {
-    //       "elk.force.iterations": "5000",
-    //     });
-    //   },
-    //   "DFL 5k iter",
-    //   true,
-    // ],
-    //
+    [
+      async (nds: ErNode[], eds: Edge[]) => {
+        await oldElkLayout(nds, eds);
+      },
+      "elk2k",
+      true,
+    ],
 
-    // [
-    //   (nds: ErNode[], eds: Edge[]) => {
-    //     // @ts-ignore
-    //     getColaLayout(nds, eds);
-    //   },
-    //   "WebCola",
-    //   false,
-    // ],
+    [
+      async (nds: ErNode[], eds: Edge[]) => {
+        await oldElkLayout(nds, eds, {
+          "elk.force.iterations": "5000",
+        });
+      },
+      "elk5k",
+      true,
+    ],
+
+    [
+      (nds: ErNode[], eds: Edge[]) => {
+        // @ts-ignore
+        getColaLayout(nds, eds);
+      },
+      "cola",
+      false,
+    ],
 
     [
       async (nds: ErNode[], eds: Edge[]) => {
         await getLayoutedElements(nds, eds);
       },
-      "Multi-Layout",
+      "multi",
       true,
     ],
   ] as const;
 
+  type measure = {
+    mean: number;
+    std: number;
+  };
+
+  type testResult = {
+    input: {
+      erdoc: {
+        entities: number;
+        relations: number;
+        aggregations: number;
+      };
+
+      graph: {
+        nodes: number;
+        edges: number;
+      };
+    };
+
+    results: {
+      processing: {
+        parser: measure;
+        linter: measure;
+        er2graph: measure;
+        all: measure;
+      };
+      layout: {
+        elk2k: measure;
+        elk5k: measure;
+        cola: measure;
+        multi: measure;
+      };
+    };
+  };
+
+  const initTestResult = (): testResult => ({
+    input: {
+      erdoc: {
+        entities: 0,
+        relations: 0,
+        aggregations: 0,
+      },
+
+      graph: {
+        nodes: 0,
+        edges: 0,
+      },
+    },
+
+    results: {
+      processing: {
+        parser: { mean: 0, std: 0 },
+        linter: { mean: 0, std: 0 },
+        er2graph: { mean: 0, std: 0 },
+        all: { mean: 0, std: 0 },
+      },
+      layout: {
+        elk2k: { mean: 0, std: 0 },
+        elk5k: { mean: 0, std: 0 },
+        cola: { mean: 0, std: 0 },
+        multi: { mean: 0, std: 0 },
+      },
+    },
+  });
+
   async function start() {
-    const testcases = [generated];
+    const testcases_dir = "src/eval/reports";
+    const testcases = fs.readdirSync(testcases_dir).map((f) => {
+      const content = fs.readFileSync(`${testcases_dir}/${f}`, "utf-8");
+      return content;
+    });
+
     console.log(`Running ${ITERATIONS} iterations for processing functions`);
     console.log(`Running ${LAYOUT_ITERATIONS} iterations for layout functions`);
+    const results: testResult[] = [];
 
     for (const erdoc of testcases) {
+      const result = initTestResult();
       const er = parse(erdoc);
       const [nodes, edges] = erdocToGraph(erdoc);
       console.log("\n\n--- START ---");
-      console.log(
-        `Er Document with ${er.entities.length} entities, ${er.relationships.length} relationships and ${er.aggregations.length} aggregations`,
-      );
-      console.log(`Graph with ${nodes.length} nodes and ${edges.length} edges`);
+      const n_entities = er.entities.length;
+      const n_relations = er.relationships.length;
+      const n_aggregations = er.aggregations.length;
+      const n_nodes = nodes.length;
+      const n_edges = edges.length;
 
-      await logProcessingFuncs(() => parse(erdoc), "parser");
-      await logProcessingFuncs(() => getSemanticErrors(er), "Linter");
-      await logProcessingFuncs(
+      result.input = {
+        erdoc: {
+          entities: n_entities,
+          relations: n_relations,
+          aggregations: n_aggregations,
+        },
+
+        graph: {
+          nodes: n_nodes,
+          edges: n_edges,
+        },
+      };
+
+      console.log(
+        `Er Document with ${n_entities} entities, ${n_relations} relationships and ${n_aggregations} aggregations`,
+      );
+      console.log(`Graph with ${n_nodes} nodes and ${n_edges} edges`);
+
+      const [parseMean, parseStd] = await logProcessingFuncs(
+        () => parse(erdoc),
+        "parser",
+      );
+      const [linterMean, linterStd] = await logProcessingFuncs(
+        () => getSemanticErrors(er),
+        "Linter",
+      );
+      const [er2flowMean, er2flowStd] = await logProcessingFuncs(
         () => erToReactflowElements(er, notation.edgeMarkers),
         "ER2Graph",
       );
 
-      await logProcessingFuncs(() => {
+      const [allMean, allStd] = await logProcessingFuncs(() => {
         erdocToGraph(erdoc);
       }, "Parse + Errors + ToGraph");
+
+      result.results.processing = {
+        parser: { mean: parseMean, std: parseStd },
+        linter: { mean: linterMean, std: linterStd },
+        er2graph: { mean: er2flowMean, std: er2flowStd },
+        all: { mean: allMean, std: allStd },
+      };
+
       for (const [layoutFun, funName, isAsync] of layouts) {
-        await logLayoutFuncs(
+        const [mean, std] = await logLayoutFuncs(
           layoutFun,
           () => [nodes.map((n) => ({ ...n })), edges.map((e) => ({ ...e }))],
           funName,
           isAsync,
         );
+        result.results.layout[funName] = { mean, std };
       }
+      results.push(result);
     }
+    console.log("Finished, writing results to file");
+    const OUTPUT_FILE = "src/eval/eval-results.json";
+    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(results, null, 2));
   }
 
   start().then(() => {
