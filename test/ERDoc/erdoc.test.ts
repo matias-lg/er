@@ -48,7 +48,7 @@ describe("Parses and get semantic errors for a ERDoc string", () => {
     const ERDoc = getERDoc(wrongERDoc);
     const [_, errors] = ERDoc;
 
-    expect(errors.length).toBe(3);
+    expect(errors.length).toBe(4);
     expect(
       errors.some((err) => err.type === "AGGREGATION_RELATIONSHIP_NOT_EXISTS"),
     ).toBe(true);
@@ -60,5 +60,9 @@ describe("Parses and get semantic errors for a ERDoc string", () => {
     expect(
       errors.some((err) => err.type === "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION"),
     ).toBe(true);
+
+    expect(errors.some((err) => err.type === "WEAK_ENTITY_HAS_NO_PKEY")).toBe(
+      true,
+    );
   });
 });

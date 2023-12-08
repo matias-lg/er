@@ -18,6 +18,7 @@ import { checkAggregationUsesSameRelationship } from "./aggregation/checkAggrega
 import { checkAggregationUsesEntityName } from "./aggregation/checkAggregationUsesEntityName";
 import { checkRelationshipParticipatingEntityNotExists } from "./relationship/checkRelationshipParticipatingEntityNotExists";
 import { checkEntityExtendsChildEntity } from "./entity/checkEntityExtendsChild";
+import { checkWeakEntityNoPkey } from "./entity/checkWeakEntityNoPkey";
 
 type checkErrorFunction = (er: ER) => SemanticError[];
 
@@ -32,6 +33,7 @@ const validators: checkErrorFunction[] = [
 
   checkWeakEntityRelationshipExists,
   checkWeakEntityInRelationship,
+  checkWeakEntityNoPkey,
   checkWeakEntityHasTotalParticipation,
 
   checkRelationshipDuplicate,
