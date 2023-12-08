@@ -36,6 +36,11 @@ const getErrorMessage = (t: translation, err: SemanticError): string => {
         relationshipName: err.relationshipName,
       });
 
+    case "WEAK_ENTITY_HAS_NO_PKEY":
+      return t("WEAK_ENTITY_HAS_NO_PKEY", {
+        entityName: err.entityName,
+      });
+
     case "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION":
       return t("WEAK_ENTITY_NOT_TOTAL_PARTICIPATION", {
         entityName: err.entityName,

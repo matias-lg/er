@@ -39,6 +39,12 @@ export type ChildEntityHasKeyError = {
   location: TokenLocation;
 };
 
+export type WeakEntityHasNoPkeyError = {
+  type: "WEAK_ENTITY_HAS_NO_PKEY";
+  entityName: string;
+  location: TokenLocation;
+};
+
 export type WeakEntityDependsOnNonExistentRelationshipError = {
   type: "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP";
   entityName: string;
@@ -129,6 +135,7 @@ export type SemanticError =
   | WeakEntityDependsOnNonExistentRelationshipError
   | WeakEntityNotInRelationshipError
   | WeakEntityNotTotalParticipationError
+  | WeakEntityHasNoPkeyError
   | RelationshipDuplicateError
   | RelationshipDuplicateAttributeError
   | RelationshipLessThanTwoParticipatingEntitiesError
