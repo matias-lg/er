@@ -7,7 +7,6 @@ import ArrowNotation from "../app/components/ErDiagram/notations/ArrowNotation/A
 import { getLayoutedElements } from "../app/hooks/useLayoutedElements";
 import { ErNode } from "../app/types/ErDiagram";
 import { erToReactflowElements } from "../app/util/erToReactflowElements";
-import { generated } from "./perf-examples";
 import { oldElkLayout } from "../app/hooks/useOldElkLayout";
 import { colaLayout as getColaLayout } from "../app/hooks/useColaLayout";
 import * as fs from "fs";
@@ -274,6 +273,7 @@ const doExperiment = () => {
         );
         result.results.layout[funName] = { mean, std };
       }
+
       results.push(result);
     }
     console.log("Finished, writing results to file");

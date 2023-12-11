@@ -75,7 +75,7 @@ layoutTimes = {
 }
 
 for case in data:
-    print(case["input"]["graph"])
+    print(case["input"]["graph"], case["input"]["erdoc"])
     erdoc_items.append(
         case["input"]["erdoc"]["entities"]
         + case["input"]["erdoc"]["relations"]
@@ -115,6 +115,8 @@ fig2, ax2 = plt.subplots()
 for layout, stats in layoutTimes.items():
     # print(erdoc_items)
     # print(stats)
+    if layout != "multi":
+        continue
     xy = zip(graph_items, stats)
     xy = sorted(xy, key=lambda x: x[0])
     for x, y in xy:
@@ -122,7 +124,7 @@ for layout, stats in layoutTimes.items():
 
     
 
-    plt.plot(graph_items, stats, 'o', label=layout)
+    plt.plot(graph_items, stats,'o', label= "elk 2000" if layout == "elk2k" else "elk 5000" if layout == "elk5k" else layout) 
     ax2.set_title("Time for layouting graphs")
     ax2.legend(loc="upper right")
 plt.show()
