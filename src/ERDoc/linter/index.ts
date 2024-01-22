@@ -22,12 +22,14 @@ import { checkWeakEntityNoPkey } from "./entity/checkWeakEntityNoPkey";
 
 type checkErrorFunction = (er: ER) => SemanticError[];
 
-const validators: checkErrorFunction[] = [
-  checkEntityDuplicate,
+const inheritanceValidators: checkErrorFunction[] = [
   checkEntityDuplicateAttribute,
   checkEntityNoKey,
+];
+
+const validators: checkErrorFunction[] = [
+  checkEntityDuplicate,
   checkEntityExtendsNonExistentEntity,
-  checkEntityExtendsChildEntity,
 
   checkChildEntityHasKey,
 
@@ -50,8 +52,21 @@ const validators: checkErrorFunction[] = [
 
 export const getSemanticErrors = (er: ER): SemanticError[] => {
   let errors: SemanticError[] = [];
+
+  const cycleErrors = checkEntityExtendsChildEntity(er);
+  if (cycleErrors.length > 0) {
+    errors.push(...cycleErrors);
+  }
+  else {
+    for (const validator of inheritanceValidators) {
+      console.log(`in inheritance validator ${validator.name}`);
+      errors.push(...validator(er));
+    }
+  }
+
   for (const validator of validators) {
-    errors = errors.concat(validator(er));
+    console.log(`in validator ${validator.name}`);
+    errors.push(...validator(er));
   }
   return errors;
 };
