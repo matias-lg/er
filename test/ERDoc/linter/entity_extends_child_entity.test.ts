@@ -26,7 +26,6 @@ describe("Linter detects when a child entity extends a child entity", () => {
     const errors = checkEntityExtendsChildEntity(cyclicER);
     expect(errors.length).toBe(1);
   });
-
 });
 
 const wrongER: ER = parse(`entity Dog extends Animal {
@@ -74,8 +73,7 @@ entity Westie extends Dog {
 
 entity Frenchie extends Dog {
 
-}`
-);
+}`);
 
 const correctER: ER = parse(`entity Dog extends Mammal {
     breed

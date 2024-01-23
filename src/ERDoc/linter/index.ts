@@ -56,8 +56,7 @@ export const getSemanticErrors = (er: ER): SemanticError[] => {
   const cycleErrors = checkEntityExtendsChildEntity(er);
   if (cycleErrors.length > 0) {
     errors.push(...cycleErrors);
-  }
-  else {
+  } else {
     for (const validator of inheritanceValidators) {
       errors.push(...validator(er));
     }
