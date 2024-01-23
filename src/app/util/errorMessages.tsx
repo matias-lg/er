@@ -41,8 +41,8 @@ const getErrorMessage = (t: translation, err: SemanticError): string => {
         entityName: err.entityName,
       });
 
-    case "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION":
-      return t("WEAK_ENTITY_NOT_TOTAL_PARTICIPATION", {
+    case "WEAK_ENTITY_WRONG_CONSTRAINTS":
+      return t("WEAK_ENTITY_WRONG_CONSTRAINTS", {
         entityName: err.entityName,
         relationshipName: err.relationshipName,
       });

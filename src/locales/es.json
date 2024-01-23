@@ -98,7 +98,7 @@
 
         "WEAK_ENTITY_HAS_NO_PKEY": "La entidad débil \"{entityName}\" no tiene una llave parcial",
 
-        "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION": "La entidad débil \"{entityName}\" no tiene participación total en la relación \"{relationshipName}\"",
+        "WEAK_ENTITY_WRONG_CONSTRAINTS": "La entidad débil \"{entityName}\" debe tener participación total y cardinalidad \"1\" en la relación \"{relationshipName}\"",
 
         "WEAK_ENTITY_DEPENDS_ON_NON_EXISTENT_RELATIONSHIP": "La entidad débil \"{entityName}\" depende de la relación \"{relationshipName}\", que no existe.\n Hint: para declarar una entidad como débil se debe indicar su relación débil",
 
