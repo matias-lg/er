@@ -59,8 +59,8 @@ export type WeakEntityNotInRelationshipError = {
   location: TokenLocation;
 };
 
-export type WeakEntityNotTotalParticipationError = {
-  type: "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION";
+export type WeakEntityWrongConstraintsError = {
+  type: "WEAK_ENTITY_WRONG_CONSTRAINTS";
   entityName: string;
   relationshipName: string;
   location: TokenLocation;
@@ -134,7 +134,7 @@ export type SemanticError =
   | ChildEntityHasKeyError
   | WeakEntityDependsOnNonExistentRelationshipError
   | WeakEntityNotInRelationshipError
-  | WeakEntityNotTotalParticipationError
+  | WeakEntityWrongConstraintsError
   | WeakEntityHasNoPkeyError
   | RelationshipDuplicateError
   | RelationshipDuplicateAttributeError

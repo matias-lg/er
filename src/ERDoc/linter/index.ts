@@ -6,7 +6,7 @@ import { checkEntityNoKey } from "./entity/checkEntityNoKey";
 import { checkEntityExtendsNonExistentEntity } from "./entity/checkExtendsExistingEntity";
 import { checkWeakEntityRelationshipExists } from "./entity/checkWeakEntityRelationshipExists";
 import { checkWeakEntityInRelationship } from "./entity/checkWeakEntityInRelationship";
-import { checkWeakEntityHasTotalParticipation } from "./entity/checkWeakEntityHasTotalParticipation";
+import { checkWeakEntityConstraints } from "./entity/checkWeakEntityHasTotalParticipation";
 import { checkChildEntityHasKey } from "./entity/checkChildEntityHasKey";
 import { checkRelationshipDuplicate } from "./relationship/checkRelationshipDuplicate";
 import { checkRelationshipDuplicateAttribute } from "./relationship/checkRelationshipDuplicateAttribute";
@@ -36,7 +36,7 @@ const validators: checkErrorFunction[] = [
   checkWeakEntityRelationshipExists,
   checkWeakEntityInRelationship,
   checkWeakEntityNoPkey,
-  checkWeakEntityHasTotalParticipation,
+  checkWeakEntityConstraints,
 
   checkRelationshipDuplicate,
   checkRelationshipDuplicateAttribute,
@@ -59,13 +59,11 @@ export const getSemanticErrors = (er: ER): SemanticError[] => {
   }
   else {
     for (const validator of inheritanceValidators) {
-      console.log(`in inheritance validator ${validator.name}`);
       errors.push(...validator(er));
     }
   }
 
   for (const validator of validators) {
-    console.log(`in validator ${validator.name}`);
     errors.push(...validator(er));
   }
   return errors;

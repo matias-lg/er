@@ -99,7 +99,7 @@
 
         "WEAK_ENTITY_NOT_IN_RELATIONSHIP": "Weak entity \"{entityName}\" depends on relationship \"{relationshipName}\", but it doesn't participate in it",
 
-        "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION": "Weak entity \"{entityName}\" doesn't have total participation in relationship \"{relationshipName}\"",
+        "WEAK_ENTITY_WRONG_CONSTRAINTS": "Weak entity \"{entityName}\" must have total participation and a cardinality of \"1\" in relationship \"{relationshipName}\"",
 
         "WEAK_ENTITY_HAS_NO_PKEY": "Weak entity \"{entityName}\" has no partial key",
 

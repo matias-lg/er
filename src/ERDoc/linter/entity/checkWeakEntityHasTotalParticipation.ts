@@ -1,15 +1,20 @@
 import { ER } from "../../types/parser/ER";
-import { WeakEntityNotTotalParticipationError } from "../../types/linter/SemanticError";
+import { WeakEntityWrongConstraintsError } from "../../types/linter/SemanticError";
+import { simpleRelationParticipant } from "../../types/parser/Relationship";
+
+const hasCorrectConstraints = (entity: simpleRelationParticipant) => {
+  return entity.participation === "total" && entity.cardinality === "1";
+};
 
 /**
- * Finds weak entities that don't have total participation in their identifying relationship in an ER object
+ * Finds weak entities that don't have both total participation and cardinality of 1, in their identifying relationship in an ER object
  * @param {ER} er - The ER object to lint
- * @return {WeakEntityNotTotalParticipationError[]} An array of errors for each weak entity that doesn't have total participation in its identifying relationship
+ * @return {WeakEntityWrongConstraintsError[]} An array of errors for each weak entity that doesn't have total participation in its identifying relationship
  */
-export const checkWeakEntityHasTotalParticipation = (
+export const checkWeakEntityConstraints = (
   er: ER,
-): WeakEntityNotTotalParticipationError[] => {
-  const errors: WeakEntityNotTotalParticipationError[] = [];
+): WeakEntityWrongConstraintsError[] => {
+  const errors: WeakEntityWrongConstraintsError[] = [];
   for (const entity of er.entities) {
     if (!entity.hasDependencies) continue;
     // check if relationship exists
@@ -28,19 +33,17 @@ export const checkWeakEntityHasTotalParticipation = (
 
       // finally check if entity has total participation
       if (
-        /* entity is composite,at least 1 child has total participation */
+        /* entity is composite, every role must satisfy the constraints */
         (entityInRelationship.isComposite &&
-          entityInRelationship.childParticipants.some(
-            (child) => child.participation === "total",
-          )) ||
+          entityInRelationship.childParticipants.every(hasCorrectConstraints)) ||
         /* entity is not composite and has total participation */
         (!entityInRelationship.isComposite &&
-          entityInRelationship.participation === "total")
+          hasCorrectConstraints(entityInRelationship))
       )
         continue;
 
       errors.push({
-        type: "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION",
+        type: "WEAK_ENTITY_WRONG_CONSTRAINTS",
         entityName: entity.name,
         relationshipName: identifyingRelationship.name,
         location: entityInRelationship.location,

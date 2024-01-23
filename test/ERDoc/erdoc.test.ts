@@ -58,7 +58,7 @@ describe("Parses and get semantic errors for a ERDoc string", () => {
     );
 
     expect(
-      errors.some((err) => err.type === "WEAK_ENTITY_NOT_TOTAL_PARTICIPATION"),
+      errors.some((err) => err.type === "WEAK_ENTITY_WRONG_CONSTRAINTS"),
     ).toBe(true);
 
     expect(errors.some((err) => err.type === "WEAK_ENTITY_HAS_NO_PKEY")).toBe(
