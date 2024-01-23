@@ -2,7 +2,7 @@ import { ER } from "../../types/parser/ER";
 import { WeakEntityHasNoPkeyError } from "../../types/linter/SemanticError";
 
 /**
- * Finds weak entities that don't have a pkey when they have other than 1 to 1 participation in some identifying relationship.
+ * Finds weak entities that don't have a pkey when some strong entity have other than cardinality of "1" in some identifying relationship.
  * @param {ER} er - The ER object to lint
  * @return {WeakEntityHasNoPkeyError[]} An array of errors for each weak entity without pkey
  */
@@ -22,16 +22,27 @@ export const checkWeakEntityNoPkey = (er: ER): WeakEntityHasNoPkeyError[] => {
       );
       if (weakEntityInRelationship === undefined) continue;
 
-      let isManyCardinality = false;
-      if (weakEntityInRelationship.isComposite) {
-        isManyCardinality = weakEntityInRelationship.childParticipants.some(
-          (child) => child.cardinality !== "1",
-        );
-      } else {
-        isManyCardinality = weakEntityInRelationship.cardinality !== "1";
+      let someIsMany = false;
+
+      for (const participant of relationship.participantEntities) {
+        if (participant.entityName === entity.name) continue;
+
+        if (participant.isComposite) {
+          if (
+            participant.childParticipants.some(
+              (child) => child.cardinality !== "1",
+            )
+          ) {
+            someIsMany = true;
+            break;
+          }
+        } else if (participant.cardinality !== "1") {
+          someIsMany = true;
+          break;
+        }
       }
 
-      if (isManyCardinality) {
+      if (someIsMany) {
         errors.push({
           type: "WEAK_ENTITY_HAS_NO_PKEY",
           entityName: entity.name,

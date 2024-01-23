@@ -35,7 +35,9 @@ export const checkWeakEntityConstraints = (
       if (
         /* entity is composite, every role must satisfy the constraints */
         (entityInRelationship.isComposite &&
-          entityInRelationship.childParticipants.every(hasCorrectConstraints)) ||
+          entityInRelationship.childParticipants.every(
+            hasCorrectConstraints,
+          )) ||
         /* entity is not composite and has total participation */
         (!entityInRelationship.isComposite &&
           hasCorrectConstraints(entityInRelationship))

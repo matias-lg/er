@@ -7,52 +7,28 @@ entity Course {
     code key
     name
 }
- 
+
 entity Evaluation depends on of {
     name
     date
 }
- 
-relation of(Course, Evaluation 1!)
- 
+
+relation of(Course 1, Evaluation 1!)
+
 entity Grade depends on eval, belongs_to {
     question
     value
 }
- 
+
 entity Student {
     s_id key
     name
 }
- 
-relation eval(Grade N!, Evaluation)
-relation belongs_to(Grade N!, Student)`);
+
+relation eval(Grade 1!, Evaluation 1)
+relation belongs_to(Grade 1!, Student)`);
 
 const noPkeyER: ER = parse(`
-                    entity Course {
-                        code key
-                    }
-
-                    entity Assignment depends on From {
-                        as_no
-                    }
-
-                    relation From(Assignment N!, Course)
-                    `);
-
-const withPkeyEr: ER = parse(`
-                    entity Course {
-                        code key
-                    }
-
-                    entity Assignment depends on From {
-                        as_no pkey
-                    }
-
-                    relation From(Assignment N!, Course)
-                    `);
-
-const oneToOneEr: ER = parse(`
                     entity Course {
                         code key
                     }
@@ -64,6 +40,30 @@ const oneToOneEr: ER = parse(`
                     relation From(Assignment 1!, Course)
                     `);
 
+const withPkeyEr: ER = parse(`
+                    entity Course {
+                        code key
+                    }
+
+                    entity Assignment depends on From {
+                        as_no pkey
+                    }
+
+                    relation From(Assignment 1!, Course)
+                    `);
+
+const oneToOneEr: ER = parse(`
+                    entity Course {
+                        code key
+                    }
+
+                    entity Assignment depends on From {
+                        as_no
+                    }
+
+                    relation From(Assignment 1!, Course 1)
+                    `);
+
 const multipleWrongEr: ER = parse(`
                     entity Course {
                         code key
@@ -72,7 +72,7 @@ const multipleWrongEr: ER = parse(`
                         as_no
                     }
 
-                    relation From(Assignment N!, Course)
+                    relation From(Assignment 1!, Course)
 
                     entity Course2 {
                         code key
@@ -82,7 +82,7 @@ const multipleWrongEr: ER = parse(`
                         as_no
                     }
 
-                    relation From2(Assignment2 N!, Course2)
+                    relation From2(Assignment2 1!, Course2)
 
 
                     entity Course3 {
@@ -93,11 +93,11 @@ const multipleWrongEr: ER = parse(`
                         as_no
                     }
 
-                    relation From3(Assignment3 N!, Course3)
+                    relation From3(Assignment3 1!, Course3)
     `);
 
 describe("Linter detects that a weak entity must have a pkey in a one to many relationship", () => {
-  it("Finds an error when a weak entity doesn't have a pkey and doesn't have 1to1 constraint", () => {
+  it("Finds an error when a weak entity doesn't have a pkey and a strong entity is 'many'", () => {
     const errors = checkWeakEntityNoPkey(noPkeyER);
     expect(errors[0].type).toBe("WEAK_ENTITY_HAS_NO_PKEY");
     expect(errors.length).toBe(1);
@@ -109,7 +109,7 @@ describe("Linter detects that a weak entity must have a pkey in a one to many re
     expect(errors.length).toBe(0);
   });
 
-  it("Finds no error when a weak entity has no pkey but is 1to1", () => {
+  it("Finds no error when a weak entity has no pkey but strong entity has cardinality of 1", () => {
     const errors = checkWeakEntityNoPkey(oneToOneEr);
     expect(errors.length).toBe(0);
   });

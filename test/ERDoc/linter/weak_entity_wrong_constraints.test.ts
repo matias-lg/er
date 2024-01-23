@@ -61,25 +61,15 @@ describe("Linter detects that a weak entity must have total participation in its
     expect(errors.length).toBe(2);
   });
 
-
   it("Returns 1 error when a weak entity has cardinality of 1, but not total participation", () => {
     const errors = checkWeakEntityConstraints(onlyCardinalityOneER);
     expect(errors.length).toBe(1);
   });
 
-
   it("Returns 1 errors when a weak entity has total participation, but not a cardinality of 1", () => {
     const errors = checkWeakEntityConstraints(onlyTotalParticipationER);
     expect(errors.length).toBe(1);
   });
-
-
-
-
-
-
-
-
 });
 
 const implicitWrongER: ER = parse(`entity Sun depends on BelongsTo {
