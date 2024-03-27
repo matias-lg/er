@@ -25,17 +25,17 @@ entity Department {
     d_name
 }
 
-relation Manages(Department: [Management 1!, Research])
+relation Manages(Department: [Management N!, Research 1])
 
 
-relation Works_for(Employee N, Department 1!)
+relation Works_for(Employee 1, Department N!)
 
 entity Project {
     p_id key
     p_name
 }
 
-relation Controls(Department 1, Project N!)
+relation Controls(Department, Project 1!)
 
 relation Works_on(Employee M, Project N) {
     hours
@@ -64,7 +64,7 @@ entity Dependent depends on Dependent_of {
     Gender
 }
 
-relation Dependent_of(Employee 1, Dependent N!)
+relation Dependent_of(Employee, Dependent 1!)
 ```
 
 In the playground, this example will generate the following ER diagram (after adjusting some positions), here we are using _(min, max) notation_.

@@ -9,7 +9,7 @@ import { Callout } from "nextra/components";
 To define a relationship between two or more entities we use the keyword `relation`, followed by the name of the relationship and its partipating entities
 with their constraints. Relationships may also have attributes.
 The following example shows the relationship "Drinks", which has the attribute "amount", between the entities "Human" and "Coffee". The entity "Human" has a
-cardinality of `1`, so the relationship is one-to-many:
+cardinality of `1`, so the relationship is many-to-one:
 
 ```erdoc
 entity Human {
@@ -93,7 +93,7 @@ entity Employee {
   age
 }
 
-relation Manages(Employee: [Intern, Manager 1])
+relation Manages(Employee: [Intern 1, Manager])
 ```
 In the ERD, roles are visualized as labeled edges:
 <Image src={roles} alt="relationship with roles ER Diagram" style={{ backgroundColor: "#fff" }}/>
