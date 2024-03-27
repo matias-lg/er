@@ -1,5 +1,5 @@
 {
-  "erDoc": "entity Library {\n  name key\n  address key\n}\n \nentity Book {\n  bid key\n  name\n  n_pages\n}\n \nentity Author {\n  id key\n  name\n  language\n}\n \nrelation Writes(Author 1, Book N!) {\n  took\n}\n \naggregation Book_written_by_Author(Writes)\n \nrelation Contains(Library 1, Book_written_by_Author)",
+  "erDoc": "entity Library {\n  name key\n  address key\n}\n \nentity Book {\n  bid key\n  name\n  n_pages\n}\n \nentity Author {\n  id key\n  name\n  language\n}\n \nrelation Writes(Author, Book 1!) {\n  took\n}\n \naggregation Book_written_by_Author(Writes)\n \nrelation Contains(Library, Book_written_by_Author 1)",
   "nodes": [
     {
       "id": "0",
