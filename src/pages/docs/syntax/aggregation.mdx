@@ -21,7 +21,7 @@ entity Coffee {
   roast_date
 }
 
-relation Drinks(Human 1, Coffee) {
+relation Drinks(Human, Coffee 1) {
   amount
 }
 
@@ -51,13 +51,13 @@ entity Author {
   language
 }
 
-relation Writes(Author 1, Book N!) {
+relation Writes(Author, Book 1!) {
   took
 }
 
 aggregation Book_written_by_Author(Writes)
 
-relation Contains(Library 1, Book_written_by_Author)
+relation Contains(Library, Book_written_by_Author 1)
 ```
 
 
