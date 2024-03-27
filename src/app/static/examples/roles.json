@@ -1,5 +1,5 @@
 {
-  "erDoc": "entity Employee {\n  id key\n  name\n  age\n}\n \nrelation Manages(Employee: [Intern, Manager 1])",
+  "erDoc": "entity Employee {\n  id key\n  name\n  age\n}\n \nrelation Manages(Employee: [Intern 1, Manager])",
   "nodes": [
     {
       "id": "0",
