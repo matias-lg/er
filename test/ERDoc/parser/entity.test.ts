@@ -785,4 +785,33 @@ describe("Parses Entities", () => {
       expect(() => parse(entity)).toThrowError();
     });
   });
+
+  it("Ignore extra spaces after an attribute", () => {
+    expect(() =>
+      parse(`
+    entity Dog {
+        name key   
+        age   
+        breed  
+    }
+    `),
+    ).not.toThrow();
+    expect(() =>
+      parse(`
+    entity Dog extends Animal{
+        name key   
+        age   
+        breed  
+    }
+    `),
+    ).not.toThrow();
+  });
+
+  it("Ignore extra spaces after the name of an entity in a relation", () => {
+    expect(() =>
+      parse(`
+    relation  Foo  (Bar , Baz  1  ){}
+    `),
+    ).not.toThrow();
+  });
 });

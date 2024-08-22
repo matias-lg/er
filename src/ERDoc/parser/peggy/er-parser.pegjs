@@ -102,7 +102,7 @@ entity =
     
 // Atributos de la entidad
 entityAttribute =
-	identifier:attributeIdentifier [ \t]* childAttributes:declareComposite? [ \t]* isKey:(declareIsKey {return true})?
+	identifier:attributeIdentifier [ \t]* childAttributes:declareComposite? [ \t]* isKey:(declareIsKey {return true})? [ \t]*
     {
     	const attribute = {name: identifier, location: getLocation(location)}
         attribute.isKey = isKey === true
@@ -136,7 +136,7 @@ entityExtends
 
 // RELATIONSHIP 
 relationship
-	= declaration:(declareRelationship _ identifier:relationshipIdentifier { return { identifier, location: getLocation(location)}}) _0 participants:listOfParticipants attributes:(_0 Lcurly _0
+	= declaration:(declareRelationship _0 identifier:relationshipIdentifier { return { identifier, location: getLocation(location)}}) _0 participants:listOfParticipants attributes:(_0 Lcurly _0
         attribList:(
              head:(_0 e:relationShipAttribute{return e})
 		     tail:( newline _0 e:relationShipAttribute{return e})*
@@ -201,7 +201,7 @@ listOfChildParticipants =
 // end composite participant in relationship
 
 // begin participant entity in relationship
-participantEntity = entityName:entityIdentifier constraints:declareConstraints?{
+participantEntity = entityName:entityIdentifier constraints:declareConstraints? [ \t\n]*{
      {
          let cardinality = "N";
          let isTotal = false;
